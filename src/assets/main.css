@@ -102,5 +102,5 @@
 }
 
 .my-input, .my-select {
-  @apply w-1/2 border border-secondary px-4 py-2 rounded-lg bg-formColor
+  @apply w-96 border border-secondary px-4 py-2 rounded-lg bg-formColor
 }

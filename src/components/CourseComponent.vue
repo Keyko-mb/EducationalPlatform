@@ -9,8 +9,8 @@ const curriculumId = useRoute().params.id
 
 const props = defineProps(["course"])
 
-const  lessons = ref([])
-const  homeworks = ref([])
+const lessons = ref([])
+const homeworks = ref([])
 
 onMounted( () => {
   axios.get(`courses/${props.course.id}/lessons`).then((response) => {
@@ -29,8 +29,8 @@ onMounted( () => {
     <div class="cards-container">
       <RouterLink
           v-for="lesson in lessons" :key="lesson.id"
-          :to="`/curricula/${curriculumId}/lessons/${lesson.id}`">
-        <Card :name="lesson.name">
+          :to="`/curricula/${curriculumId}/courses/${props.course.id}/lessons/${lesson.id}`">
+        <Card :title="lesson.name">
           <template #caption>
             <div>
               <p>{{ lesson.description }}</p>
@@ -40,8 +40,8 @@ onMounted( () => {
       </RouterLink>
       <RouterLink
           v-for="homework in homeworks" :key="homework.id"
-          :to="`/curricula/${curriculumId}/homeworks/${homework.id}`">
-        <Card :name="homework.name">
+          :to="`/curricula/${curriculumId}/courses/${props.course.id}/homeworks/${homework.id}`">
+        <Card :title="homework.name">
           <template #caption>
             <div>
               <p>{{homework.description}}</p>

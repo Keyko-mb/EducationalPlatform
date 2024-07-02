@@ -2,7 +2,7 @@
 import { defineProps } from 'vue';
 
 const props = defineProps([
-    "name",
+    "title",
     "description",
 ])
 
@@ -12,7 +12,7 @@ const props = defineProps([
 <template>
     <div class="border rounded-lg p-3 my-3 border-secondary bg-tertiary cursor-pointer w-1/2 hover:bg-primary">
 
-        <h3>{{name}}</h3>
+        <h3>{{title}}</h3>
 
         <slot name="caption">{{description}}</slot>
 

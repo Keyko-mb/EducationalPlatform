@@ -7,17 +7,17 @@ defineProps(["users"]);
   <table class="w-full border border-secondary bg-tertiary rounded-lg">
     <thead>
     <tr>
-      <th></th>
       <th>Фамилия</th>
       <th>Имя</th>
+      <th>Отчество</th>
       <th>Роль</th>
     </tr>
     </thead>
     <tbody>
     <tr v-for="user in users" :key="user.id">
-      <td><input type="checkbox"></td>
       <td>{{ user.lastName }}</td>
       <td>{{ user.firstName }}</td>
+      <td>{{ user.patronymic }}</td>
       <td>{{ user.role }}</td>
     </tr>
     </tbody>
@@ -27,8 +27,8 @@ defineProps(["users"]);
 
 <style>
 th, td {
-  padding: 8px;
-  text-align: left;
+  padding: 10px;
+  text-align: center;
   @apply border-b border-secondary;
 }
 </style>

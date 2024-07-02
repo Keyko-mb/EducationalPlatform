@@ -8,13 +8,8 @@ import LessonView from '@/views/LessonView.vue'
 import CurriculumCreationView from "@/views/CurriculumCreationView.vue";
 import PersonEditionView from "@/views/PersonEditionView.vue";
 import PersonCreationView from "@/views/PersonCreationView.vue";
-import LessonEditionView from "@/views/LessonEditionView.vue";
-import HomeworkEditionView from "@/views/HomeworkEditionView.vue";
-import LessonCreationView from "@/views/LessonCreationView.vue";
-import HomeworkCreationView from "@/views/HomeworkCreationView.vue";
 import CurriculumSettingsView from "@/views/CurriculumSettingsView.vue";
 import CurriculumView from "@/views/CurriculumView.vue";
-import CourseCreationView from "@/views/CourseCreationView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -40,39 +35,14 @@ const router = createRouter({
       component: CurriculumSettingsView
     },
     {
-      path: '/curricula/:curriculumId/settings/courses/create',
-      name: 'createCourse',
-      component: CourseCreationView
-    },
-    {
-      path: '/curricula/:curriculumId/lessons/:lessonId',
+      path: '/curricula/:curriculumId/courses/:courseId/lessons/:lessonId',
       name: 'lesson',
       component: LessonView
     },
     {
-      path: '/curricula/:curriculumId/homeworks/:homeworkId:',
+      path: '/curricula/:curriculumId/courses/:courseId/homeworks/:homeworkId:',
       name: 'homework',
       component: HomeworkView
-    },
-    {
-      path: '/lessons/create',
-      name: 'createLesson',
-      component: LessonCreationView
-    },
-    {
-      path: '/homeworks/create',
-      name: 'createHomework',
-      component: HomeworkCreationView
-    },
-    {
-      path: '/lessons/:lessonId/edit',
-      name: 'editLesson',
-      component: LessonEditionView
-    },
-    {
-      path: '/homeworks/:homeworkId:/edit',
-      name: 'editHomework',
-      component: HomeworkEditionView
     },
     {
       path: '/curricula/create',

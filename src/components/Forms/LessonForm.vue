@@ -1,47 +1,42 @@
 <script setup>
-import {defineEmits} from "vue";
-import {useRouter} from "vue-router";
-
-const router = useRouter()
+import {defineEmits, ref, watch} from "vue";
 
 const props = defineProps(['lesson'])
+const lesson = props.lesson ? ref(props.lesson) : ref({})
 const emit = defineEmits(['saveLessonData'])
 
 const emitLessonData = () => {
-  console.log(props.lesson)
-  emit('saveLessonData', props.lesson)
+  emit('saveLessonData', lesson.value)
 }
-
 </script>
 
 <template>
 <div>
   <div class="my-5 space-y-5">
+    <h1>Урок</h1>
     <div>
       <p>Название</p>
-      <input class="my-input" type="text" id="name" v-model="props.lesson.name">
+      <input class="my-input" type="text" id="name" v-model="lesson.name">
     </div>
     <div>
       <p>Описание</p>
-      <input  class="my-input" type="text" id="surname" v-model="props.lesson.description">
+      <input  class="my-input" type="text" id="surname" v-model="lesson.description">
     </div>
     <div>
       <p>Текст</p>
-      <input  class="my-input" type="email" id="email" v-model="props.lesson.content">
+      <input  class="my-input" type="email" id="email" v-model="lesson.content">
     </div>
 <!--    <attachment/>-->
-<!--    <div>-->
-<!--      <p>Доступ</p>-->
-<!--      <select class="my-select" id="role" v-model="props.lesson.access">-->
-<!--        <option>Выберите роль</option>-->
-<!--        <option>STUDENT</option>-->
-<!--        <option>TEACHER</option>-->
-<!--      </select>-->
-<!--    </div>-->
+    <div>
+      <p>Доступность</p>
+      <div class="flex gap-1">
+        <input type="checkbox" id="access" v-model="lesson.access"/>
+        <p>Доступно ученикам</p>
+      </div>
+    </div>
   </div>
-  <div class="flex gap-5">
+  <div class="flex gap-5 items-center mt-5">
     <button class="my-button" @click="emitLessonData">Сохранить</button>
-    <button class="my-button" @click="router.go(-1)">Отмена</button>
   </div>
 </div>
 </template>

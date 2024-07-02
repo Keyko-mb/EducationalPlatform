@@ -1,17 +1,20 @@
 <script setup>
-import {onMounted, ref} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import axios from "axios";
 
-const classrooms = ref([])
+const emit = defineEmits(['addClassroom'])
+const props = defineProps(['currentClassrooms'])
+
+const availableClassrooms = ref([])
 const newClassroom = ref({})
 
 onMounted(() => {
   axios.get('classrooms').then((response) => {
-    classrooms.value = response.data
+    availableClassrooms.value = response.data;
+    availableClassrooms.value = availableClassrooms.value.filter(classroom => !props.currentClassrooms.some(currClassroom => currClassroom.id === classroom.id));
   })
 })
 
-const emit = defineEmits(['addClassroom'])
 
 const emitAddClassroom = () => {
   emit('addClassroom', newClassroom)
@@ -25,7 +28,7 @@ const emitAddClassroom = () => {
       <h3>Выберите учебую группу</h3>
       <select class="border border-secondary rounded-lg bg-tertiary p-2" v-model="newClassroom" id="select_classroom">
         <option selected disabled value="">Выберите учебую группу</option>
-        <option v-for="classroom in classrooms" :value="classroom" :key="classroom.id">{{classroom.name}}</option>
+        <option v-for="classroom in availableClassrooms" :value="classroom" :key="classroom.id">{{classroom.name}}</option>
       </select>
     </div>
       <button class="my-button" @click="emitAddClassroom">Сохранить</button>

@@ -14,6 +14,7 @@ const emitCourseData = () => {
 
 <template>
   <div class="mt-2 space-y-2">
+    <h1>Раздел</h1>
     <div>
       <p>Название раздела</p>
       <input class="my-input" type="text" id="name" v-model="course.name" value="">

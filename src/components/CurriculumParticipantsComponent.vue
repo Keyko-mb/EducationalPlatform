@@ -23,28 +23,27 @@ const showClassroomAddDialog = () => {
 }
 
 const addClassroom = (classroom) => {
-  classroom.value.curriculum_id = props.curriculum.id
-  axios.put(`curricula/${props.curriculum.id}/classrooms/${classroom.value.id}`)
-  classrooms.value.push(classroom)
+  axios.put(`classrooms/${classroom.value.id}/curriculum/${props.curriculum.id}`)
+      .then(response => classrooms.value.push(response.data))
   addClassroomDialogVisible.value = false
 }
 
 const deleteClassroom = (classroomId) => {
-  axios.delete(`curricula/${props.curriculum.id}/classrooms/${classroomId}`)
-  classrooms.value.filter(classroom => classroom.id !== classroomId)
+  axios.delete(`classrooms/${classroomId}/curriculum/${props.curriculum.id}`)
+  classrooms.value = classrooms.value.filter(classroom => classroom.id !== classroomId)
 }
 </script>
 
 <template>
   <div class="flex flex-col items-end">
     <button class="my-button mt-5" @click="showClassroomAddDialog">Добавить группу</button>
-    <ClassroomTable class="w-full" v-for="classroom in classrooms"
+    <ClassroomTable class="w-full mb-5" v-for="classroom in classrooms"
                     :key="classroom.id"
                     :classroom="classroom"
                     :users="classroom.persons"
                     @deleteClassroom="deleteClassroom"/>
     <Dialog v-model:show="addClassroomDialogVisible">
-      <ClassroomAddToCurriculumForm @addClassroom = "addClassroom"/>
+      <ClassroomAddToCurriculumForm :currentClassrooms="classrooms" @addClassroom = "addClassroom"/>
     </Dialog>
   </div>
 </template>

@@ -21,8 +21,13 @@ const router = useRouter();
         <div class="my-3">
           <Card v-for="curriculum in curriculaStore.curricula" :key="curriculum.id"
                 @click="router.push(`/curricula/${curriculum.id}`)"
-                :name="curriculum.name"
-                :description="curriculum.description"/>
+                :title="curriculum.name">
+            <template #caption>
+              <div>
+                <p>{{ curriculum.description }}</p>
+              </div>
+            </template>
+          </Card>
         </div>
       <button class="my-button" @click="router.push(`/curricula/create`)">Добавить</button>
     </div>
