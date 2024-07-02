@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;0,1000;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900;1,1000&display=swap');
+
+@import './base.css';
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* @layer components {
+    .theme-classic {
+      @apply text-theme-light-primary border-theme-light-secondary bg-slate-50;
+      
+    }
+  
+    .theme-light {
+      @apply text-theme-light-primary border-theme-light-secondary bg-theme-light-background;
+      
+    }
+  
+    .theme-dark {
+      @apply text-theme-dark-primary border-theme-dark-secondary bg-theme-dark-background;
+      
+    }
+  
+    .theme-blue {
+      @apply text-theme-blue-primary border-theme-blue-secondary bg-theme-blue-background;
+      
+    }
+} */
+
+@layer base {
+  :root {
+    --font-size: 1em;
+    --font-family: Nunito;
+    --primary-color: #B0CCEC;
+    --secondary-color: #6EA1DB;
+    --tertiary-color: #EBF1FA;
+    --form-color: #fff;
+    --text-color: #10202C;
+    --error-color: #ff9999;
+    --background-color: #F3F7FC;
+  }
+
+  body {
+    font-size: var(--font-size);
+    font-family: var(--font-family);
+    line-height: 1.5;
+    background-color: var(--background-color);
+    color: var(--text-color);
+  }
+
+  * {
+    border-color: inherit;
+  }
+  h1 {
+  font-size: 1.5em;
+  }
+  h2 {
+  font-size: 1.25em;
+  }
+  h3 {
+  font-size: 1.125em;
+  }
+
+}
+
+.theme-light {
+  --primary-color: #fff;
+  --secondary-color: #333;
+  --tertiary-color: #fff;
+  --form-color: #fff;
+  --text-color: #333;
+  --error-color: #fff;
+  --background-color: #fff;
+
+}
+
+.theme-dark {
+  --primary-color: #333;
+  --secondary-color: #fff;
+  --tertiary-color: #333;
+  --form-color: #333;
+  --text-color: #fff;
+  --error-color: #333;
+  --background-color: #333;
+
+}
+
+.theme-blue {
+  --primary-color: #9dd1ff;
+  --secondary-color: #063462;
+  --tertiary-color: #9dd1ff;
+  --form-color: #9dd1ff;
+  --text-color: #333;
+  --error-color: #9dd1ff;
+  --background-color: #9dd1ff;
+}
+
+.my-button {
+  @apply border border-secondary bg-primary px-4 py-2 rounded-lg hover:bg-secondary 
+}
+
+.my-input, .my-select {
+  @apply w-1/2 border border-secondary px-4 py-2 rounded-lg bg-formColor
+}
