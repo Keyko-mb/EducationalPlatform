@@ -7,13 +7,18 @@ import PeopleView from '@/views/PeopleView.vue'
 import LessonView from '@/views/LessonView.vue'
 import CurriculumCreationView from "@/views/CurriculumCreationView.vue";
 import PersonEditionView from "@/views/PersonEditionView.vue";
-import PersonCreationView from "@/views/PersonCreationView.vue";
 import CurriculumSettingsView from "@/views/CurriculumSettingsView.vue";
 import CurriculumView from "@/views/CurriculumView.vue";
+import SignInView from "@/views/SignInView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    {
+      path: '/signIn',
+      name: 'signIn',
+      component: SignInView
+    },
     {
       path: '/',
       name: 'home',
@@ -58,11 +63,6 @@ const router = createRouter({
       path: '/people',
       name: 'people',
       component: PeopleView
-    },
-    {
-      path: '/people/add',
-      name: 'addUser',
-      component: PersonCreationView
     },
     {
       path: '/people/:id/edit',

@@ -1,15 +1,14 @@
 <script setup>
-import {ref, defineEmits, onMounted} from "vue";
+import {defineEmits, ref} from "vue";
 import {useRouter} from "vue-router";
 
 const router = useRouter()
-
 const props = defineProps(['person'])
+const person = props.person ? ref(props.person) : ref({})
 const emit = defineEmits(['savePersonData'])
 
 const emitPersonData = () => {
-  console.log(props.person)
-  emit('savePersonData', props.person)
+  emit('savePersonData', person.value)
 }
 
 </script>
