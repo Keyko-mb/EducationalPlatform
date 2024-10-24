@@ -1,13 +1,16 @@
 import { defineStore } from 'pinia';
 import axios from "axios";
-import {ref} from "vue";
+import {computed, ref} from "vue";
+import {useStudentStore} from "@/stores/studentInfo.js";
 
 export const useAuthStore = defineStore('auth', () => {
     const userInfo = ref({
-        person: null,
-        token: '',
-        refresh_token: ''
+        id: null,
+        role: null,
+        token: null,
+        refresh_token: null
     })
+    const isAuthenticated = computed(() => userInfo.value.token !== null);
 
     const signIn = (payload) => {
         try {
@@ -15,16 +18,29 @@ export const useAuthStore = defineStore('auth', () => {
                 username: payload.username,
                 password: payload.password
             }).then((response) => {
-                console.log(response)
                 userInfo.value = {
-                    person: response.data.person,
+                    id: response.data.person.id,
+                    role: response.data.person.role,
                     token: response.data.access_token,
                     refresh_token: response.data.refresh_token
                 }
+                const studentStore =useStudentStore()
+                studentStore.initStudent()
+                localStorage.setItem('userInfo', JSON.stringify({id: userInfo.value.id, role: userInfo.value.role, token: userInfo.value.token, refresh_token: userInfo.value.refresh_token}))
             })
         } catch (error) {
             console.error('Ошибка при аутентификации:', error);
         }
     }
-    return {signIn, userInfo}
+
+    const logOut = () => {
+        userInfo.value = {
+            id: null,
+            role: null,
+            token: null,
+            refresh_token: null
+        }
+    }
+
+    return {signIn, logOut, userInfo, isAuthenticated}
 });

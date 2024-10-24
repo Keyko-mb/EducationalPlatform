@@ -9,7 +9,6 @@ const username = ref('')
 const password = ref('')
 
 const signIn = () => {
-  console.log(username.value, password.value)
   authStore.signIn({username: username.value, password: password.value})
   router.push('/')
 }

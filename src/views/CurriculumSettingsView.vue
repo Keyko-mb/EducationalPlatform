@@ -1,5 +1,5 @@
 <script setup>
-import {ref, onMounted} from 'vue'
+import {ref, onMounted, shallowRef} from 'vue'
 import CurriculumStructure from '../components/CurriculumStructureComponent.vue'
 import CurriculumParticipants from '../components/CurriculumParticipantsComponent.vue'
 import CurriculumSettings from '../components/CurriculumSettingsComponent.vue'
@@ -10,15 +10,15 @@ import axios from "axios";
 const tabs = ref([
   {
     name: "Стуктура",
-    component: CurriculumStructure
+    component: shallowRef(CurriculumStructure)
   },
   {
     name: "Участники",
-    component: CurriculumParticipants
+    component: shallowRef(CurriculumParticipants)
   },
   {
     name: "Настройки",
-    component: CurriculumSettings
+    component: shallowRef(CurriculumSettings)
   },
 ])
 

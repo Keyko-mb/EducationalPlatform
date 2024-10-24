@@ -36,7 +36,7 @@ const deleteClassroom = (classroomId) => {
 
 <template>
   <div class="flex flex-col items-end">
-    <button class="my-button mt-5" @click="showClassroomAddDialog">Добавить группу</button>
+    <button class="my-button my-5" @click="showClassroomAddDialog">Добавить группу</button>
     <ClassroomTable class="w-full mb-5" v-for="classroom in classrooms"
                     :key="classroom.id"
                     :classroom="classroom"

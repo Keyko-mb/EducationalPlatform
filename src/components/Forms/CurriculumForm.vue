@@ -1,12 +1,12 @@
 <script setup>
 
-import {ref, defineEmits, onMounted} from "vue";
+import {ref, defineEmits} from "vue";
 import {useRouter} from "vue-router";
 
 const router = useRouter()
 
 const props = defineProps(['curriculum'])
-const curriculum = props.curriculum ? ref(props.curriculum) : ref({})
+const curriculum = ref({ ...props.curriculum });
 const emit = defineEmits(['saveCurriculumData'])
 const isSaved = ref(false)
 

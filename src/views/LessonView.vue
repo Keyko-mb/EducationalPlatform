@@ -5,11 +5,13 @@ import {useRoute, useRouter} from "vue-router";
 import axios from "axios";
 import Dialog from "@/components/UI/Dialog.vue";
 import LessonForm from "@/components/Forms/LessonForm.vue";
+import {useAuthStore} from "@/stores/auth.js";
 
 const lesson = ref({})
 const lessonId = useRoute().params.lessonId
 const curriculumId = useRoute().params.curriculumId
 const editLessonDialogVisible = ref(false)
+const authStore = useAuthStore()
 
 const router = useRouter()
 
@@ -43,7 +45,7 @@ const deleteLesson = () => {
     <div>
       <div class="flex justify-between">
         <h1>{{ lesson.name }}</h1>
-        <div class="flex gap-2">
+        <div v-if="authStore.userInfo.role === 'ADMIN' || authStore.userInfo.role === 'TEACHER'" class="flex gap-2">
           <button class="my-button" @click="showLessonEditDialog">Редактировать</button>
           <button class="border border-secondary bg-errColor px-4 py-2 rounded-lg hover:drop-shadow-lg" @click="deleteLesson">Удалить</button>
         </div>

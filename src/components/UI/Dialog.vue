@@ -4,7 +4,7 @@ import {defineEmits} from "vue";
 
 const props = defineProps(["show"])
 
-const emit = defineEmits(['hideDialog'])
+const emit = defineEmits(['hideDialog', 'update:show'])
 
 const emitHideDialog = () => {
   emit('update:show', false)

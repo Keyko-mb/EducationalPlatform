@@ -1,11 +1,12 @@
 <script setup>
-import Card from '../components/UI/Card.vue'
-import {onMounted, ref, watch} from "vue";
+import {onMounted, ref} from "vue";
 import axios from "axios";
 import {useRoute} from "vue-router";
 import CourseComponent from "@/components/CourseComponent.vue";
 import router from "@/router/index.js";
+import {useAuthStore} from "@/stores/auth.js";
 
+const authStore = useAuthStore()
 const curriculum = ref({})
 const courses = ref([])
 
@@ -26,7 +27,9 @@ onMounted (() => {
     <div>
       <div class="flex justify-between">
         <h1>{{curriculum.name}}</h1>
-        <button class="my-button" @click="router.push(`/curricula/${curriculum.id}/settings`)">Настройки курса</button>
+        <button v-if="authStore.userInfo.role === 'ADMIN' || authStore.userInfo.role === 'TEACHER'"
+                class="my-button"
+                @click="router.push(`/curricula/${curriculum.id}/settings`)">Настройки курса</button>
       </div>
       <p>{{ curriculum.description }}</p>
       <CourseComponent v-for="course in courses" :key="course.id" :course="course" />

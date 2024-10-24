@@ -1,20 +1,18 @@
 <script setup lang="ts">
-import UsersTable from "@/components/UI/UsersTable.vue";
 import {onMounted, ref} from "vue";
 import axios from "axios";
-import {useRouter} from "vue-router";
 import Dialog from "@/components/UI/Dialog.vue";
 import PersonForm from "@/components/Forms/PersonForm.vue";
+import PeopleTable from "@/components/UI/PeopleTable.vue";
 
-const users = ref([])
+const people = ref([])
 const person = ref({})
 const addPersonDialogVisible = ref(false)
 
-const router = useRouter()
 
 onMounted(() => {
   axios.get('people').then((response) => {
-    users.value = response.data
+    people.value = response.data
   })
 })
 
@@ -24,7 +22,10 @@ const showAddPersonDialog = () => {
 
 const createPerson = (person) => {
   axios
-      .post("people", person)
+      .post("auth/register", person)
+      .then(() => {
+        people.value.push(person)
+      })
   addPersonDialogVisible.value = false
 }
 </script>
@@ -39,7 +40,7 @@ const createPerson = (person) => {
                 <button class="my-button" @click="showAddPersonDialog">Добавить</button>
             </div>
         </div>
-        <UsersTable :users="users"/>
+        <PeopleTable :people="people"/>
     </div>
 
     <div>

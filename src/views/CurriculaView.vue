@@ -4,11 +4,20 @@ import {onMounted, ref} from 'vue';
 import Card from '../components/UI/Card.vue'
 import {useRouter} from "vue-router";
 import {useCurriculaStore} from "@/stores/curricula.js";
+import {useAuthStore} from "@/stores/auth.js";
+import {useStudentStore} from "@/stores/studentInfo.js";
 
 const curriculaStore = useCurriculaStore();
+const authStore = useAuthStore()
+const studentStore = useStudentStore()
+const curriculum = ref({})
 
 onMounted (() => {
+  if (authStore.userInfo.role === "STUDENT") {
+    curriculum.value = studentStore.curriculumId
+  } else {
     curriculaStore.fetchCurricula();
+  }
 })
 
 const router = useRouter();
@@ -19,17 +28,35 @@ const router = useRouter();
     <div>
         <h1>Обучение</h1>
         <div class="my-3">
-          <Card v-for="curriculum in curriculaStore.curricula" :key="curriculum.id"
-                @click="router.push(`/curricula/${curriculum.id}`)"
-                :title="curriculum.name">
-            <template #caption>
-              <div>
-                <p>{{ curriculum.description }}</p>
-              </div>
-            </template>
-          </Card>
+          <div v-if="authStore.userInfo.role === 'ADMIN' || authStore.userInfo.role === 'TEACHER'">
+            <Card v-for="curriculum in curriculaStore.curricula" :key="curriculum.id"
+                  @click="router.push(`/curricula/${curriculum.id}`)"
+                  :title="curriculum.name">
+              <template #caption>
+                <div>
+                  <p>{{ curriculum.description }}</p>
+                </div>
+              </template>
+            </Card>
+            <button v-if="authStore.userInfo.role === 'ADMIN'" class="my-button" @click="router.push(`/curricula/create`)">Добавить</button>
+          </div>
+          <div v-else>
+            <div v-if="curriculum">
+              <Card :key="curriculum.id"
+                    @click="router.push(`/curricula/${curriculum.id}`)"
+                    :title="curriculum.name">
+                <template #caption>
+                  <div>
+                    <p>{{ curriculum.description }}</p>
+                  </div>
+                </template>
+              </Card>
+            </div>
+            <div v-else>
+              <p>Вы не обучаетесь ни на одной учебной программе</p>
+            </div>
+          </div>
         </div>
-      <button class="my-button" @click="router.push(`/curricula/create`)">Добавить</button>
     </div>
 </template>
 

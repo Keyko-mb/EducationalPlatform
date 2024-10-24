@@ -4,6 +4,7 @@ import {useRoute, useRouter} from "vue-router";
 import axios from "axios";
 import Dialog from "@/components/UI/Dialog.vue";
 import HomeworkForm from "@/components/Forms/HomeworkForm.vue";
+import {useAuthStore} from "@/stores/auth.js";
 
 // const files = ref({})
 
@@ -16,6 +17,7 @@ const homework = ref({})
 const homeworkId = useRoute().params.homeworkId
 const curriculumId = useRoute().params.curriculumId
 const editHomeworkDialogVisible = ref(false)
+const authStore = useAuthStore()
 
 onMounted(() => {
   axios.get(`homeworks/${homeworkId}`).then((response) => {
@@ -47,7 +49,7 @@ const deleteHomework = () => {
     <div>
       <div class="flex justify-between">
         <h1>{{ homework.name }}</h1>
-        <div class="flex gap-2">
+        <div v-if="authStore.userInfo.role === 'ADMIN' || authStore.userInfo.role === 'TEACHER'" class="flex gap-2">
           <button class="my-button" @click="showHomeworkEditDialog">Редактировать</button>
           <button class="border border-secondary bg-errColor px-4 py-2 rounded-lg hover:drop-shadow-lg" @click="deleteHomework">Удалить</button>
         </div>
