@@ -39,6 +39,8 @@
     --form-color: #fff;
     --text-color: #10202C;
     --error-color: #ff9999;
+    --truth-color: #a8ffab;
+    --warning-color: #ffda99;
     --background-color: #F3F7FC;
   }
 
@@ -72,6 +74,8 @@
   --form-color: #fff;
   --text-color: #333;
   --error-color: #fff;
+  --truth-color: #fff;
+  --warning-color: #fff;
   --background-color: #fff;
 
 }
@@ -83,6 +87,8 @@
   --form-color: #333;
   --text-color: #fff;
   --error-color: #333;
+  --truth-color: #333;
+  --warning-color: #333;
   --background-color: #333;
 
 }
@@ -94,6 +100,8 @@
   --form-color: #9dd1ff;
   --text-color: #333;
   --error-color: #9dd1ff;
+  --truth-color: #9dd1ff;
+  --warning-color: #9dd1ff;
   --background-color: #9dd1ff;
 }
 
@@ -102,5 +110,5 @@
 }
 
 .my-input, .my-select {
-  @apply w-96 border border-secondary px-4 py-2 rounded-lg bg-formColor
+  @apply border border-secondary px-4 py-2 rounded-lg bg-formColor
 }

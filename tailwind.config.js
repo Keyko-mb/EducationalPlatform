@@ -17,6 +17,8 @@ export default {
         formColor: "var(--form-color)",
         bgColor: "var(--background-color)",
         errColor: "var(--error-color)",
+        truthColor: "var(--truth-color)",
+        warnColor: "var(--warning-color)",
         textColor: "var(--text-color)",
       }
   },

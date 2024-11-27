@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import CurriculaView from '@/views/CurriculaView.vue'
-import HomeworkView from '@/views/HomeworkView.vue'
+import StudentHomeworkView from '@/views/StudentHomeworkView.vue'
 import AccountView from '@/views/AccountView.vue'
 import PeopleView from '@/views/PeopleView.vue'
 import LessonView from '@/views/LessonView.vue'
@@ -12,6 +12,7 @@ import SignInView from "@/views/SignInView.vue";
 import {useAuthStore} from "@/stores/auth.js";
 import ClassroomsView from "@/views/ClassroomsView.vue";
 import AccessDeniedView from "@/views/AccessDeniedView.vue";
+import TeacherHomeworkView from "@/views/TeacherHomeworkView.vue";
 
 const Role = {
   Admin: 'ADMIN',
@@ -72,11 +73,21 @@ const router = createRouter({
       }
     },
     {
-      path: '/curricula/:curriculumId/courses/:courseId/homeworks/:homeworkId:',
-      name: 'homework',
-      component: HomeworkView,
+      path: '/curricula/:curriculumId/courses/:courseId/homeworks/:homeworkId',
+      name: 'studentHomework',
+      component: StudentHomeworkView,
       meta: {
-        auth: true
+        auth: true,
+        roles: [Role.Student]
+      }
+    },
+    {
+      path: '/curricula/:curriculumId/courses/:courseId/homeworks/:homeworkId/teacher',
+      name: 'teacherHomework',
+      component: TeacherHomeworkView,
+      meta: {
+        auth: true,
+        roles: [Role.Admin, Role.Teacher]
       }
     },
     {

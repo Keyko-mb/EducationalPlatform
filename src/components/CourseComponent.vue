@@ -4,8 +4,10 @@ import Card from "@/components/UI/Card.vue";
 import {onMounted, ref} from "vue";
 import {useRoute} from "vue-router";
 import axios from "axios";
+import {useAuthStore} from "@/stores/auth.js";
 
 const curriculumId = useRoute().params.id
+const authStore = useAuthStore()
 
 const props = defineProps(["course"])
 
@@ -38,17 +40,33 @@ onMounted( () => {
           </template>
         </Card>
       </RouterLink>
-      <RouterLink
-          v-for="homework in homeworks" :key="homework.id"
-          :to="`/curricula/${curriculumId}/courses/${props.course.id}/homeworks/${homework.id}`">
-        <Card :title="homework.name">
-          <template #caption>
-            <div>
-              <p>{{homework.description}}</p>
-            </div>
-          </template>
-        </Card>
-      </RouterLink>
+
+      <div v-if="authStore.userInfo.role === 'STUDENT'">
+        <RouterLink
+            v-for="homework in homeworks" :key="homework.id"
+            :to="`/curricula/${curriculumId}/courses/${props.course.id}/homeworks/${homework.id}`">
+          <Card :title="homework.name">
+            <template #caption>
+              <div>
+                <p>{{homework.description}}</p>
+              </div>
+            </template>
+          </Card>
+        </RouterLink>
+      </div>
+      <div v-else>
+        <RouterLink
+            v-for="homework in homeworks" :key="homework.id"
+            :to="`/curricula/${curriculumId}/courses/${props.course.id}/homeworks/${homework.id}/teacher`">
+          <Card :title="homework.name">
+            <template #caption>
+              <div>
+                <p>{{homework.description}}</p>
+              </div>
+            </template>
+          </Card>
+        </RouterLink>
+      </div>
     </div>
   </div>
 </template>

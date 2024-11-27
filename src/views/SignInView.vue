@@ -26,7 +26,7 @@ const signIn = () => {
         </div>
         <div>
           <p>Пароль</p>
-          <input class="my-input" type="text" id="password" v-model="password">
+          <input class="my-input" type="password" id="password" v-model="password">
         </div>
       </div>
       <div class="flex gap-5">

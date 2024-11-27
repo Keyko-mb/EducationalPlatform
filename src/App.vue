@@ -2,6 +2,7 @@
 import { RouterView } from 'vue-router';
 import Navbar from './components/UI/Navbar.vue'
 import {useAuthStore} from "@/stores/auth.js";
+import {useStudentStore} from "@/stores/studentInfo.js";
 
 const authStore = useAuthStore()
 
@@ -12,6 +13,9 @@ const checkAuth = () => {
     authStore.userInfo.role = userInfo.role
     authStore.userInfo.token = userInfo.token
     authStore.userInfo.refresh_token = userInfo.refresh_token
+
+    const studentStore = useStudentStore()
+    studentStore.initStudent()
   }
 }
 

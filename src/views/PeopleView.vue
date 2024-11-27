@@ -9,7 +9,6 @@ const people = ref([])
 const person = ref({})
 const addPersonDialogVisible = ref(false)
 
-
 onMounted(() => {
   axios.get('people').then((response) => {
     people.value = response.data

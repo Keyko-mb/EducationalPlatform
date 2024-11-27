@@ -9,12 +9,15 @@ import Dialog from "@/components/UI/Dialog.vue";
 import CourseForm from "@/components/Forms/CourseForm.vue";
 import LessonForm from "@/components/Forms/LessonForm.vue";
 import HomeworkForm from "@/components/Forms/HomeworkForm.vue";
+import {useAuthStore} from "@/stores/auth.js";
 
 const curriculumId = useRoute().params.id
 const router = useRouter()
 
 const props = defineProps(["course"])
 const emit = defineEmits(['deleteClick'])
+
+const authStore = useAuthStore()
 
 const editCourseDialogVisible = ref(false)
 const addLessonDialogVisible = ref(false)
@@ -89,15 +92,16 @@ const showHomeworkAddDialog = () => {
     <p>{{ props.course.description }}</p>
     <div class="cards-container space-y-3">
 
-        <Card v-for="lesson in lessons" :key="lesson.id" :title="lesson.name" @click="router.push(`/curricula/${curriculumId}/courses/${course.id}/lessons/${lesson.id}`)">
-          <template #caption>
-            <div>
-              <p>{{ lesson.description }}</p>
-            </div>
-          </template>
-        </Card>
+      <Card v-for="lesson in lessons" :key="lesson.id" :title="lesson.name" @click="router.push(`/curricula/${curriculumId}/courses/${course.id}/lessons/${lesson.id}`)">
+        <template #caption>
+          <div>
+            <p>{{ lesson.description }}</p>
+          </div>
+        </template>
+      </Card>
 
 
+      <div v-if="authStore.userInfo.role === 'STUDENT'">
         <Card v-for="homework in homeworks" :key="homework.id" :title="homework.name" @click="router.push(`/curricula/${curriculumId}/courses/${course.id}/homeworks/${homework.id}`)">
           <template #caption>
             <div>
@@ -105,6 +109,16 @@ const showHomeworkAddDialog = () => {
             </div>
           </template>
         </Card>
+      </div>
+      <div v-else>
+        <Card v-for="homework in homeworks" :key="homework.id" :title="homework.name" @click="router.push(`/curricula/${curriculumId}/courses/${course.id}/homeworks/${homework.id}/teacher`)">
+          <template #caption>
+            <div>
+              <p>{{homework.description}}</p>
+            </div>
+          </template>
+        </Card>
+      </div>
 
     </div>
     <div class="flex gap-2">
