@@ -33,7 +33,7 @@ const createPerson = (person) => {
     <div>
         <h1>Пользователи</h1>
         <div class="flex justify-between my-3">
-            <input class="border border-secondary px-4 py-2 rounded-lg" type="text" placeholder="Поиск...">
+            <input class="my-input" type="text" placeholder="Поиск...">
             <div class="flex gap-5">
 <!--                <button class="my-button">Импорт</button>-->
                 <button class="my-button" @click="showAddPersonDialog">Добавить</button>

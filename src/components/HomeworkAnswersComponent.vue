@@ -31,40 +31,40 @@ const Status = {
 
 <template>
   <div v-if="answers && answers.length">
-    <table class="w-full table-fixed border border-secondary bg-bgColor rounded-lg m-2">
+    <table class="w-full rounded-lg overflow-hidden border-collapse shadow-md">
       <thead>
-      <tr>
-        <th>Фамилия</th>
-        <th>Имя</th>
-        <th>Отчество</th>
-        <th>Статус</th>
-        <th>Текст ответа</th>
-        <th>Комментарий</th>
-        <th></th>
+      <tr class="bg-tertiary bg-opacity-75">
+        <th class="my-th">Фамилия</th>
+        <th class="my-th">Имя</th>
+        <th class="my-th">Отчество</th>
+        <th class="my-th">Статус</th>
+        <th class="my-th">Текст ответа</th>
+        <th class="my-th">Комментарий</th>
+        <th class="my-th"></th>
       </tr>
       </thead>
       <tbody>
-      <tr v-for="answer in answers" :key="answer.id">
-        <td>{{ answer.student?.lastName }}</td>
-        <td>{{ answer.student?.firstName }}</td>
-        <td>{{ answer.student?.patronymic }}</td>
-        <td>
+      <tr v-for="answer in answers" :key="answer.id" class="bg-formColor ">
+        <td class="my-td">{{ answer.student?.lastName }}</td>
+        <td class="my-td">{{ answer.student?.firstName }}</td>
+        <td class="my-td">{{ answer.student?.patronymic }}</td>
+        <td class="my-td">
           <select class="my-select w-full" v-model="answer.statusId">
             <option v-for="(value, key) in Status" :key="key" :value="key">{{ value }}</option>
           </select>
         </td>
-        <td class="break-words">{{ answer.text }}</td>
+        <td class="break-words my-td">{{ answer.text }}</td>
         <!--      <td>{{ answer.attachment }}</td>-->
         <!--        <td>{{answer.updatedAt}}</td>-->
-        <td>
+        <td class="my-td">
           <textarea
               v-model="answer.comment"
               placeholder="Введите комментарий..."
               class="my-input min-h-20 w-full"
           />
         </td>
-        <td>
-          <button @click="saveComment(answer)" class="border border-secondary bg-primary px-4 py-2 rounded-lg hover:bg-secondary w-f">
+        <td class="my-td">
+          <button @click="saveComment(answer)" class="my-button-danger">
             Сохранить
           </button>
         </td>

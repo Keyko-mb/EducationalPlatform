@@ -21,11 +21,11 @@ const emitCurriculumData = () => {
   <div class="mt-2 space-y-2">
     <div>
       <p>Название курса</p>
-      <input class="my-input" type="text" id="name" v-model="curriculum.name" value="">
+      <input class="my-input w-1/2" type="text" id="name" v-model="curriculum.name" value="">
     </div>
     <div>
       <p>Описание курса</p>
-      <input class="my-input" type="text" id="caption" v-model="curriculum.description" value="">
+      <textarea class="my-input w-1/2" type="text" id="caption" v-model="curriculum.description"/>
     </div>
     <div>
       <p>Доступность</p>
@@ -34,8 +34,8 @@ const emitCurriculumData = () => {
         <p>Доступно ученикам</p>
       </div>
     </div>
-    <div class="flex gap-5 items-center mt-5">
-      <button class="my-button" @click="emitCurriculumData">Сохранить</button>
+    <div class="flex gap-5 items-center">
+      <button class="my-button mt-5" @click="emitCurriculumData">Сохранить</button>
       <p v-if="isSaved" class="text-secondary">Изменения сохранены</p>
     </div>
   </div>

@@ -36,11 +36,11 @@ const logOut = () => {
         <div class="my-3">
             <div class="space-y-3">
                 <div>
-                    <p class="text-sm text-gray-400">Роль</p>
+                    <p class="text-sm">Роль</p>
                     <p>{{ authStore.userInfo.role }}</p>
                 </div>
                 <div v-if="studentStore.classroomId">
-                    <p class="text-sm text-gray-400">Учебная группа</p>
+                    <p class="text-sm">Учебная группа</p>
                     <p> {{classroomName}} </p>
                 </div>
 

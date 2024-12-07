@@ -24,7 +24,7 @@ const deleteHomework = () => {
 <template>
   <div>
     <HomeworkForm :homework="homework" @saveHomeworkData="editHomework"/>
-    <button class="border border-secondary bg-errColor px-4 py-2 mt-2 rounded-lg hover:drop-shadow-lg" @click="deleteHomework">Удалить</button>
+    <button class="my-button-danger mt-2" @click="deleteHomework">Удалить</button>
   </div>
 </template>
 

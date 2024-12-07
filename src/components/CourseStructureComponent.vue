@@ -85,7 +85,7 @@ const showHomeworkAddDialog = () => {
     <div class="flex gap-2">
       <h1 class="bg-bg">{{ props.course.name }}</h1>
       <EditAndDeleteButtons @deleteClick="emitDeleteCourse" @editClick="showCourseEditDialog"/>
-      <Dialog v-model:show="editCourseDialogVisible">
+      <Dialog v-model:show="editCourseDialogVisible" >
         <CourseForm :course="course" @saveCourseData="editCourse"/>
       </Dialog>
     </div>

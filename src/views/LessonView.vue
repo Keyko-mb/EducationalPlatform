@@ -47,7 +47,7 @@ const deleteLesson = () => {
         <h1>{{ lesson.name }}</h1>
         <div v-if="authStore.userInfo.role === 'ADMIN' || authStore.userInfo.role === 'TEACHER'" class="flex gap-2">
           <button class="my-button" @click="showLessonEditDialog">Редактировать</button>
-          <button class="border border-secondary bg-errColor px-4 py-2 rounded-lg hover:drop-shadow-lg" @click="deleteLesson">Удалить</button>
+          <button class="my-button-danger" @click="deleteLesson">Удалить</button>
         </div>
       </div>
         <h3>{{ lesson.description }}</h3>

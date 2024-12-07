@@ -33,15 +33,15 @@
   :root {
     --font-size: 1em;
     --font-family: Nunito;
-    --primary-color: #B0CCEC;
-    --secondary-color: #6EA1DB;
-    --tertiary-color: #EBF1FA;
-    --form-color: #fff;
-    --text-color: #10202C;
+    --primary-color: #ff8b90;
+    --secondary-color: #a2d2ff;
+    --tertiary-color: #d6d1f0;
+    --form-color: #FFFAFA;
+    --text-color: #001021;
     --error-color: #ff9999;
     --truth-color: #a8ffab;
     --warning-color: #ffda99;
-    --background-color: #F3F7FC;
+    --background-color: #f8f7fd;
   }
 
   body {
@@ -105,10 +105,26 @@
   --background-color: #9dd1ff;
 }
 
+.navbar-text {
+  @apply hover:opacity-75 transition-all
+}
+
 .my-button {
-  @apply border border-secondary bg-primary px-4 py-2 rounded-lg hover:bg-secondary 
+  @apply bg-secondary px-6 py-3 rounded-lg shadow-md transition duration-300 hover:brightness-125;
+}
+
+.my-button-danger {
+  @apply bg-errColor px-6 py-3 rounded-lg shadow-md transition duration-300 hover:brightness-125;
 }
 
 .my-input, .my-select {
-  @apply border border-secondary px-4 py-2 rounded-lg bg-formColor
+  @apply border border-tertiary px-4 py-2 rounded-lg bg-formColor shadow-sm
+}
+
+.my-th {
+  @apply border-b border-tertiary py-2 text-center
+}
+
+.my-td {
+  @apply border-b border-tertiary py-2 text-center
 }

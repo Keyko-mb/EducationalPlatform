@@ -51,23 +51,23 @@ const showClassroomEditDialog = (classroom) => {
 </script>
 
 <template>
-  <div class="flex items-start gap-2">
+  <div class="flex items-start gap-2 mb-5">
       <details class="w-full" open>
         <summary style=" font-size: 1.25em;">{{props.classroom.name}}</summary>
 <!--        <p v-for="person in props.classroom.persons">{{ person.lastName + ' ' + person.firstName + ' ' + person.patronymic }}</p>-->
-        <table class="w-full border border-secondary bg-tertiary rounded-lg m-2">
+        <table class="w-full rounded-lg overflow-hidden border-collapse shadow-md mt-2">
           <thead>
-          <tr>
-            <th>Фамилия</th>
-            <th>Имя</th>
-            <th>Отчество</th>
+          <tr class="bg-tertiary bg-opacity-75 ">
+            <th class="my-th">Фамилия</th>
+            <th class="my-th">Имя</th>
+            <th class="my-th">Отчество</th>
           </tr>
           </thead>
           <tbody>
-          <tr v-for="person in props.classroom.persons" :key="person.id">
-            <td>{{ person.lastName }}</td>
-            <td>{{ person.firstName }}</td>
-            <td>{{ person.patronymic }}</td>
+          <tr v-for="person in props.classroom.persons" :key="person.id" class="bg-formColor">
+            <td class="my-td">{{ person.lastName }}</td>
+            <td class="my-td">{{ person.firstName }}</td>
+            <td class="my-td">{{ person.patronymic }}</td>
           </tr>
           </tbody>
         </table>

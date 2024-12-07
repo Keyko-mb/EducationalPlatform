@@ -17,11 +17,11 @@ const emitCourseData = () => {
     <h1>Раздел</h1>
     <div>
       <p>Название раздела</p>
-      <input class="my-input" type="text" id="name" v-model="course.name" value="">
+      <input class="my-input w-full" type="text" id="name" v-model="course.name" value="">
     </div>
     <div>
       <p>Описание раздела</p>
-      <input class="my-input" type="text" id="caption" v-model="course.description" value="">
+      <textarea class="my-input w-full" type="text" id="caption" v-model="course.description"/>
     </div>
     <div>
       <p>Доступность</p>

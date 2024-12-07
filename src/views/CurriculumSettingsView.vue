@@ -45,11 +45,11 @@ onMounted(() => {
       <button
           v-for="tab in tabs"
           :key="tab.name"
-          :class="['border-t border-l border-r border-secondary px-4 py-2 rounded-t-lg hover:bg-primary bg-tertiary', { active: currentTab.name === tab.name }]"
+          :class="['border-t border-l border-r border-tertiary px-4 py-2 rounded-t-lg hover:brightness-95 bg-formColor', { active: currentTab.name === tab.name }]"
           @click="currentTab = tab">
         {{ tab.name }}
       </button>
-      <component :is="currentTab.component" class="border border-secondary rounded-b-lg bg-tertiary p-5"
+      <component :is="currentTab.component" class="border border-tertiary rounded-b-lg bg-formColor p-5"
                  :curriculum="curriculum"
       ></component>
     </div>
@@ -58,6 +58,6 @@ onMounted(() => {
 
 <style scoped>
 .active {
-  @apply bg-white rounded-t-lg
+  @apply brightness-95 rounded-t-lg
 }
 </style>

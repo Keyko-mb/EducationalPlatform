@@ -10,7 +10,7 @@ const props = defineProps([
 
 
 <template>
-    <div class="border rounded-lg p-3 my-3 border-secondary bg-tertiary cursor-pointer w-1/2 hover:bg-primary">
+    <div class="border border-tertiary rounded-lg p-3 my-3 bg-formColor cursor-pointer w-1/2 hover:brightness-95 transition-all">
 
         <h3>{{title}}</h3>
 

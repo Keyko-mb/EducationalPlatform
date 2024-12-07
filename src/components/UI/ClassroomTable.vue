@@ -16,19 +16,19 @@ const emitDeleteClassroom = () => {
     <div class="flex items-start gap-2">
       <details class="w-full" open>
         <summary style=" font-size: 1.25em;">{{props.classroom.name}}</summary>
-        <table class="w-full border border-secondary bg-tertiary rounded-lg m-2">
+        <table class="w-full rounded-lg overflow-hidden border-collapse shadow-md mt-2">
           <thead>
-          <tr>
-            <th>Фамилия</th>
-            <th>Имя</th>
-            <th>Отчество</th>
+          <tr class="bg-tertiary bg-opacity-75 ">
+            <th class="my-th">Фамилия</th>
+            <th class="my-th">Имя</th>
+            <th class="my-th">Отчество</th>
           </tr>
           </thead>
           <tbody>
-          <tr v-for="user in props.users" :key="user.id">
-            <td>{{ user.lastName }}</td>
-            <td>{{ user.firstName }}</td>
-            <td>{{ user.patronymic }}</td>
+          <tr v-for="user in props.users" :key="user.id" class="bg-formColor">
+            <td class="my-td">{{ user.lastName }}</td>
+            <td class="my-td">{{ user.firstName }}</td>
+            <td class="my-td">{{ user.patronymic }}</td>
           </tr>
           </tbody>
         </table>

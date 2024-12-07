@@ -65,7 +65,7 @@ const isPersonInAnotherClassroom = (person) => {
       </div>
       <div>
         <p>Участники</p>
-        <div class="h-80 w-full border rounded-lg overflow-y-auto p-2 bg-formColor">
+        <div class="h-80 w-full border rounded-lg overflow-y-auto p-2 bg-formColor border-tertiary">
           <div v-for="person in people" :key="person.id">
             <input type="checkbox"
                    :value="person"

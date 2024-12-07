@@ -14,13 +14,14 @@ const emitHomeworkData = () => {
 <template>
   <div>
     <div class="space-y-5">
+      <h1>Урок</h1>
       <div>
         <p>Название</p>
-        <input class="my-input" type="text" id="name" v-model="homework.name">
+        <input class="my-input w-full" type="text" id="name" v-model="homework.name">
       </div>
       <div>
         <p>Описание</p>
-        <input  class="my-input" type="text" id="surname" v-model="homework.description">
+        <textarea class="my-input w-full" type="text" id="surname" v-model="homework.description"/>
       </div>
       <!--    <attachment/>-->
 <!--      <div>-->

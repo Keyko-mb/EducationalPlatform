@@ -1,5 +1,5 @@
 <script setup>
-import {defineEmits, ref, watch} from "vue";
+import {defineEmits, ref} from "vue";
 
 const props = defineProps(['lesson'])
 const lesson = props.lesson ? ref(props.lesson) : ref({})
@@ -12,19 +12,19 @@ const emitLessonData = () => {
 
 <template>
 <div>
-  <div class="my-5 space-y-5">
+  <div class="my-5 space-y-2">
     <h1>Урок</h1>
     <div>
       <p>Название</p>
-      <input class="my-input" type="text" id="name" v-model="lesson.name">
+      <input class="my-input w-full" type="text" id="name" v-model="lesson.name">
     </div>
     <div>
       <p>Описание</p>
-      <input  class="my-input" type="text" id="surname" v-model="lesson.description">
+      <textarea  class="my-input w-full" type="text" id="surname" v-model="lesson.description"/>
     </div>
     <div>
       <p>Текст</p>
-      <input  class="my-input" type="email" id="email" v-model="lesson.content">
+      <textarea class="my-input w-full" type="email" id="email" v-model="lesson.content"/>
     </div>
 <!--    <attachment/>-->
     <div>

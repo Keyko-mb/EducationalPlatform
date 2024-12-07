@@ -41,24 +41,27 @@ const showPersonEditDialog = (person) => {
 </script>
 
 <template>
-  <table class="w-full border border-secondary bg-tertiary rounded-lg">
+  <table class="w-full rounded-lg overflow-hidden border-collapse shadow-md">
     <thead>
-    <tr>
-      <th>Фамилия</th>
-      <th>Имя</th>
-      <th>Отчество</th>
-      <th>Роль</th>
-      <th></th>
+    <tr class="bg-tertiary bg-opacity-75 ">
+      <th class="my-th">Фамилия</th>
+      <th class="my-th">Имя</th>
+      <th class="my-th">Отчество</th>
+      <th class="my-th">Роль</th>
+      <th class="my-th"></th>
     </tr>
     </thead>
     <tbody>
-    <tr v-for="person in props.people" :key="person.id">
-      <td>{{ person.lastName }}</td>
-      <td>{{ person.firstName }}</td>
-      <td>{{ person.patronymic }}</td>
-      <td>{{ person.role }}</td>
-      <td>
-        <EditAndDeleteButtons @deleteClick="deletePerson(person.id)" @editClick="showPersonEditDialog(person)"/>
+    <tr v-for="person in props.people" :key="person.id" class="bg-formColor">
+      <td class="my-td">{{ person.lastName }}</td>
+      <td class="my-td">{{ person.firstName }}</td>
+      <td class="my-td">{{ person.patronymic }}</td>
+      <td class="my-td">{{ person.role }}</td>
+      <td class="my-td">
+        <EditAndDeleteButtons
+            @deleteClick="deletePerson(person.id)"
+            @editClick="showPersonEditDialog(person)"
+        />
       </td>
     </tr>
     </tbody>
@@ -68,12 +71,3 @@ const showPersonEditDialog = (person) => {
     <PersonForm v-if="selectedPerson" :person="selectedPerson" @savePersonData="editPerson"/>
   </Dialog>
 </template>
-
-
-<style>
-th, td {
-  padding: 10px;
-  text-align: center;
-  @apply border-b border-secondary;
-}
-</style>

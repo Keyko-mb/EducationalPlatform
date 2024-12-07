@@ -55,12 +55,12 @@ const makeAccessible = () => {
         <div class="container mx-auto">
             <header class="flex justify-between items-center">
                 <div class="flex space-x-10">
-                    <RouterLink to="/"><h1>МультиЗнайка</h1></RouterLink>
+                    <RouterLink to="/"><h1 class="font-extrabold text-primary hover:brightness-125 transition-all">МультиЗнайка</h1></RouterLink>
                     <div class="flex space-x-10 items-center">
-                      <RouterLink active-class="active" to="/"><h3 class="hover:opacity-50">Главная</h3></RouterLink>
-                      <RouterLink active-class="active" to="/curricula" v-if="authStore.isAuthenticated"><h3 class="hover:opacity-50">Обучение</h3></RouterLink>
-                      <RouterLink active-class="active" to="/people" v-if="authStore.isAuthenticated && authStore.userInfo.role === 'ADMIN'"><h3 class="hover:opacity-50">Пользователи</h3></RouterLink>
-                      <RouterLink active-class="active" to="/classrooms" v-if="authStore.isAuthenticated && authStore.userInfo.role === 'ADMIN'"><h3 class="hover:opacity-50">Учебные группы</h3></RouterLink>
+                      <RouterLink active-class="active" to="/"><h3 class="navbar-text">Главная</h3></RouterLink>
+                      <RouterLink active-class="active" to="/curricula" v-if="authStore.isAuthenticated"><h3 class="navbar-text">Обучение</h3></RouterLink>
+                      <RouterLink active-class="active" to="/people" v-if="authStore.isAuthenticated && authStore.userInfo.role === 'ADMIN'"><h3 class="navbar-text">Пользователи</h3></RouterLink>
+                      <RouterLink active-class="active" to="/classrooms" v-if="authStore.isAuthenticated && authStore.userInfo.role === 'ADMIN'"><h3 class="navbar-text">Учебные группы</h3></RouterLink>
                     </div>
                 </div>
                 <div class="flex items-center gap-20">
@@ -98,6 +98,6 @@ const makeAccessible = () => {
 
 <style>
 .active {
-    @apply underline text-secondary;
+    @apply underline decoration-primary decoration-2
 }
 </style>

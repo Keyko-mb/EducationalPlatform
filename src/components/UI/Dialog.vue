@@ -13,7 +13,7 @@ const emitHideDialog = () => {
 
 <template>
   <div class="bg-black/50 flex fixed inset-x-0 inset-y-0" v-if="show" @click="emitHideDialog">
-    <div @click.stop class="m-auto min-h-14 min-w-80 border border-secondary rounded-lg p-5 bg-tertiary relative">
+    <div @click.stop class="m-auto min-h-14 min-w-96 border border-tertiary rounded-lg p-5 bg-formColor relative">
       <input @click="emitHideDialog"
              type="image"
              alt="close"

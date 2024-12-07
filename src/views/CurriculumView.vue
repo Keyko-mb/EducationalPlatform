@@ -25,13 +25,15 @@ onMounted (() => {
 
 <template>
     <div>
-      <div class="flex justify-between">
-        <h1>{{curriculum.name}}</h1>
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-primary">{{curriculum.name}}</h1>
+          <p>{{ curriculum.description }}</p>
+        </div>
         <button v-if="authStore.userInfo.role === 'ADMIN' || authStore.userInfo.role === 'TEACHER'"
-                class="my-button"
+                class="my-button h-1/2"
                 @click="router.push(`/curricula/${curriculum.id}/settings`)">Настройки курса</button>
       </div>
-      <p>{{ curriculum.description }}</p>
       <CourseComponent v-for="course in courses" :key="course.id" :course="course" />
     </div>
 </template>
