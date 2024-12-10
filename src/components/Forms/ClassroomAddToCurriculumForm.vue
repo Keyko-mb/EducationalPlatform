@@ -23,10 +23,10 @@ const emitAddClassroom = () => {
 </script>
 
 <template>
-  <div class="space-y-2">
+  <div class="my-5 space-y-5">
     <div class="space-y-2">
       <h3>Выберите учебую группу</h3>
-      <select class="border border-tertiary rounded-lg bg-formColor p-2" v-model="newClassroom" id="select_classroom">
+      <select class="w-full border border-tertiary rounded-lg bg-formColor p-2" v-model="newClassroom" id="select_classroom">
         <option selected disabled value="">Выберите учебую группу</option>
         <option v-for="classroom in availableClassrooms" :value="classroom" :key="classroom.id">{{classroom.name}}</option>
       </select>

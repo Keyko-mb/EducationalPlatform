@@ -1,6 +1,7 @@
 <script setup>
 import {useHomeworkStore} from "@/stores/homework.js";
 import {computed} from "vue";
+import Files from "@/components/UI/Files.vue";
 
 const homeworkStore = useHomeworkStore()
 const homework = computed(() => homeworkStore.homework)
@@ -8,13 +9,14 @@ const homework = computed(() => homeworkStore.homework)
 
 <template>
   <div v-if="homework">
-    <div class="flex justify-between">
       <h1>{{ homework.name }}</h1>
-    </div>
-    <div class="my-5">
+    <div class="my-5 space-y-2">
       <h3>{{ homework.description }}</h3>
       <p>{{  homework.text }}</p>
-      <!--          <p v-if="homework.attachment">Вложение: <a :href="homework.attachment">Скачать</a></p>-->
+      <div v-if="homework.attachments">
+        <h3 class="mb-2">Вложения</h3>
+        <Files/>
+      </div>
     </div>
   </div>
 </template>

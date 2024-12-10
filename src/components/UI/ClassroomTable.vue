@@ -26,9 +26,9 @@ const emitDeleteClassroom = () => {
           </thead>
           <tbody>
           <tr v-for="user in props.users" :key="user.id" class="bg-formColor">
-            <td class="my-td">{{ user.lastName }}</td>
+            <td class="my-td border-l border-tertiary">{{ user.lastName }}</td>
             <td class="my-td">{{ user.firstName }}</td>
-            <td class="my-td">{{ user.patronymic }}</td>
+            <td class="my-td border-r border-tertiary">{{ user.patronymic }}</td>
           </tr>
           </tbody>
         </table>

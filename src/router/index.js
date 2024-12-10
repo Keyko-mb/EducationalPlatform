@@ -5,7 +5,6 @@ import StudentHomeworkView from '@/views/StudentHomeworkView.vue'
 import AccountView from '@/views/AccountView.vue'
 import PeopleView from '@/views/PeopleView.vue'
 import LessonView from '@/views/LessonView.vue'
-import CurriculumCreationView from "@/views/CurriculumCreationView.vue";
 import CurriculumSettingsView from "@/views/CurriculumSettingsView.vue";
 import CurriculumView from "@/views/CurriculumView.vue";
 import SignInView from "@/views/SignInView.vue";
@@ -88,15 +87,6 @@ const router = createRouter({
       meta: {
         auth: true,
         roles: [Role.Admin, Role.Teacher]
-      }
-    },
-    {
-      path: '/curricula/create',
-      name: 'createCurriculum',
-      component: CurriculumCreationView,
-      meta: {
-        auth: true,
-        roles: [Role.Admin]
       }
     },
     {

@@ -4,6 +4,7 @@ import {useRoute} from "vue-router";
 import {useHomeworkStore} from "@/stores/homework.js";
 import {useAnswerStore} from "@/stores/answer.js";
 import {useStudentStore} from "@/stores/studentInfo.js";
+import Files from "@/components/UI/Files.vue";
 
 
 // const uploadFile = () => {
@@ -64,9 +65,12 @@ const Status = {
       <div v-else>
         <p class="bg-errColor px-5 py-1 rounded-lg w-fit mt-2"> {{ Status[1] }}</p>
       </div>
-      <div class="my-5">
+      <div class="my-5 space-y-2">
         <p>{{ homework.description }}</p>
-<!--          <p v-if="homework.attachment">Вложение: <a :href="homework.attachment">Скачать</a></p>-->
+        <div v-if="homework.attachments">
+          <h3 class="mb-2">Вложения</h3>
+          <Files/>
+        </div>
       </div>
 
       <div>

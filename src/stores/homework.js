@@ -8,14 +8,14 @@ export const useHomeworkStore = defineStore('homework', {
      }),
 
      actions: {
-         fetchHomework(id) {
-             axios.get(`homeworks/${id}`).then((response) => {
+         async fetchHomework(id) {
+             await axios.get(`homeworks/${id}`).then((response) => {
                  this.homework = response.data
              })
          },
 
-         fetchAnswers(id) {
-             axios.get(`homeworks/${id}/answers`).then((response) => {
+         async fetchAnswers(id) {
+             await axios.get(`homeworks/${id}/answers`).then((response) => {
                  this.answers = response.data
                  if (this.answers.length) {
                      axios
@@ -26,7 +26,7 @@ export const useHomeworkStore = defineStore('homework', {
                                  this.answers = this.answers.map(answer => {
                                      const student = people.find(student => student.id === answer.studentId);
                                      if (student) {
-                                         return { ...answer, student: student || null };
+                                         return {...answer, student: student || null};
                                      }
                                  })
                              }
@@ -52,6 +52,9 @@ export const useHomeworkStore = defineStore('homework', {
              try {
                  axios
                      .delete(`homeworks/${id}`)
+                     .then(() => {
+                         this.homework = null
+                     })
              } catch (error) {
                  console.error("Ошибка при удалении домашнего задания:", error);
              }

@@ -3,7 +3,7 @@ import { defineStore } from 'pinia';
 export const useThemeStore = defineStore('theme', {
   state: () => ({
     theme: '',
-    fontSize: '1em',
+    fontSize: '1rem',
     fontFamily: 'Nunito, sans-serif',
   }),
   actions: {
@@ -15,11 +15,11 @@ export const useThemeStore = defineStore('theme', {
     setFontSize(size) {
       this.fontSize = size;
       if (size === 'normal') {
-        document.documentElement.style.setProperty('--font-size', '1em');
+        document.documentElement.style.setProperty('--font-size', '1rem');
       } else if (size === 'large') {
-        document.documentElement.style.setProperty('--font-size', '1.5em');
+        document.documentElement.style.setProperty('--font-size', '2rem');
       } else if (size === 'xlarge') {
-        document.documentElement.style.setProperty('--font-size', '2em');
+        document.documentElement.style.setProperty('--font-size', '3rem');
       }
     },
     setFontFamily(fontFamily) {

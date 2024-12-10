@@ -19,13 +19,14 @@ const emitCurriculumData = () => {
 
 <template>
   <div class="mt-2 space-y-2">
+    <h1>Учебная программа</h1>
     <div>
       <p>Название курса</p>
-      <input class="my-input w-1/2" type="text" id="name" v-model="curriculum.name" value="">
+      <input class="my-input w-full" type="text" id="name" v-model="curriculum.name" value="">
     </div>
     <div>
       <p>Описание курса</p>
-      <textarea class="my-input w-1/2" type="text" id="caption" v-model="curriculum.description"/>
+      <textarea class="my-input w-full min-h-52" type="text" id="caption" v-model="curriculum.description"/>
     </div>
     <div>
       <p>Доступность</p>

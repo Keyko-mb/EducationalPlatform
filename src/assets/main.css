@@ -2,46 +2,25 @@
 
 @import './base.css';
 
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* @layer components {
-    .theme-classic {
-      @apply text-theme-light-primary border-theme-light-secondary bg-slate-50;
-      
-    }
-  
-    .theme-light {
-      @apply text-theme-light-primary border-theme-light-secondary bg-theme-light-background;
-      
-    }
-  
-    .theme-dark {
-      @apply text-theme-dark-primary border-theme-dark-secondary bg-theme-dark-background;
-      
-    }
-  
-    .theme-blue {
-      @apply text-theme-blue-primary border-theme-blue-secondary bg-theme-blue-background;
-      
-    }
-} */
-
 @layer base {
   :root {
-    --font-size: 1em;
+    --font-size: 1rem;
+    --navbar-font-size: 1rem;
     --font-family: Nunito;
     --primary-color: #ff8b90;
     --secondary-color: #a2d2ff;
     --tertiary-color: #d6d1f0;
-    --form-color: #FFFAFA;
+    --form-color: #FFF;
     --text-color: #001021;
     --error-color: #ff9999;
     --truth-color: #a8ffab;
     --warning-color: #ffda99;
     --background-color: #f8f7fd;
+    --logo-color: #ff8b90;
   }
 
   body {
@@ -50,59 +29,80 @@
     line-height: 1.5;
     background-color: var(--background-color);
     color: var(--text-color);
+    overflow-wrap: break-word;
+    max-width: 100%;
   }
 
   * {
     border-color: inherit;
   }
-  h1 {
-  font-size: 1.5em;
-  }
-  h2 {
-  font-size: 1.25em;
-  }
-  h3 {
-  font-size: 1.125em;
+
+  .navbar {
+    font-size: var(--navbar-font-size);
   }
 
+  .navbar h1 {
+    font-size: calc(1.5 * var(--navbar-font-size)) !important;
+  }
+
+  .navbar h2 {
+    font-size: calc(1.25 * var(--navbar-font-size)) !important;
+  }
+
+  .navbar h3 {
+    font-size: calc(1.125 * var(--navbar-font-size)) !important;
+  }
+
+  .container h1 {
+    font-size: calc(1.5 * var(--font-size));
+  }
+
+  .container h2 {
+    font-size: calc(1.25 * var(--font-size));
+  }
+
+  .container h3 {
+    font-size: calc(1.125 * var(--font-size));
+  }
 }
 
 .theme-light {
   --primary-color: #fff;
-  --secondary-color: #333;
-  --tertiary-color: #fff;
+  --secondary-color: #fff;
+  --tertiary-color: #333;
   --form-color: #fff;
   --text-color: #333;
   --error-color: #fff;
   --truth-color: #fff;
   --warning-color: #fff;
   --background-color: #fff;
-
+  --logo-color: #333;
 }
 
 .theme-dark {
   --primary-color: #333;
-  --secondary-color: #fff;
-  --tertiary-color: #333;
+  --secondary-color: #333;
+  --tertiary-color: #fff;
   --form-color: #333;
   --text-color: #fff;
   --error-color: #333;
   --truth-color: #333;
   --warning-color: #333;
   --background-color: #333;
-
+  --logo-color: #fff;
 }
 
 .theme-blue {
   --primary-color: #9dd1ff;
-  --secondary-color: #063462;
-  --tertiary-color: #9dd1ff;
+  --secondary-color: #9dd1ff;
+  --tertiary-color: #063462;
   --form-color: #9dd1ff;
   --text-color: #333;
   --error-color: #9dd1ff;
   --truth-color: #9dd1ff;
   --warning-color: #9dd1ff;
   --background-color: #9dd1ff;
+  --logo-color: #063462;
 }
 
 .navbar-text {
@@ -110,11 +110,11 @@
 }
 
 .my-button {
-  @apply bg-secondary px-6 py-3 rounded-lg shadow-md transition duration-300 hover:brightness-125;
+  @apply bg-secondary px-6 py-3 rounded-lg shadow-md transition duration-300 hover:brightness-110 border border-tertiary;
 }
 
 .my-button-danger {
-  @apply bg-errColor px-6 py-3 rounded-lg shadow-md transition duration-300 hover:brightness-125;
+  @apply bg-errColor px-6 py-3 rounded-lg shadow-md transition duration-300 hover:brightness-110 border border-tertiary;
 }
 
 .my-input, .my-select {
@@ -127,4 +127,12 @@
 
 .my-td {
   @apply border-b border-tertiary py-2 text-center
+}
+
+.my-file {
+  @apply block w-full file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-secondary file:transition file:duration-300  hover:file:brightness-110
+}
+
+.my-link {
+  @apply hover:opacity-75 transition-all underline px-4 py-1 rounded-lg border border-tertiary;
 }

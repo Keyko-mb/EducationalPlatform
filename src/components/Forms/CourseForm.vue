@@ -21,7 +21,7 @@ const emitCourseData = () => {
     </div>
     <div>
       <p>Описание раздела</p>
-      <textarea class="my-input w-full" type="text" id="caption" v-model="course.description"/>
+      <textarea class="my-input w-full min-h-52" type="text" id="caption" v-model="course.description"/>
     </div>
     <div>
       <p>Доступность</p>

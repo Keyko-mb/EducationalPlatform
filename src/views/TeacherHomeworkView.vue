@@ -1,10 +1,11 @@
 <script setup>
-import {ref, onMounted, shallowRef, computed} from 'vue'
+import {ref, onMounted, shallowRef, computed, onUnmounted} from 'vue'
 import {useRoute} from "vue-router";
 import HomeworkStructure from "@/components/HomeworkStructureComponent.vue";
 import HomeworkAnswers from "@/components/HomeworkAnswersComponent.vue";
 import HomeworkSettings from "@/components/HomeworkSettingsComponent.vue";
 import {useHomeworkStore} from "@/stores/homework.js";
+import {useFilesStore} from "@/stores/files.js";
 
 const tabs = ref([
   {
@@ -24,13 +25,24 @@ const tabs = ref([
 const currentTab = ref(0)
 
 const homeworkStore = useHomeworkStore()
+const filesStore = useFilesStore();
 const homework = computed(() => homeworkStore.homework)
 const homeworkId = useRoute().params.homeworkId
 
 onMounted(async () => {
   await homeworkStore.fetchHomework(homeworkId)
   currentTab.value = tabs.value[0]
+  if (homework.value.attachments) {
+    for (const file of homework.value.attachments) {
+      await filesStore.fetchFile("homeworks", homeworkId, file)
+    }
+    filesStore.refreshFiles();
+  }
 })
+
+onUnmounted(() => {
+  filesStore.clearFiles();
+});
 
 </script>
 

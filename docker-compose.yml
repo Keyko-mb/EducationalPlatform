@@ -1,0 +1,73 @@
+#version: '5.0'
+#services:
+#  frontend:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile  # Ваш Dockerfile для фронтенда
+#    container_name: reserve-frontend
+#    ports:
+#      - "5173:5173"           # Порт, на котором будет доступно ваше фронтенд-приложение
+#    volumes:
+#      - .:/app
+#      - node_modules:/app/node_modules
+#    depends_on:
+#      - spring-server         # Указание на зависимость от сервера
+#    environment:
+#      - VITE_API_URL=http://spring-server:8084
+#    networks:
+#      - app-network
+#
+#  spring-server:
+#    image: astraklaus/reserve-app:reserve  # Docker Hub образ вашего Spring-сервера
+#    container_name: reserve-app
+#    ports:
+#      - "8084:8084"                # Проброс порта сервера наружу
+#    networks:
+#      - app-network
+#    depends_on:
+#      - postgres
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/reserve
+#      SPRING_DATASOURCE_USERNAME: postgres
+#      SPRING_DATASOURCE_PASSWORD: 1234
+#      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+#      SPRING_LIQUIBASE_CHANGELOG: classpath:db/changelog/db.changelog-master.yaml
+#
+#  postgres:
+#    image: postgres:15-alpine
+#    container_name: postgres-db
+#    environment:
+#      POSTGRES_DB: reserve
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: 1234
+#    volumes:
+#      - postgres_data:/var/lib/postgresql/data
+#    networks:
+#      - app-network
+#    ports:
+#      - "5432:5432"
+#
+#  pgadmin:
+#    container_name: pgadmin_recerver
+#    image: dpage/pgadmin4
+#    restart: always
+#    depends_on:
+#      - postgres
+#    environment:
+#      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+#      PGADMIN_DEFAULT_PASSWORD: admin
+#    networks:
+#      - app-network
+#    ports:
+#      - "5050:80"
+#
+#
+#volumes:
+#  node_modules:
+#  postgres_data:
+#    driver: local
+#
+#
+#networks:
+#  app-network:
+#    driver: bridge

@@ -53,11 +53,11 @@ const showPersonEditDialog = (person) => {
     </thead>
     <tbody>
     <tr v-for="person in props.people" :key="person.id" class="bg-formColor">
-      <td class="my-td">{{ person.lastName }}</td>
+      <td class="my-td border-l border-tertiary">{{ person.lastName }}</td>
       <td class="my-td">{{ person.firstName }}</td>
       <td class="my-td">{{ person.patronymic }}</td>
       <td class="my-td">{{ person.role }}</td>
-      <td class="my-td">
+      <td class="my-td border-r border-tertiary">
         <EditAndDeleteButtons
             @deleteClick="deletePerson(person.id)"
             @editClick="showPersonEditDialog(person)"

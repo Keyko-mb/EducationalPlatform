@@ -20,6 +20,7 @@ export default {
         truthColor: "var(--truth-color)",
         warnColor: "var(--warning-color)",
         textColor: "var(--text-color)",
+        logoColor: "var(--logo-color)",
       }
   },
   plugins: [],

@@ -16,23 +16,23 @@ const emitPersonData = () => {
   <div class="my-5 space-y-5">
     <div>
       <p>Имя</p>
-      <input class="my-input" type="text" id="name" v-model="person.firstName">
+      <input class="my-input w-full" type="text" id="name" v-model="person.firstName">
     </div>
     <div>
       <p>Фамилия</p>
-      <input  class="my-input" type="text" id="surname" v-model="person.lastName">
+      <input  class="my-input w-full" type="text" id="surname" v-model="person.lastName">
     </div>
     <div>
       <p>Отчество</p>
-      <input  class="my-input" type="text" id="surname" v-model="person.patronymic">
+      <input  class="my-input w-full" type="text" id="surname" v-model="person.patronymic">
     </div>
     <div>
       <p>Username</p>
-      <input  class="my-input" type="email" id="email" v-model="person.username">
+      <input  class="my-input w-full" type="email" id="email" v-model="person.username">
     </div>
     <div>
       <p>Роль</p>
-      <select class="my-select" id="role" v-model="person.role">
+      <select class="my-select w-full" id="role" v-model="person.role">
         <option>Выберите роль</option>
         <option>STUDENT</option>
         <option>TEACHER</option>

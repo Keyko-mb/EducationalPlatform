@@ -33,7 +33,7 @@ const Status = {
   <div v-if="answers && answers.length">
     <table class="w-full rounded-lg overflow-hidden border-collapse shadow-md">
       <thead>
-      <tr class="bg-tertiary bg-opacity-75">
+      <tr class="bg-tertiary border border-tertiary rounded-t-lg">
         <th class="my-th">Фамилия</th>
         <th class="my-th">Имя</th>
         <th class="my-th">Отчество</th>
@@ -45,7 +45,7 @@ const Status = {
       </thead>
       <tbody>
       <tr v-for="answer in answers" :key="answer.id" class="bg-formColor ">
-        <td class="my-td">{{ answer.student?.lastName }}</td>
+        <td class="my-td border-l border-tertiary">{{ answer.student?.lastName }}</td>
         <td class="my-td">{{ answer.student?.firstName }}</td>
         <td class="my-td">{{ answer.student?.patronymic }}</td>
         <td class="my-td">
@@ -63,7 +63,7 @@ const Status = {
               class="my-input min-h-20 w-full"
           />
         </td>
-        <td class="my-td">
+        <td class="my-td border-r border-tertiary">
           <button @click="saveComment(answer)" class="my-button-danger">
             Сохранить
           </button>

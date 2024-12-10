@@ -61,7 +61,7 @@ const isPersonInAnotherClassroom = (person) => {
     <div class="my-5 space-y-5">
       <div>
         <p>Название группы</p>
-        <input class="my-input" type="text" id="name" v-model="classroom.name">
+        <input class="my-input w-full" type="text" id="name" v-model="classroom.name">
       </div>
       <div>
         <p>Участники</p>
