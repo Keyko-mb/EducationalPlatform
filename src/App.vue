@@ -6,7 +6,7 @@ import {useStudentStore} from "@/stores/studentInfo.js";
 
 const authStore = useAuthStore()
 
-const checkAuth = () => {
+const checkAuth = async () => {
   const userInfo = JSON.parse(localStorage.getItem('userInfo'))
   if (userInfo) {
     authStore.userInfo.id = userInfo.id
@@ -15,7 +15,7 @@ const checkAuth = () => {
     authStore.userInfo.refresh_token = userInfo.refresh_token
 
     const studentStore = useStudentStore()
-    studentStore.initStudent()
+    await studentStore.initStudent()
   }
 }
 

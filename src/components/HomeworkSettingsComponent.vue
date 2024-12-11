@@ -11,12 +11,8 @@ const homework = computed(() => homeworkStore.homework)
 const curriculumId = useRoute().params.curriculumId
 const filesStore = useFilesStore();
 
-const editHomework = async (updatedHomework, newFiles) => {
+const editHomework = async (updatedHomework) => {
   await homeworkStore.updateHomework(homework.value.id, updatedHomework)
-  for (const file of newFiles) {
-    const filename = await filesStore.uploadFile('homeworks', homework.value.id, file);
-    await filesStore.fetchFile('homeworks', homework.value.id, filename);
-  }
   filesStore.refreshFiles();
 }
 

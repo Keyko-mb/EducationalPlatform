@@ -13,7 +13,7 @@ const homework = computed(() => homeworkStore.homework)
     <div class="my-5 space-y-2">
       <h3>{{ homework.description }}</h3>
       <p>{{  homework.text }}</p>
-      <div v-if="homework.attachments">
+      <div v-if="homework.attachments &&homework.attachments.length > 0">
         <h3 class="mb-2">Вложения</h3>
         <Files/>
       </div>

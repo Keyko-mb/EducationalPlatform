@@ -35,8 +35,11 @@ const deleteClassroom = (classroomId) => {
 </script>
 
 <template>
-  <div class="flex flex-col items-end">
-    <button class="my-button my-5" @click="showClassroomAddDialog">Добавить группу</button>
+  <div class="flex flex-col">
+    <div class="flex justify-between items-center mb-5">
+      <h1>Список учебных групп</h1>
+      <button class="my-button" @click="showClassroomAddDialog">Добавить группу</button>
+    </div>
     <ClassroomTable class="w-full mb-5" v-for="classroom in classrooms"
                     :key="classroom.id"
                     :classroom="classroom"

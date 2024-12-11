@@ -57,7 +57,7 @@ const showClassroomEditDialog = (classroom) => {
 <!--        <p v-for="person in props.classroom.persons">{{ person.lastName + ' ' + person.firstName + ' ' + person.patronymic }}</p>-->
         <table class="w-full rounded-lg overflow-hidden border-collapse shadow-md mt-2">
           <thead>
-          <tr class="bg-tertiary bg-opacity-75 ">
+          <tr class="bg-tableColor border border-tertiary bg-opacity-75 ">
             <th class="my-th">Фамилия</th>
             <th class="my-th">Имя</th>
             <th class="my-th">Отчество</th>
@@ -65,9 +65,9 @@ const showClassroomEditDialog = (classroom) => {
           </thead>
           <tbody>
           <tr v-for="person in props.classroom.persons" :key="person.id" class="bg-formColor">
-            <td class="my-td">{{ person.lastName }}</td>
+            <td class="my-td border-l border-tertiary">{{ person.lastName }}</td>
             <td class="my-td">{{ person.firstName }}</td>
-            <td class="my-td">{{ person.patronymic }}</td>
+            <td class="my-td border-r border-tertiary">{{ person.patronymic }}</td>
           </tr>
           </tbody>
         </table>

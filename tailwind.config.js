@@ -21,6 +21,7 @@ export default {
         warnColor: "var(--warning-color)",
         textColor: "var(--text-color)",
         logoColor: "var(--logo-color)",
+        tableColor: "var(--table-color)",
       }
   },
   plugins: [],

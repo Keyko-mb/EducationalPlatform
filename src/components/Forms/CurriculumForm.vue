@@ -12,7 +12,10 @@ const isSaved = ref(false)
 
 const emitCurriculumData = () => {
   emit('saveCurriculumData', curriculum.value)
-  isSaved.value = true
+  isSaved.value = true;
+  setTimeout(() => {
+    isSaved.value = false;
+  }, 3000);
 }
 
 </script>
@@ -37,7 +40,7 @@ const emitCurriculumData = () => {
     </div>
     <div class="flex gap-5 items-center">
       <button class="my-button mt-5" @click="emitCurriculumData">Сохранить</button>
-      <p v-if="isSaved" class="text-secondary">Изменения сохранены</p>
+      <p v-if="isSaved" class="opacity-80">Изменения сохранены</p>
     </div>
   </div>
 </template>

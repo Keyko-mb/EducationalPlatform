@@ -35,9 +35,9 @@ export const useHomeworkStore = defineStore('homework', {
              })
          },
 
-         updateHomework(id, updatedHomework) {
+         async updateHomework(id, updatedHomework) {
              try {
-                 axios
+                 await axios
                      .put(`homeworks/${id}`, updatedHomework)
                      .then((response) => {
                          this.homework = response.data
@@ -58,6 +58,11 @@ export const useHomeworkStore = defineStore('homework', {
              } catch (error) {
                  console.error("Ошибка при удалении домашнего задания:", error);
              }
+         },
+
+         clearHomework() {
+             this.answers = []
+             this.homework = null
          }
      }
  })

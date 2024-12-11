@@ -33,15 +33,11 @@ const showLessonEditDialog = () => {
   editLessonDialogVisible.value = true;
 }
 
-const editLesson = (updatedLesson, newFiles) => {
+const editLesson = (updatedLesson) => {
   axios
       .put(`lessons/${lesson.value.id}`, updatedLesson)
       .then(async (response) => {
         lesson.value = response.data
-        for (const file of newFiles) {
-          const filename = await filesStore.uploadFile('lessons', lessonId, file);
-          await filesStore.fetchFile('lessons', lessonId, filename);
-        }
         filesStore.refreshFiles();
       })
   editLessonDialogVisible.value = false
@@ -75,7 +71,7 @@ onUnmounted(() => {
       <div class="my-5">
           <p>{{lesson.content}}</p>
       </div>
-      <div v-if="lesson.attachments">
+      <div v-if="lesson.attachments && lesson.attachments.length > 0">
         <h3 class="mb-2">Вложения</h3>
         <Files/>
       </div>

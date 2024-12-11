@@ -1,6 +1,6 @@
 <script setup>
 
-import {onMounted, ref} from 'vue';
+import {computed, onMounted, ref} from 'vue';
 import Card from '../components/UI/Card.vue'
 import {useRouter} from "vue-router";
 import {useCurriculaStore} from "@/stores/curricula.js";
@@ -12,12 +12,10 @@ import CurriculumForm from "@/components/Forms/CurriculumForm.vue";
 const curriculaStore = useCurriculaStore();
 const authStore = useAuthStore()
 const studentStore = useStudentStore()
-const curriculum = ref({})
+const studentCurriculum = computed(() => studentStore.curriculumId);
 
-onMounted (() => {
-  if (authStore.userInfo.role === "STUDENT") {
-    curriculum.value = studentStore.curriculumId
-  } else {
+onMounted (async () => {
+  if (authStore.userInfo.role !== "STUDENT") {
     curriculaStore.fetchCurricula();
   }
 })
@@ -62,13 +60,13 @@ const addCurriculum = (curriculum) => {
 
           </div>
           <div v-else>
-            <div v-if="curriculum">
-              <Card :key="curriculum.id"
-                    @click="router.push(`/curricula/${curriculum.id}`)"
-                    :title="curriculum.name">
+            <div v-if="studentCurriculum">
+              <Card :key="studentCurriculum.id"
+                    @click="router.push(`/curricula/${studentCurriculum.id}`)"
+                    :title="studentCurriculum.name">
                 <template #caption>
                   <div>
-                    <p>{{ curriculum.description }}</p>
+                    <p>{{ studentCurriculum.description }}</p>
                   </div>
                 </template>
               </Card>

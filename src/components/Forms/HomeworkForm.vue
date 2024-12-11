@@ -9,15 +9,28 @@ const filesStore = useFilesStore();
 const files = ref(filesStore.decodedFiles);
 const newFiles = ref([]);
 const fileInput = ref(null);
-const isSaved = ref(false)
+const removedFiles = ref([]);
+const isSaved = ref(false);
 
-const emitHomeworkData = () => {
-  emit('saveHomeworkData', homework.value, newFiles.value)
-  isSaved.value = true
-  if (fileInput.value) {
-    fileInput.value.value = "";
-    newFiles.value = [];
+const emitHomeworkData = async () => {
+  for (const file of removedFiles.value) {
+    await filesStore.deleteFile('homeworks', homework.value.id, file.name);
+    homework.value.attachments = homework.value.attachments.filter(f => f !== file.name);
   }
+  for (const file of newFiles.value) {
+    const filename = await filesStore.uploadFile('homeworks', homework.value.id, file);
+    await filesStore.fetchFile('homeworks', homework.value.id, filename);
+    homework.value.attachments.push(filename);
+  }
+  filesStore.refreshFiles();
+  emit('saveHomeworkData', homework.value, newFiles.value)
+  fileInput.value.value = "";
+  newFiles.value = [];
+  removedFiles.value = [];
+  isSaved.value = true;
+  setTimeout(() => {
+    isSaved.value = false;
+  }, 3000);
 }
 
 const handleFileUpload = (event) => {
@@ -26,10 +39,8 @@ const handleFileUpload = (event) => {
 
 const removeFile = (file) => {
   try {
-    filesStore.deleteFile('homeworks', homework.value.id, file.name);
     files.value = Object.values(files.value).filter(f => f.name !== file.name);
-    homework.value.attachments = homework.value.attachments.filter(f => f !== file.name);
-    filesStore.refreshFiles();
+    removedFiles.value.push(file);
   } catch (error) {
     console.error('Ошибка при удалении вложения:', error);
   }
@@ -38,8 +49,8 @@ const removeFile = (file) => {
 
 <template>
   <div>
-    <div>
-      <h1>Урок</h1>
+    <div class="my-5">
+      <h1>Домашнее задание</h1>
       <div class="my-5">
         <label for="name">Название</label>
         <input class="my-input w-full" type="text" id="name" v-model="homework.name">
@@ -93,8 +104,8 @@ const removeFile = (file) => {
       </div>
     </div>
     <div class="flex gap-5 items-center mt-5">
-      <button class="my-button" @click="emitHomeworkData">Сохранить</button>
-      <p v-if="isSaved">Изменения сохранены</p>
+      <button class="my-button active:bg-tertiary" @click="emitHomeworkData">Сохранить</button>
+      <p v-if="isSaved" class="opacity-80">Изменения сохранены</p>
     </div>
   </div>
 </template>

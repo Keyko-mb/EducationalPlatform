@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { useThemeStore } from '../../stores/theme.js';
+import { useThemeStore } from '@/stores/theme.js';
 
 const themeStore = useThemeStore();
 
@@ -32,21 +32,21 @@ const setTheme = (theme) => {
             Размер шрифта
             <div class="flex space-x-4 ">
                 <button
-                    class="w-8 h-8 flex items-center justify-center border cursor-pointer"
+                    class="w-8 h-8 flex items-center justify-center border border-tertiary cursor-pointer"
                     title="Обычный"
                     @click="setFontSize('normal')"
                     >
                         <p class="text-base">A</p>
                 </button>
                 <button
-                    class="w-8 h-8 flex items-center justify-center border cursor-pointer"
+                    class="w-8 h-8 flex items-center justify-center border border-tertiary cursor-pointer"
                     title="Увеличенный"
                     @click="setFontSize('large')"
                     >
                         <p class="text-2xl">A</p>
                 </button>
                 <button
-                    class="w-8 h-8 flex items-center justify-center border cursor-pointer"
+                    class="w-8 h-8 flex items-center justify-center border border-tertiary cursor-pointer"
                     title="Большой"
                     @click="setFontSize('xlarge')"
                     >
@@ -68,21 +68,21 @@ const setTheme = (theme) => {
             Цвет сайта
             <div class="flex space-x-4">
                 <label
-                  class="w-8 h-8 bg-white border cursor-pointer"
+                  class="w-8 h-8 bg-white border cursor-pointer border-tertiary"
                   title="Светлая тема"
                   @click="setTheme('light')"
                 >
                     <input type="radio" name="theme" class="hidden" />
                 </label>
                 <label
-                  class="w-8 h-8 bg-black border cursor-pointer"
+                  class="w-8 h-8 bg-black border cursor-pointer border-tertiary"
                   title="Темная тема"
                   @click="setTheme('dark')"
                 >
                     <input type="radio" name="theme" class="hidden" />
                 </label>
                 <label
-                  class="w-8 h-8 border cursor-pointer"
+                  class="w-8 h-8 border cursor-pointer border-tertiary"
                   style="background-color: #9DD1FF;"
                   title="Голубая тема"
                   @click="setTheme('blue')"

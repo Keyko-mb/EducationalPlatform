@@ -1,8 +1,12 @@
 <script setup>
 import {useFilesStore} from "@/stores/files.js";
 import {computed} from "vue";
+import {useAnswerStore} from "@/stores/answer.js";
 
-const filesStore = useFilesStore();
+const props = defineProps({
+  flag: String
+})
+const filesStore = props.flag === 'answer' ? useAnswerStore() : useFilesStore();
 const images = computed(() => filesStore.images);
 const links = computed(() => filesStore.links);
 </script>
@@ -13,7 +17,7 @@ const links = computed(() => filesStore.links);
       <div
           v-for="(file, index) in images"
           :key="'image-' + index"
-          class="max-w-60 text-center">
+          class="max-w-96 text-center">
         <img :src="file.url" alt="Изображение" class="shadow-md"/>
       </div>
     </div>
@@ -29,9 +33,9 @@ const links = computed(() => filesStore.links);
       </div>
     </div>
 
-    <div v-if="!images.length && !links.length">
-      Нет вложений
-    </div>
+<!--    <div v-if="!images.length && !links.length">-->
+<!--      Нет вложений-->
+<!--    </div>-->
   </div>
 </template>
 

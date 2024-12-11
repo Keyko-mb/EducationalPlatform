@@ -5,36 +5,47 @@ import {useStudentStore} from "@/stores/studentInfo.js";
 
 export const useAnswerStore = defineStore('answer', {
     state: () => ({
-        answer: null
+        answer: null,
+        decodedFiles: [],
+        images: [],
+        links: [],
     }),
 
     actions: {
         fetchAnswer(homeworkId) {
             const studentStore = useStudentStore()
-
-            // const homeworkStore = useHomeworkStore();
-            // homeworkStore.fetchAnswers(homeworkId)
-            // const answerIndex = homeworkStore.answers.find(answer => answer.studentId === studentStore.studentId);
-
             axios
                 .get(`people/${studentStore.studentId}/answer`)
-                .then((response) => {
+                .then(async (response) => {
                     const answers = response.data
                     if (answers) {
                         const studentAnswer = answers.find(answer => answer.homeworkId === homeworkId);
                         if (studentAnswer) {
                             this.answer = studentAnswer
+                            if (studentAnswer.attachments) {
+                                for (const file of studentAnswer.attachments) {
+                                    await this.fetchFile(studentAnswer.id, file)
+                                }
+                                this.refreshFiles()
+                            }
                         }
                     }
                 })
         },
 
-        submitAnswer(answer) {
+        submitAnswer(answer, newFiles) {
             axios
                 .post('answers', answer)
-                .then((response) => {
+                .then(async (response) => {
                     this.answer = response.data
+                    for (const file of newFiles) {
+                        const filename = await this.uploadFile(this.answer.id, file);
+                        await this.fetchFile(this.answer.id, filename);
+                        this.answer.attachments.push(filename);
+                    }
+                    this.refreshFiles()
                 })
+
         },
 
         updateAnswer(id, updatedAnswer) {
@@ -42,6 +53,7 @@ export const useAnswerStore = defineStore('answer', {
                 .put(`answers/${id}`, updatedAnswer)
                 .then((response) => {
                     this.answer = response.data
+                    console.log(this.decodedFiles);
                 })
         },
 
@@ -59,6 +71,64 @@ export const useAnswerStore = defineStore('answer', {
             } catch (error) {
                 console.error("Ошибка при обновлении комментария:", error);
             }
-        }
+        },
+
+        async fetchFile(id, file) {
+            try {
+                const response = await axios.get(`answers/${id}/attachments/${file}`, {
+                    responseType: "blob",
+                });
+                const contentType = response.headers["content-type"];
+                const fileURL = URL.createObjectURL(response.data);
+
+                this.decodedFiles.push({
+                    name: file,
+                    url: fileURL,
+                    type: contentType,
+                });
+            } catch (error) {
+                console.error("Ошибка при загрузке файла:", error);
+            }
+        },
+
+        async uploadFile(id, file) {
+            const formData = new FormData();
+            formData.append('image', file);
+            try {
+                const response = await axios.post(`answers/${id}/attachments`, formData)
+                return response.data;
+            } catch (error) {
+                console.error("Ошибка при загрузке вложения:", error);
+            }
+        },
+
+        refreshFiles() {
+            this.decodedFiles.sort((a, b) => {
+                const isImageA = a.type.startsWith('image/');
+                const isImageB = b.type.startsWith('image/');
+                if (isImageA && !isImageB) return -1;
+                if (!isImageA && isImageB) return 1;
+                return 0;
+            });
+            this.images = this.decodedFiles.filter(
+                (file) => file.type && file.type.startsWith("image/")
+            );
+            this.links = this.decodedFiles.filter(
+                (file) => file.type && !file.type.startsWith("image/")
+            );
+        },
+
+        async deleteFile(id, file) {
+            await axios.delete(`answers/${id}/attachments/${file}`);
+            this.decodedFiles = this.decodedFiles.filter((f) => f.name !== file);
+            console.log(this.decodedFiles);
+        },
+
+        clearAnswer() {
+            this.answer = null
+            this.decodedFiles = [];
+            this.images = [];
+            this.links = [];
+        },
     }
 })

@@ -27,7 +27,7 @@ onMounted (() => {
     <div>
       <div class="flex justify-between items-center">
         <div>
-          <h1 class="text-primary">{{curriculum.name}}</h1>
+          <h1 class="text-logoColor">{{curriculum.name}}</h1>
           <p>{{ curriculum.description }}</p>
         </div>
         <button v-if="authStore.userInfo.role === 'ADMIN' || authStore.userInfo.role === 'TEACHER'"

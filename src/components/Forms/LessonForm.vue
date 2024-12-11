@@ -8,9 +8,22 @@ const emit = defineEmits(['saveLessonData'])
 const filesStore = useFilesStore();
 const files = ref(filesStore.decodedFiles);
 const newFiles = ref([]);
+const removedFiles = ref([]);
 
-const emitLessonData = () => {
-  emit('saveLessonData', lesson.value, newFiles.value)
+const emitLessonData = async () => {
+  for (const file of removedFiles.value) {
+    await filesStore.deleteFile('lessons', lesson.value.id, file.name);
+    lesson.value.attachments = lesson.value.attachments.filter(f => f !== file.name);
+  }
+  for (const file of newFiles.value) {
+    const filename = await filesStore.uploadFile('lessons', lesson.value.id, file);
+    await filesStore.fetchFile('lessons', lesson.value.id, filename);
+    lesson.value.attachments.push(filename);
+  }
+  filesStore.refreshFiles();
+  emit('saveLessonData', lesson.value, newFiles.value);
+  newFiles.value = [];
+  removedFiles.value = [];
 }
 
 const handleFileUpload = (event) => {
@@ -19,10 +32,8 @@ const handleFileUpload = (event) => {
 
 const removeFile = (file) => {
   try {
-    filesStore.deleteFile('lessons', lesson.value.id, file.name);
     files.value = Object.values(files.value).filter(f => f.name !== file.name);
-    lesson.value.attachments = lesson.value.attachments.filter(f => f !== file.name);
-    filesStore.refreshFiles();
+    removedFiles.value.push(file);
   } catch (error) {
       console.error('Ошибка при удалении вложения:', error);
   }

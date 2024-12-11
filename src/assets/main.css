@@ -21,6 +21,7 @@
     --warning-color: #ffda99;
     --background-color: #f8f7fd;
     --logo-color: #ff8b90;
+    --table-color: #d6d1f0;
   }
 
   body {
@@ -77,6 +78,7 @@
   --warning-color: #fff;
   --background-color: #fff;
   --logo-color: #333;
+  --table-color: #fff;
 }
 
 .theme-dark {
@@ -90,6 +92,7 @@
   --warning-color: #333;
   --background-color: #333;
   --logo-color: #fff;
+  --table-color: #333;
 }
 
 .theme-blue {
@@ -103,6 +106,7 @@
   --warning-color: #9dd1ff;
   --background-color: #9dd1ff;
   --logo-color: #063462;
+  --table-color: #9dd1ff;
 }
 
 .navbar-text {
@@ -130,7 +134,7 @@
 }
 
 .my-file {
-  @apply block w-full file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-secondary file:transition file:duration-300  hover:file:brightness-110
+  @apply block w-full file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-2 file:border-tertiary file:bg-tableColor file:transition file:duration-300  hover:file:brightness-110
 }
 
 .my-link {

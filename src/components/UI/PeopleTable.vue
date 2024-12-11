@@ -43,7 +43,7 @@ const showPersonEditDialog = (person) => {
 <template>
   <table class="w-full rounded-lg overflow-hidden border-collapse shadow-md">
     <thead>
-    <tr class="bg-tertiary bg-opacity-75 ">
+    <tr class="bg-tableColor bg-opacity-75 border border-tertiary">
       <th class="my-th">Фамилия</th>
       <th class="my-th">Имя</th>
       <th class="my-th">Отчество</th>
