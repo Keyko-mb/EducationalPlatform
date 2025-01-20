@@ -7,6 +7,9 @@ const emit = defineEmits(['saveCourseData'])
 
 
 const emitCourseData = () => {
+  if (!course.value.access) {
+    course.value.access = false
+  }
   emit('saveCourseData', course.value)
 }
 

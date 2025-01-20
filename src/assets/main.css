@@ -140,3 +140,7 @@
 .my-link {
   @apply hover:opacity-75 transition-all underline px-4 py-1 rounded-lg border border-tertiary;
 }
+
+.table-page {
+  overflow-y: scroll;
+}

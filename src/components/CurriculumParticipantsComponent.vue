@@ -40,11 +40,14 @@ const deleteClassroom = (classroomId) => {
       <h1>Список учебных групп</h1>
       <button class="my-button" @click="showClassroomAddDialog">Добавить группу</button>
     </div>
-    <ClassroomTable class="w-full mb-5" v-for="classroom in classrooms"
+    <ClassroomTable v-if="classrooms.length > 0" class="w-full mb-5" v-for="classroom in classrooms"
                     :key="classroom.id"
                     :classroom="classroom"
                     :users="classroom.persons"
                     @deleteClassroom="deleteClassroom"/>
+    <div v-else>
+      <p>Учебные группы отсутствуют</p>
+    </div>
     <Dialog v-model:show="addClassroomDialogVisible">
       <ClassroomAddToCurriculumForm :currentClassrooms="classrooms" @addClassroom = "addClassroom"/>
     </Dialog>

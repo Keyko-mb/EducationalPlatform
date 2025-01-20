@@ -1,9 +1,5 @@
 <script setup>
-
 import {ref, defineEmits} from "vue";
-import {useRouter} from "vue-router";
-
-const router = useRouter()
 
 const props = defineProps(['curriculum'])
 const curriculum = ref({ ...props.curriculum });
@@ -11,6 +7,9 @@ const emit = defineEmits(['saveCurriculumData'])
 const isSaved = ref(false)
 
 const emitCurriculumData = () => {
+  if (!curriculum.value.access) {
+    curriculum.value.access = false
+  }
   emit('saveCurriculumData', curriculum.value)
   isSaved.value = true;
   setTimeout(() => {

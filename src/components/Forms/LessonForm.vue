@@ -11,6 +11,9 @@ const newFiles = ref([]);
 const removedFiles = ref([]);
 
 const emitLessonData = async () => {
+  if (!lesson.value.access) {
+    lesson.value.access = false
+  }
   for (const file of removedFiles.value) {
     await filesStore.deleteFile('lessons', lesson.value.id, file.name);
     lesson.value.attachments = lesson.value.attachments.filter(f => f !== file.name);
@@ -94,7 +97,7 @@ const removeFile = (file) => {
              class="my-file">
     </div>
     <div class="my-5">
-      <label for="access" class="form-label">Текст</label>
+      <label for="access" class="form-label">Доступность</label>
       <div class="flex gap-1">
         <input type="checkbox" id="access" v-model="lesson.access"/>
         <p>Доступно ученикам</p>

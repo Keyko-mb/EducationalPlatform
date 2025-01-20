@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import axios from "axios";
 import {useRoute} from "vue-router";
 import CourseComponent from "@/components/CourseComponent.vue";
@@ -21,6 +21,15 @@ onMounted (() => {
   })
 })
 
+const filteredCourses = computed(() => {
+  return courses.value.filter(course => {
+    if (authStore.userInfo.role === 'STUDENT') {
+      return course.access;
+    }
+    return true;
+  });
+});
+
 </script>
 
 <template>
@@ -29,11 +38,12 @@ onMounted (() => {
         <div>
           <h1 class="text-logoColor">{{curriculum.name}}</h1>
           <p>{{ curriculum.description }}</p>
+          <p v-if="!curriculum.access" class="bg-warnColor px-5 rounded-lg w-fit">Скрыто</p>
         </div>
         <button v-if="authStore.userInfo.role === 'ADMIN' || authStore.userInfo.role === 'TEACHER'"
                 class="my-button h-1/2"
                 @click="router.push(`/curricula/${curriculum.id}/settings`)">Настройки курса</button>
       </div>
-      <CourseComponent v-for="course in courses" :key="course.id" :course="course" />
+      <CourseComponent v-for="course in filteredCourses" :key="course.id" :course="course" />
     </div>
 </template>

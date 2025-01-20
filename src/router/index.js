@@ -12,6 +12,8 @@ import {useAuthStore} from "@/stores/auth.js";
 import ClassroomsView from "@/views/ClassroomsView.vue";
 import AccessDeniedView from "@/views/AccessDeniedView.vue";
 import TeacherHomeworkView from "@/views/TeacherHomeworkView.vue";
+import {useCurriculaStore} from "@/stores/curricula.js";
+import {useMaterialsStore} from "@/stores/materials.js";
 
 const Role = {
   Admin: 'ADMIN',
@@ -130,17 +132,80 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
   if (to.meta.auth && !authStore.userInfo.token) {
     next('/signIn')
-  }else if (to.name === 'signIn' && authStore.userInfo.token) {
-    next('/')
-  } else if (to.meta.roles && !to.meta.roles.includes(authStore.userInfo.role)) {
-    next('/access-denied');
-  } else {
-    next()
+    return;
   }
+  if (to.name === 'signIn' && authStore.userInfo.token) {
+    next('/')
+    return;
+  }
+  if (to.meta.roles && !to.meta.roles.includes(authStore.userInfo.role)) {
+    next('/access-denied');
+    return;
+  }
+  const curriculaStore = useCurriculaStore();
+  const materialsStore = useMaterialsStore();
+
+  if (to.path.startsWith('/curricula/')) {
+    if (curriculaStore.curricula.length < 1) {
+      await curriculaStore.fetchCurricula();
+    }
+
+    const curriculumId = to.params.id || to.params.curriculumId;
+    const curriculum = curriculaStore.curricula.find(curriculum => curriculum.id.toString() === curriculumId);
+
+    if (!curriculum || (authStore.userInfo.role === 'STUDENT' && !curriculum.access)) {
+      next('/access-denied');
+      return;
+    }
+  }
+
+  if (to.path.includes('/courses/')) {
+    if (materialsStore.courses.length < 1) {
+      await materialsStore.fetchCourses();
+    }
+
+    const courseId = to.params.courseId;
+    const course = materialsStore.courses.find(course => course.id.toString() === courseId);
+
+    if (!course || (authStore.userInfo.role === 'STUDENT' && !course.access)) {
+      next('/access-denied');
+      return;
+    }
+  }
+
+  if (to.path.includes('/lessons/')) {
+    if (materialsStore.lessons.length < 1) {
+      await materialsStore.fetchLessons();
+    }
+
+    const lessonId = to.params.lessonId;
+    const lesson = materialsStore.lessons.find(lesson => lesson.id.toString() === lessonId);
+
+    if (!lesson || (authStore.userInfo.role === 'STUDENT' && !lesson.access)) {
+      next('/access-denied');
+      return;
+    }
+  }
+
+  if (to.path.includes('/homeworks/')) {
+    if (materialsStore.homeworks.length < 1) {
+      await materialsStore.fetchHomeworks();
+    }
+
+    const homeworkId = to.params.homeworkId;
+    const homework = materialsStore.homeworks.find(hw => hw.id.toString() === homeworkId);
+
+    if (!homework || (authStore.userInfo.role === 'STUDENT' && !homework.access)) {
+      next('/access-denied');
+      return;
+    }
+  }
+
+  next();
 })
 
 export default router

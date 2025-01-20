@@ -90,35 +90,27 @@ const showHomeworkAddDialog = () => {
       </Dialog>
     </div>
     <p>{{ props.course.description }}</p>
+    <p v-if="!props.course.access" class="bg-warnColor px-5 rounded-lg w-fit">Скрыто</p>
     <div class="cards-container space-y-3">
 
       <Card v-for="lesson in lessons" :key="lesson.id" :title="lesson.name" @click="router.push(`/curricula/${curriculumId}/courses/${course.id}/lessons/${lesson.id}`)">
         <template #caption>
           <div>
             <p>{{ lesson.description }}</p>
+            <p v-if="!lesson.access" class="bg-warnColor px-5 rounded-lg w-fit">Скрыто</p>
           </div>
         </template>
       </Card>
 
+      <Card v-for="homework in homeworks" :key="homework.id" :title="homework.name" @click="router.push(`/curricula/${curriculumId}/courses/${course.id}/homeworks/${homework.id}/teacher`)">
+        <template #caption>
+          <div>
+            <p>{{homework.description}}</p>
+            <p v-if="!homework.access" class="bg-warnColor px-5 rounded-lg w-fit">Скрыто</p>
+          </div>
+        </template>
+      </Card>
 
-      <div v-if="authStore.userInfo.role === 'STUDENT'">
-        <Card v-for="homework in homeworks" :key="homework.id" :title="homework.name" @click="router.push(`/curricula/${curriculumId}/courses/${course.id}/homeworks/${homework.id}`)">
-          <template #caption>
-            <div>
-              <p>{{homework.description}}</p>
-            </div>
-          </template>
-        </Card>
-      </div>
-      <div v-else>
-        <Card v-for="homework in homeworks" :key="homework.id" :title="homework.name" @click="router.push(`/curricula/${curriculumId}/courses/${course.id}/homeworks/${homework.id}/teacher`)">
-          <template #caption>
-            <div>
-              <p>{{homework.description}}</p>
-            </div>
-          </template>
-        </Card>
-      </div>
 
     </div>
     <div class="flex gap-2">

@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref} from "vue";
+import {computed, onMounted, onUnmounted, ref} from "vue";
 import axios from "axios";
 import Dialog from "@/components/UI/Dialog.vue";
 import PersonForm from "@/components/Forms/PersonForm.vue";
@@ -12,8 +12,13 @@ const addPersonDialogVisible = ref(false)
 const fileInput = ref(null);
 
 onMounted(async () => {
-  await loadPeople()
+  await loadPeople();
+  document.body.classList.add('table-page');
 })
+
+onUnmounted(() => {
+  document.body.classList.remove('table-page');
+});
 
 const loadPeople = async () => {
   axios.get('people').then((response) => {
@@ -85,13 +90,26 @@ const exportPeople = async () => {
     console.error("Ошибка при экспорте файла:", error);
   }
 }
+
+const searchQuery = ref('');
+
+const filteredPeople = computed(() => {
+  return people.value.filter(person =>
+      person.lastName.toLowerCase().startsWith(searchQuery.value.toLowerCase())
+  );
+});
 </script>
 
 <template>
     <div>
         <h1>Пользователи</h1>
         <div class="flex justify-between my-3">
-            <input class="my-input" type="text" placeholder="Поиск...">
+          <input
+              type="text"
+              v-model="searchQuery"
+              class="my-input"
+              placeholder="Поиск по фамилии..."
+          />
             <div class="flex gap-5">
               <button class="my-button bg-primary" @click="showAddPersonDialog">Добавить</button>
               <input type="file" @change="importPeople" accept=".xlsx" ref="fileInput" style="display: none" />
@@ -99,7 +117,8 @@ const exportPeople = async () => {
               <button class="my-button" @click="exportPeople">Экспорт</button>
             </div>
         </div>
-        <PeopleTable :people="people"/>
+        <PeopleTable v-if="filteredPeople.length > 0" :people="filteredPeople"/>
+        <p v-else>Пользователи не найдены</p>
     </div>
 
     <div>

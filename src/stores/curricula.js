@@ -6,10 +6,13 @@ export const useCurriculaStore = defineStore('curricula', {
         curricula: [],
     }),
     actions: {
-        fetchCurricula() {
-            axios.get('curricula').then((response) => {
-                this.curricula = response.data
-            })
+        async fetchCurricula() {
+            try {
+                const response = await axios.get('curricula');
+                this.curricula = response.data;
+            } catch (error) {
+                console.error('Ошибка загрузки учебных программ:', error);
+            }
         },
         addCurriculum(curriculum) {
             axios
