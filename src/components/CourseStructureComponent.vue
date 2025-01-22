@@ -46,6 +46,7 @@ const editCourse = (updatedCourse) => {
 }
 
 const addLesson = (lesson) => {
+  lesson.courseId = props.course.id
   axios
       .post("lessons", lesson)
       .then((response) => {
@@ -57,6 +58,7 @@ const addLesson = (lesson) => {
 }
 
 const addHomework = (homework) => {
+  homework.courseId = props.course.id
   axios
       .post("homeworks", homework)
       .then((response) => {

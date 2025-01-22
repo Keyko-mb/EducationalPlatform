@@ -55,7 +55,7 @@ const showClassroomEditDialog = (classroom) => {
       <details class="w-full" open>
         <summary style=" font-size: 1.25em;">{{props.classroom.name}}</summary>
 <!--        <p v-for="person in props.classroom.persons">{{ person.lastName + ' ' + person.firstName + ' ' + person.patronymic }}</p>-->
-        <table class="w-full rounded-lg overflow-hidden border-collapse shadow-md mt-2">
+        <table v-if="props.classroom.persons.length > 0" class="w-full rounded-lg overflow-hidden border-collapse shadow-md mt-2">
           <thead>
           <tr class="bg-tableColor border border-tertiary bg-opacity-75 ">
             <th class="my-th">Фамилия</th>
@@ -71,6 +71,7 @@ const showClassroomEditDialog = (classroom) => {
           </tr>
           </tbody>
         </table>
+        <p class="mt-2" v-else>Группа пуста</p>
       </details>
     <EditAndDeleteButtons @deleteClick="emitDeleteClassroom" @editClick="showClassroomEditDialog(classroom)" class="mt-1"/>
   </div>

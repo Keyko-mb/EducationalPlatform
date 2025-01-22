@@ -27,10 +27,6 @@ const emitPersonData = () => {
       <input  class="my-input w-full" type="text" id="surname" v-model="person.patronymic">
     </div>
     <div>
-      <p>Username</p>
-      <input  class="my-input w-full" type="email" id="email" v-model="person.username">
-    </div>
-    <div>
       <p>Роль</p>
       <select class="my-select w-full" id="role" v-model="person.role">
         <option>Выберите роль</option>

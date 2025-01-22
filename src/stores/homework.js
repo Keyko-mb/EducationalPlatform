@@ -36,11 +36,13 @@ export const useHomeworkStore = defineStore('homework', {
          },
 
          async updateHomework(id, updatedHomework) {
+             console.log(updatedHomework)
              try {
                  await axios
                      .put(`homeworks/${id}`, updatedHomework)
                      .then((response) => {
                          this.homework = response.data
+                         console.log(response.data)
                      })
              } catch (error) {
                  console.error("Ошибка при обновлении домашнего задания:", error);

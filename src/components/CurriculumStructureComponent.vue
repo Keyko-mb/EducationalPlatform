@@ -22,7 +22,7 @@ onMounted (() => {
 })
 
 const addCourse = (course) => {
-  course.curriculum_id = curriculum.value.id
+  course.curriculumId = curriculum.value.id
   axios
       .post("courses", course)
       .then((response) => {

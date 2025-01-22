@@ -22,12 +22,15 @@
     --background-color: #f8f7fd;
     --logo-color: #ff8b90;
     --table-color: #d6d1f0;
+    --line-height: 1.5rem;
+    --letter-spacing: 0rem;
   }
 
   body {
     font-size: var(--font-size);
     font-family: var(--font-family);
-    line-height: 1.5;
+    line-height: var(--line-height);
+    letter-spacing: var(--letter-spacing);
     background-color: var(--background-color);
     color: var(--text-color);
     overflow-wrap: break-word;
