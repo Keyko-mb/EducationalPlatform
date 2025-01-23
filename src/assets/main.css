@@ -22,15 +22,18 @@
     --background-color: #f8f7fd;
     --logo-color: #ff8b90;
     --table-color: #d6d1f0;
-    --line-height: 1.5rem;
-    --letter-spacing: 0rem;
+    --hyperlink-color: #0000FF;
+    --line-height-factor: 1.5;
+    --letter-spacing-factor: 0;
+    --navbar-line-height-factor: 1.5;
+    --navbar-letter-spacing-factor: 0;
   }
 
   body {
     font-size: var(--font-size);
     font-family: var(--font-family);
-    line-height: var(--line-height);
-    letter-spacing: var(--letter-spacing);
+    line-height: calc(var(--font-size) * var(--line-height-factor));
+    letter-spacing: calc(var(--font-size) * var(--letter-spacing-factor));
     background-color: var(--background-color);
     color: var(--text-color);
     overflow-wrap: break-word;
@@ -41,8 +44,14 @@
     border-color: inherit;
   }
 
+  :focus {
+    outline: 3px solid;
+  }
+
   .navbar {
     font-size: var(--navbar-font-size);
+    line-height: calc(var(--navbar-font-size) * var(--navbar-line-height-factor));
+    letter-spacing: calc(var(--navbar-font-size) * var(--navbar-letter-spacing-factor));
   }
 
   .navbar h1 {
@@ -82,6 +91,7 @@
   --background-color: #fff;
   --logo-color: #333;
   --table-color: #fff;
+  --hyperlink-color: #333;
 }
 
 .theme-dark {
@@ -96,6 +106,7 @@
   --background-color: #333;
   --logo-color: #fff;
   --table-color: #333;
+  --hyperlink-color: #fff;
 }
 
 .theme-blue {
@@ -110,6 +121,14 @@
   --background-color: #9dd1ff;
   --logo-color: #063462;
   --table-color: #9dd1ff;
+  --hyperlink-color: #333;
+}
+
+.disable-images img,
+.disable-images picture,
+.disable-images video,
+.disable-images iframe {
+  display: none !important;
 }
 
 .navbar-text {
@@ -141,7 +160,7 @@
 }
 
 .my-link {
-  @apply hover:opacity-75 transition-all underline px-4 py-1 rounded-lg border border-tertiary;
+  @apply hover:opacity-75 transition-all underline px-4 py-1 rounded-lg border border-tertiary text-hyperlinkColor;
 }
 
 .table-page {

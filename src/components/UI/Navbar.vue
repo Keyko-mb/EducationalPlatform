@@ -13,10 +13,13 @@ const isAccessible = ref(false);
 
 const makeAccessible = () => {
     if (isAccessible.value) {
-        isAccessible.value = false;
-        document.documentElement.classList.remove('theme-light', 'theme-dark', 'theme-blue');
-        document.documentElement.style.setProperty('--font-size', '1em');
-        document.documentElement.style.setProperty('--font-family', 'Nunito, sans-serif');
+      isAccessible.value = false;
+      document.documentElement.classList.remove('theme-light', 'theme-dark', 'theme-blue');
+      document.documentElement.style.setProperty('--font-size', '1em');
+      document.documentElement.style.setProperty('--font-family', 'Nunito, sans-serif');
+      document.documentElement.style.setProperty('--line-height-factor', '1.5');
+      document.documentElement.style.setProperty('--letter-spacing-factor', '0');
+      document.body.classList.toggle('disable-images', false);
     } else {
         isAccessible.value = true;
     }

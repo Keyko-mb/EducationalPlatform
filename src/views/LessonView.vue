@@ -56,27 +56,40 @@ onUnmounted(() => {
   filesStore.clearFiles();
 });
 
+const lessonFormRef = ref(null);
+
+const focusFirstElement = () => {
+  lessonFormRef.value?.focus();
+};
+
 </script>
 
 <template>
     <div>
-      <div class="flex justify-between">
+
+      <header class="flex justify-between">
         <h1>{{ lesson.name }}</h1>
         <div v-if="authStore.userInfo.role === 'ADMIN' || authStore.userInfo.role === 'TEACHER'" class="flex gap-2">
-          <button class="my-button" @click="showLessonEditDialog">Редактировать</button>
-          <button class="my-button-danger" @click="deleteLesson">Удалить</button>
+          <button class="my-button" @click="showLessonEditDialog" aria-label="Открыть окно для редактирования урока">Редактировать</button>
+          <button class="my-button-danger" @click="deleteLesson" aria-label="Удалить урок">Удалить</button>
         </div>
-      </div>
-      <h3>{{ lesson.description }}</h3>
-      <div class="my-5">
+      </header>
+
+      <main>
+        <section class="mb-5">
+          <h2 class="mb-5">{{ lesson.description }}</h2>
           <p>{{lesson.content}}</p>
-      </div>
-      <div v-if="lesson.attachments && lesson.attachments.length > 0">
-        <h3 class="mb-2">Вложения</h3>
-        <Files/>
-      </div>
-      <Dialog v-model:show="editLessonDialogVisible">
-        <LessonForm :lesson="lesson" @saveLessonData="editLesson"/>
+        </section>
+
+        <section v-if="lesson.attachments && lesson.attachments.length > 0" aria-labelledby="attachments-title">
+          <h2  id="attachments-title" class="mb-2">Вложения</h2>
+          <Files/>
+        </section>
+      </main>
+
+      <Dialog v-model:show="editLessonDialogVisible" @shown="focusFirstElement" aria-label="Окно редактирования урока">
+        <LessonForm ref="lessonFormRef" :lesson="lesson" @saveLessonData="editLesson"/>
       </Dialog>
+
     </div>
 </template>

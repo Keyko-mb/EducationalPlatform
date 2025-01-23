@@ -7,6 +7,7 @@ export const useThemeStore = defineStore('theme', {
     fontFamily: 'Nunito, sans-serif',
     letterSpacing: '0rem',
     lineHeight: '1.5rem',
+    imgHidingFlag : false
   }),
   actions: {
     setTheme(theme) {
@@ -17,21 +18,21 @@ export const useThemeStore = defineStore('theme', {
     setLineHeight(value) {
       this.lineHeight = value;
       if (value === 'normal') {
-        document.documentElement.style.setProperty('--line-height', '1.5rem');
+        document.documentElement.style.setProperty('--line-height-factor', '1.5');
       } else if (value === 'large') {
-        document.documentElement.style.setProperty('--line-height', '1.75rem');
+        document.documentElement.style.setProperty('--line-height-factor', '1.75');
       } else if (value === 'xlarge') {
-        document.documentElement.style.setProperty('--line-height', '2rem');
+        document.documentElement.style.setProperty('--line-height-factor', '2');
       }
     },
     setLetterSpacing(value) {
       this.letterSpacing = value;
       if (value === 'normal') {
-        document.documentElement.style.setProperty('--letter-spacing', '0rem');
+        document.documentElement.style.setProperty('--letter-spacing-factor', '0');
       } else if (value === 'large') {
-        document.documentElement.style.setProperty('--letter-spacing', '0.1rem');
+        document.documentElement.style.setProperty('--letter-spacing-factor', '0.1');
       } else if (value === 'xlarge') {
-        document.documentElement.style.setProperty('--letter-spacing', '0.2rem');
+        document.documentElement.style.setProperty('--letter-spacing-factor', '0.2');
       }
     },
     setFontSize(size) {
@@ -49,5 +50,9 @@ export const useThemeStore = defineStore('theme', {
       document.documentElement.style.setProperty('--font-family', fontFamily);
       localStorage.setItem('fontFamily', fontFamily); 
     },
+    setImgHiding(value) {
+      this.imgHidingFlag = value;
+      document.body.classList.toggle('disable-images', value);
+    }
   },
 });

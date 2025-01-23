@@ -22,6 +22,7 @@ export default {
         textColor: "var(--text-color)",
         logoColor: "var(--logo-color)",
         tableColor: "var(--table-color)",
+        hyperlinkColor: "var(--hyperlink-color)",
       }
   },
   plugins: [],
