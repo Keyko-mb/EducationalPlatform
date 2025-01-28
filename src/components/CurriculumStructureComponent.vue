@@ -50,9 +50,15 @@ const showCourseAddDialog = () => {
   <div>
     <h1>{{curriculum.name}}</h1>
     <p>{{ curriculum.description }}</p>
-    <CourseStructureComponent v-for="course in courses" :key="course.id" :course="course" @deleteClick="deleteCourse"/>
-    <button class="my-button mt-2" @click="showCourseAddDialog">Добавить раздел</button>
-    <Dialog v-model:show="addCourseDialogVisible">
+    <CourseStructureComponent v-for="course in courses"
+                              :key="course.id"
+                              :course="course"
+                              @deleteClick="deleteCourse"
+                              role="listitem"/>
+    <button class="my-button mt-2" @click="showCourseAddDialog" aria-controls="add-course-dialog">Добавить раздел</button>
+    <Dialog v-model:show="addCourseDialogVisible"
+            aria-labelledby="dialog-title" >
+      <h2 id="dialog-title" class="sr-only">Окно для создания нового раздела учебной программы</h2>
       <CourseForm @saveCourseData="addCourse"/>
     </Dialog>
   </div>

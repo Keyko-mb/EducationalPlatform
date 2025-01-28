@@ -27,8 +27,11 @@ const deleteCurriculum = () => {
 
 <template>
   <div>
+    <h2 class="sr-only">Редактирование учебной программы</h2>
+
     <CurriculumForm :curriculum="props.curriculum"
     @saveCurriculumData="editCurriculum"/>
+
     <button class="mt-2 my-button-danger" @click="deleteCurriculum">Удалить</button>
   </div>
 </template>

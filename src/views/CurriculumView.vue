@@ -33,17 +33,20 @@ const filteredCourses = computed(() => {
 </script>
 
 <template>
+  <div class="flex justify-between items-center">
     <div>
-      <div class="flex justify-between items-center">
-        <div>
-          <h1 class="text-logoColor">{{curriculum.name}}</h1>
-          <p>{{ curriculum.description }}</p>
-          <p v-if="!curriculum.access" class="bg-warnColor px-5 rounded-lg w-fit">Скрыто</p>
-        </div>
-        <button v-if="authStore.userInfo.role === 'ADMIN' || authStore.userInfo.role === 'TEACHER'"
-                class="my-button h-1/2"
-                @click="router.push(`/curricula/${curriculum.id}/settings`)">Настройки курса</button>
-      </div>
-      <CourseComponent v-for="course in filteredCourses" :key="course.id" :course="course" />
+      <h1 class="text-logoColor">{{curriculum.name}}</h1>
+      <p>{{ curriculum.description }}</p>
+      <p v-if="!curriculum.access" class="bg-warnColor px-5 rounded-lg w-fit" aria-label="Статус программы: скрыто">Скрыто</p>
     </div>
+    <button v-if="authStore.userInfo.role === 'ADMIN' || authStore.userInfo.role === 'TEACHER'"
+            class="my-button h-1/2"
+            @click="router.push(`/curricula/${curriculum.id}/settings`)">Настройки курса</button>
+  </div>
+  <div role="list">
+    <CourseComponent v-for="course in filteredCourses"
+                     :key="course.id"
+                     :course="course"
+                     role="listitem"/>
+  </div>
 </template>

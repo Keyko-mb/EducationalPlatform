@@ -25,13 +25,14 @@ onUnmounted(() => {
 
 <template>
   <h1 class="my-2">Вложения к ответу</h1>
-  <div class="border rounded-lg max-h-96 flex-wrap overflow-y-auto bg-formColor p-4 flex gap-4" id="attachments">
+  <div class="border rounded-lg max-h-96 flex-wrap overflow-y-auto bg-formColor p-4 flex gap-4" role="list">
     <div
         v-for="(file, index) in files"
         :key="'file-' + index"
-        class="flex items-center mb-2">
+        class="flex items-center mb-2"
+        role="listitem">
       <div v-if="file.type.startsWith('image')" class="relative">
-        <img :src="file.url" alt="Изображение" class="rounded-lg max-w-80" />
+        <img :src="file.url" :alt="'Изображение ' + (index + 1)" class="rounded-lg max-w-80" />
       </div>
 
       <div v-else class="flex h-full w-full px-2 py-1 rounded-lg border border-tertiary ">

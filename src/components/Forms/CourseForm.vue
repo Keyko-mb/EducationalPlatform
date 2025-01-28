@@ -16,27 +16,28 @@ const emitCourseData = () => {
 </script>
 
 <template>
-  <div class="mt-2 space-y-2">
-    <h1>Раздел</h1>
-    <div>
-      <p>Название раздела</p>
-      <input class="my-input w-full" type="text" id="name" v-model="course.name" value="">
-    </div>
-    <div>
-      <p>Описание раздела</p>
-      <textarea class="my-input w-full min-h-52" type="text" id="caption" v-model="course.description"/>
-    </div>
-    <div>
-      <p>Доступность</p>
-      <div class="flex gap-1">
-        <input type="checkbox" id="access" v-model="course.access"/>
-        <p>Доступно ученикам</p>
+  <form @submit.prevent="emitCourseData">
+    <div class="mt-2 space-y-2">
+      <h1>Раздел</h1>
+      <div>
+        <label for="name">Название раздела</label>
+        <input class="my-input w-full" type="text" id="name" v-model="course.name" value="" aria-label="Поле для ввода названия раздела">
       </div>
+      <div>
+        <label for="caption">Описание раздела</label>
+        <textarea class="my-input w-full min-h-52" type="text" id="caption" v-model="course.description" aria-label="Поле для ввода описания раздела"/>
+      </div>
+      <fieldset>
+        <legend>Доступность</legend>
+        <div class="flex gap-1">
+          <input type="checkbox" id="access" v-model="lesson.access"/>
+          <label for="access">Доступно ученикам</label>
+        </div>
+      </fieldset>
+
+      <button class="my-button mt-5" type="submit">Сохранить</button>
     </div>
-    <div class="flex gap-5 items-center mt-5">
-      <button class="my-button" @click="emitCourseData">Сохранить</button>
-    </div>
-  </div>
+  </form>
 </template>
 
 <style scoped>

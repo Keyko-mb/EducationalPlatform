@@ -92,7 +92,9 @@ const filteredClassrooms = computed(() => {
   <div>
     <h1>Учебные группы</h1>
     <div class="flex justify-between my-3">
+      <label for="search-classroom" class="sr-only">Форма для поиска учебных групп</label>
       <input
+          id="search-classroom"
           type="text"
           v-model="searchQuery"
           class="my-input"
@@ -100,22 +102,22 @@ const filteredClassrooms = computed(() => {
       />
       <button class="my-button" @click="showAddClassroomDialog">Добавить группу</button>
     </div>
-    <div v-if="filteredClassrooms.length > 0">
-      <Classroom v-for="classroom in filteredClassrooms"
-                 :key="classroom.id"
-                 :classroom="classroom"
-                 @deleteClassroom="deleteClassroom"
-                 @editClassroom="editClassroom"
-      />
+    <div v-if="filteredClassrooms.length > 0" role="list">
+      <div v-for="classroom in filteredClassrooms"
+           :key="classroom.id" role="listitem">
+        <Classroom :classroom="classroom"
+            @deleteClassroom="deleteClassroom"
+            @editClassroom="editClassroom"
+        />
+      </div>
     </div>
-    <div v-else>
+    <div v-else class="my-2">
       <p>Учебные группы отсутствуют</p>
     </div>
     <div>
-      <Dialog v-model:show="addClassroomDialogVisible">
-        <h1>Новая учебная группа</h1>
-        <ClassroomForm
-            @saveClassroomData="addClassroom"/>
+      <Dialog v-model:show="addClassroomDialogVisible" aria-labelledby="dialog-title" >
+        <h2 id="dialog-title" class="sr-only">Окно для создания новой учебной группы</h2>
+        <ClassroomForm @saveClassroomData="addClassroom"/>
       </Dialog>
     </div>
   </div>

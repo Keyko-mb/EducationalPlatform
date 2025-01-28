@@ -39,7 +39,7 @@ const showFiles = (answer) => {
 }
 
 const Status = {
-  1: 'Не выполено',
+  1: 'Не выполнено',
   2: 'На проверке',
   3: 'Выполнено'
 }
@@ -51,57 +51,67 @@ onUnmounted(() => {
 
 <template>
   <div v-if="answers && answers.length">
+    <h2 class="sr-only">Таблица ответов студентов</h2>
+
     <table class="w-full table-fixed rounded-lg overflow-hidden border-collapse shadow-md">
       <thead>
-      <tr class="bg-tableColor border border-tertiary rounded-t-lg">
-        <th class="my-th">Фамилия</th>
-        <th class="my-th">Имя</th>
-        <th class="my-th">Отчество</th>
-        <th class="my-th">Статус</th>
-        <th class="my-th">Текст ответа</th>
-        <th class="my-th">Вложения</th>
-        <th class="my-th">Дата изменения</th>
-        <th class="my-th">Комментарий</th>
-        <th class="my-th"></th>
-      </tr>
+        <tr class="bg-tableColor border border-tertiary rounded-t-lg">
+          <th class="my-th" scope="col" >Фамилия</th>
+          <th class="my-th" scope="col" >Имя</th>
+          <th class="my-th" scope="col" >Отчество</th>
+          <th class="my-th" scope="col" >Статус</th>
+          <th class="my-th" scope="col" >Текст ответа</th>
+          <th class="my-th" scope="col" >Вложения</th>
+          <th class="my-th" scope="col" >Дата изменения</th>
+          <th class="my-th" scope="col" >Комментарий</th>
+          <th class="my-th" scope="col" >Действия</th>
+        </tr>
       </thead>
       <tbody>
-      <tr v-for="answer in answers" :key="answer.id" class="bg-formColor ">
-        <td class="my-td border-l border-tertiary">{{ answer.student?.lastName }}</td>
-        <td class="my-td">{{ answer.student?.firstName }}</td>
-        <td class="my-td">{{ answer.student?.patronymic }}</td>
-        <td class="my-td">
-          <select class="my-select w-full" v-model="answer.statusId">
-            <option v-for="(value, key) in Status" :key="key" :value="key">{{ value }}</option>
-          </select>
-        </td>
-        <td class="break-words my-td">
-          <textarea disabled class="rounded-lg my-input min-h-20 w-full">{{ answer.text }}</textarea>
-        </td>
+        <tr v-for="answer in answers" :key="answer.id" class="bg-formColor" role="row">
+          <td class="my-td border-l border-tertiary">{{ answer.student?.lastName }}</td>
+          <td class="my-td">{{ answer.student?.firstName }}</td>
+          <td class="my-td">{{ answer.student?.patronymic }}</td>
+          <td class="my-td">
+            <select class="my-select w-full" v-model="answer.statusId" aria-describedby="status-help" :aria-label='"Статус ответа: " + Status[answer.statusId]'>
+              <option v-for="(value, key) in Status" :key="key" :value="key">{{ value }}</option>
+            </select>
+            <p id="status-help" class="sr-only">Используйте стрелки для выбора статуса, затем нажмите Enter.</p>
+          </td>
+          <td class="break-words my-td" >
+            <label :for="'answer-text-' + answer.id" class="sr-only">Текст ответа</label>
+            <textarea disabled class="rounded-lg my-input min-h-20 w-full" :id="'answer-text-' + answer.id" aria-readonly="true" :aria-label='"Текст ответа" + answer.text'>{{ answer.text }}</textarea>
+          </td>
 
-        <td v-if="answer.attachments &&answer.attachments.length > 0" class="my-td">
-          <button class="my-link" @click="showFiles(answer)">Открыть</button>
-        </td>
-        <td v-else class="my-td opacity-50">Отсутствуют</td>
+          <td v-if="answer.attachments &&answer.attachments.length > 0" class="my-td">
+            <button class="my-link" @click="showFiles(answer)" :aria-label="'Открыть вложения для ' + answer.student?.lastName">Открыть</button>
+          </td>
+          <td v-else class="my-td opacity-50" aria-label="Вложения отсутствуют">Отсутствуют</td>
 
-        <td class="my-td">{{formatDate(answer.updatedAt)}}</td>
-        <td class="my-td">
-          <textarea
-              v-model="answer.comment"
-              placeholder="Введите комментарий..."
-              class="my-input min-h-20 w-full"
-          />
-        </td>
-        <td class="my-td border-r border-tertiary">
-          <button @click="saveComment(answer)" class="my-button-danger">
-            Сохранить
-          </button>
-<!--          <p v-if="isSaved" class="opacity-80">Сохранено</p>-->
-        </td>
-      </tr>
+          <td class="my-td" :aria-label="'Дата изменения ответа' + formatDate(answer.updatedAt)">{{formatDate(answer.updatedAt)}}</td>
+
+          <td class="my-td">
+            <label :for="'comment-' + answer.id" class="sr-only">Введите комментарий</label>
+            <textarea
+                :id="'comment-' + answer.id"
+                v-model="answer.comment"
+                placeholder="Введите комментарий..."
+                class="my-input min-h-20 w-full"
+                :aria-label="'Текст комментария' + answer.comment"
+            />
+          </td>
+
+          <td class="my-td border-r border-tertiary">
+            <button @click="saveComment(answer)" class="my-button-danger" :aria-label="'Сохранить комментарий для ' + answer.student?.lastName">
+              Сохранить
+            </button>
+  <!--          <p v-if="isSaved" class="opacity-80">Сохранено</p>-->
+          </td>
+        </tr>
       </tbody>
     </table>
     <Dialog v-model:show="showFilesDialogVisible">
+      <h2 id="dialog-title" class="sr-only" aria-labelledby="dialog-title">Окно с вложениями</h2>
       <FilesModal :answer="selectedAnswer"/>
     </Dialog>
   </div>

@@ -103,23 +103,23 @@ onUnmounted(() => {
       <div class="mb-5">
         <h1>{{ homework.name }}</h1>
         <div v-if="answer && answer.statusId !== 1">
-          <p v-if="answer.statusId === 2" class="bg-warnColor px-5 py-1 rounded-lg w-fit mt-2"> {{ Status[2] }}</p>
-          <p v-if="answer.statusId === 3" class="bg-truthColor px-5 py-1 rounded-lg w-fit mt-2"> {{ Status[3] }}</p>
+          <p v-if="answer.statusId === 2" class="bg-warnColor px-5 py-1 rounded-lg w-fit mt-2" aria-label="Статус: на проверке"> {{ Status[2] }}</p>
+          <p v-if="answer.statusId === 3" class="bg-truthColor px-5 py-1 rounded-lg w-fit mt-2" aria-label="Статус: выполнено"> {{ Status[3] }}</p>
         </div>
         <div v-else>
-          <p class="bg-errColor px-5 py-1 rounded-lg w-fit mt-2 shadow-md"> {{ Status[1] }}</p>
+          <p class="bg-errColor px-5 py-1 rounded-lg w-fit mt-2 shadow-md" aria-label="Статус: не выполнено"> {{ Status[1] }}</p>
         </div>
         <div class="my-5 space-y-2">
           <p>{{ homework.description }}</p>
           <div v-if="homework.attachments &&homework.attachments.length > 0">
-            <h3 class="mb-2">Вложения</h3>
+            <h2 class="mb-2">Вложения</h2>
             <Files :flag="'materials'"/>
           </div>
         </div>
       </div>
 
       <div>
-        <h1 class="text-logoColor mb-2">Ваш ответ:</h1>
+        <h2 class="text-logoColor mb-2">Ваш ответ:</h2>
         <div v-if="answer && answer.statusId !== 1" class="space-y-5">
           <div>
             <p v-if="answer.text">{{answer.text}}</p>
@@ -128,40 +128,62 @@ onUnmounted(() => {
             </div>
           </div>
           <div v-if="answer.comment" >
-            <h1 class="text-logoColor mb-2">Комментарий от преподавателя:</h1>
+            <h2 class="text-logoColor mb-2">Комментарий от преподавателя:</h2>
             <p>{{ answer.comment }}</p>
           </div>
         </div>
 
         <div v-else-if="answer && answer.statusId === 1">
           <form @submit.prevent="submitAnswer" class="flex flex-col">
-            <textarea v-model="answerText" class="my-input h-28 w-full" type="text" placeholder="Начните писать ответ..." />
+            <label for="answer-text" class="sr-only">Текст ответа</label>
+            <textarea id="answer-text" v-model="answerText" class="my-input h-28 w-full" type="text" placeholder="Начните писать ответ..." :aria-label="answerText"/>
             <div v-if="answerFiles.length > 0">
-              <label class="form-label" for="attachments">Вложения</label>
+              <label class="form-label">Вложения</label>
 
-              <div class="border border-tertiary rounded-lg max-h-96 flex-wrap overflow-y-auto bg-formColor p-4 flex gap-4" id="attachments">
+              <div class="border border-tertiary rounded-lg max-h-96 flex-wrap overflow-y-auto bg-formColor p-4 flex gap-4" role="list">
                 <div
                     v-for="(file, index) in answerFiles"
                     :key="'file-' + index"
-                    class="flex items-center mb-2">
+                    class="flex items-center mb-2"
+                    role="listitem">
                   <div v-if="file.type.startsWith('image')" class="relative">
-                    <img :src="file.url" alt="Изображение" width="150" class="rounded-lg" />
-                    <input @click.prevent="removeFile(file)"
-                           type="image"
-                           alt="Удалить"
-                           src='/delete.svg'
-                           class="absolute top-2 right-2 w-6 h-6 bg-errColor rounded-full p-1 hover:shadow-lg hover:opacity-100 opacity-80"/>
+                    <img :src="file.url"
+                         :alt="`Прикрепленное изображение ${index + 1}`"
+                         width="150"
+                         class="rounded-lg" />
+                    <button
+                        @click.prevent="removeFile(file)"
+                        class="absolute top-2 right-2 w-6 h-6 bg-errColor rounded-full p-1 hover:shadow-lg hover:opacity-100 opacity-80"
+                        tabindex="0"
+                        aria-label="Удалить"
+                    >
+                      <img
+                          src="/delete.svg"
+                          alt="Удалить"
+                          class="w-6 h-6"
+                          role="presentation"
+                      >
+                    </button>
                   </div>
 
                   <div v-else class="flex h-full w-full px-2 py-1 rounded-lg border border-tertiary ">
                     <a :href="file.url"
                        :download="'file-' + index"
-                       class="hover:opacity-75 transition-all underline flex-grow p-2">Скачать файл {{ index + 1 }}</a>
-                    <input @click.prevent="removeFile(file)"
-                           type="image"
-                           alt="Удалить"
-                           src='/delete.svg'
-                           class="w-6 h-6 opacity-80 hover:opacity-100 mt-2 bg-errColor rounded-full p-1"/>
+                       class="hover:opacity-75 transition-all underline flex-grow p-2"
+                       :aria-label="`Скачать файл: ${file.name || 'Без названия'}`">Скачать файл {{ index + 1 }}</a>
+                    <button
+                        @click.prevent="removeFile(file)"
+                        class="w-6 h-6 opacity-80 hover:opacity-100 mt-2 bg-errColor rounded-full p-1"
+                        tabindex="0"
+                        aria-label="Удалить"
+                    >
+                      <img
+                          src="/delete.svg"
+                          alt="Удалить"
+                          class="w-6 h-6"
+                          role="presentation"
+                      >
+                    </button>
                   </div>
                 </div>
               </div>
@@ -173,49 +195,60 @@ onUnmounted(() => {
                      @change="handleFileUpload"
                      ref="fileInput"
                      class="my-file">
+<!--                     aria-describedby="file-upload-help">-->
+<!--              <p id="file-upload-help" class="sr-only">-->
+<!--                Поддерживаются файлы любых форматов, максимальный размер файла 50 МБ-->
+<!--              </p>-->
             </div>
 
             <button type="submit" class="my-button mt-5 w-1/5">Отправить на проверку</button>
           </form>
 
           <div v-if="answer.comment" class="mt-5">
-            <h1 class="text-logoColor mb-2">Комментарий от преподавателя:</h1>
+            <h2 class="text-logoColor mb-2">Комментарий от преподавателя:</h2>
             <p>{{ answer.comment }}</p>
           </div>
         </div>
+
         <div v-else>
           <form @submit.prevent="submitAnswer" class="flex flex-col">
-            <textarea v-model="answerText" class="my-input h-28 w-1/2" type="text" placeholder="Начните писать ответ..." />
+            <label for="answer-text" class="sr-only">Текст ответа</label>
+            <textarea id="answer-text" v-model="answerText" class="my-input h-28 w-1/2" type="text" placeholder="Начните писать ответ..." :aria-label="answerText"/>
             <div v-if="answerFiles.length > 0" class="mt-3">
-              <label class="form-label" for="attachments">Вложения</label>
+              <label class="form-label">Вложения</label>
 
-              <div class="border border-tertiary rounded-lg max-h-96 flex-wrap overflow-y-auto bg-formColor p-4 flex gap-4" id="attachments">
+              <div class="border border-tertiary rounded-lg max-h-96 flex-wrap overflow-y-auto bg-formColor p-4 flex gap-4" role="list">
                 <div
                     v-for="(file, index) in answerFiles"
                     :key="'file-' + index"
-                    class="flex items-center mb-2">
+                    class="flex items-center mb-2" role="listitem">
                   <div v-if="file.type.startsWith('image')" class="relative">
-                    <img :src="file.url" alt="Изображение" width="150" class="rounded-lg" />
+                    <img :src="file.url" :alt="`Прикрепленное изображение ${index + 1}`" width="150" class="rounded-lg" />
                   </div>
 
                   <div v-else class="flex h-full w-full px-2 py-1 rounded-lg border border-tertiary ">
                     <a :href="file.url"
                        :download="'file-' + index"
-                       class="hover:opacity-75 transition-all underline flex-grow p-2">Скачать файл {{ index + 1 }}</a>
+                       class="hover:opacity-75 transition-all underline flex-grow p-2"
+                       :aria-label="`Скачать файл: ${file.name || 'Без названия'}`">Скачать файл {{ index + 1 }}</a>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div>
-              <label for="new-attachments" class="mt-3">Добавить вложения</label>
+            <div class="mt-3" >
+              <label for="new-attachments">Добавить вложения</label>
               <input type="file" multiple id="new-attachments"
                      @change="handleFileUpload"
                      ref="fileInput"
                      class="my-file">
+<!--              aria-describedby="file-input-help"-->
+<!--              <p id="file-input-help" class="sr-only">-->
+<!--                Максимальный размер файла: 50 МБ. Допустимые форматы: все типы файлов-->
+<!--              </p>-->
             </div>
 
-            <button type="submit" class="my-button mt-5 w-1/5">Отправить на проверку</button>
+            <button type="submit" class="my-button mt-5 w-1/5" aria-label="Отправить ответ на проверку">Отправить на проверку</button>
           </form>
         </div>
       </div>

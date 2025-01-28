@@ -51,32 +51,36 @@ const showClassroomEditDialog = (classroom) => {
 </script>
 
 <template>
-  <div class="flex items-start gap-2 mb-5">
+  <div class="flex items-start gap-2 mb-5" >
       <details class="w-full" open>
-        <summary style=" font-size: 1.25em;">{{props.classroom.name}}</summary>
-<!--        <p v-for="person in props.classroom.persons">{{ person.lastName + ' ' + person.firstName + ' ' + person.patronymic }}</p>-->
-        <table v-if="props.classroom.persons.length > 0" class="w-full rounded-lg overflow-hidden border-collapse shadow-md mt-2">
-          <thead>
-          <tr class="bg-tableColor border border-tertiary bg-opacity-75 ">
-            <th class="my-th">Фамилия</th>
-            <th class="my-th">Имя</th>
-            <th class="my-th">Отчество</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr v-for="person in props.classroom.persons" :key="person.id" class="bg-formColor">
-            <td class="my-td border-l border-tertiary">{{ person.lastName }}</td>
-            <td class="my-td">{{ person.firstName }}</td>
-            <td class="my-td border-r border-tertiary">{{ person.patronymic }}</td>
-          </tr>
-          </tbody>
-        </table>
-        <p class="mt-2" v-else>Группа пуста</p>
+        <summary style=" font-size: 1.25em;"
+                 aria-controls="students-table"
+                 aria-expanded="true"
+        >{{props.classroom.name}}</summary>
+        <div>
+          <table v-if="props.classroom.persons.length > 0" class="w-full rounded-lg overflow-hidden border-collapse shadow-md mt-2">
+            <thead role="rowgroup">
+            <tr class="bg-tableColor border border-tertiary bg-opacity-75" role="row">
+              <th class="my-th" role="columnheader" scope="col">Фамилия</th>
+              <th class="my-th" role="columnheader" scope="col">Имя</th>
+              <th class="my-th" role="columnheader" scope="col">Отчество</th>
+            </tr>
+            </thead>
+            <tbody role="rowgroup">
+            <tr v-for="person in props.classroom.persons" :key="person.id" class="bg-formColor" role="row">
+              <td class="my-td border-l border-tertiary" role="cell">{{ person.lastName }}</td>
+              <td class="my-td" role="cell">{{ person.firstName }}</td>
+              <td class="my-td border-r border-tertiary" role="cell">{{ person.patronymic }}</td>
+            </tr>
+            </tbody>
+          </table>
+          <p class="mt-2" v-else>Группа пуста</p>
+        </div>
       </details>
-    <EditAndDeleteButtons @deleteClick="emitDeleteClassroom" @editClick="showClassroomEditDialog(classroom)" class="mt-1"/>
+    <EditAndDeleteButtons @deleteClick="emitDeleteClassroom" @editClick="showClassroomEditDialog(classroom)" class="mt-1" :aria-label="`Действия над учебной группой ${props.classroom.name}`"/>
   </div>
-  <Dialog v-model:show="editClassroomDialogVisible">
-    <h1>Редактирование группы</h1>
+  <Dialog v-model:show="editClassroomDialogVisible" aria-labelledby="dialog-title" >
+    <h2 id="dialog-title" class="sr-only">Окно для редактирования учебной группы</h2>
     <ClassroomForm v-if="selectedClassroom" :classroom="selectedClassroom" @saveClassroomData="emitEditClassroom"/>
   </Dialog>
 </template>

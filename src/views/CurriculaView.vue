@@ -52,54 +52,63 @@ const filteredCurricula = computed(() => {
 </script>
 
 <template>
-    <div>
-        <h1>Обучение</h1>
-        <div class="my-3">
-          <input
-              type="text"
-              v-model="searchQuery"
-              class="my-input"
-              placeholder="Поиск по названию..."
-          />
-          <div v-if="authStore.userInfo.role === 'ADMIN' || authStore.userInfo.role === 'TEACHER'">
-            <div v-if="filteredCurricula.length > 0">
-              <Card v-for="curriculum in filteredCurricula" :key="curriculum.id"
-                    @click="router.push(`/curricula/${curriculum.id}`)"
-                    :title="curriculum.name">
-                <template #caption>
-                  <div>
-                    <p>{{ curriculum.description }}</p>
-                    <p v-if="!curriculum.access" class="bg-warnColor px-5 rounded-lg w-fit">Скрыто</p>
-                  </div>
-                </template>
-              </Card>
-            </div>
-            <div v-else class="my-2">
-              <p>Учебные программы отсутствуют</p>
-            </div>
-            <button v-if="authStore.userInfo.role === 'ADMIN'" class="my-button" @click="showCurriculumAddDialog">Добавить учебную программу</button>
-            <Dialog v-model:show="addCurriculumDialogVisible">
-              <CurriculumForm @saveCurriculumData="addCurriculum"/>
-            </Dialog>
+    <h1>Обучение</h1>
+    <div class="my-3">
+      <label for="searchInput" class="sr-only">Поле для поиска учебной программы по названию</label>
+      <input
+          type="text"
+          id="searchInput"
+          v-model="searchQuery"
+          class="my-input"
+          placeholder="Поиск по названию..."
+      />
 
-          </div>
-          <div v-else>
-            <div v-if="studentCurriculum && studentCurriculum.access">
-              <Card :key="studentCurriculum.id"
-                    @click="router.push(`/curricula/${studentCurriculum.id}`)"
-                    :title="studentCurriculum.name">
-                <template #caption>
-                  <div>
-                    <p>{{ studentCurriculum.description }}</p>
-                  </div>
-                </template>
-              </Card>
-            </div>
-            <div v-else class="my-2">
-              <p>Вы не обучаетесь ни на одной учебной программе</p>
-            </div>
+      <div v-if="authStore.userInfo.role === 'ADMIN' || authStore.userInfo.role === 'TEACHER'">
+        <h2 class="sr-only" id="homeworks-heading">Список учебных программ</h2>
+        <div v-if="filteredCurricula.length > 0" role="list">
+          <div v-for="curriculum in filteredCurricula" :key="curriculum.id" role="listitem">
+            <Card @click="router.push(`/curricula/${curriculum.id}`)"
+                  @keydown.enter="router.push(`/curricula/${curriculum.id}`)"
+                  :title="curriculum.name">
+              <template #caption>
+                <div>
+                  <p>{{ curriculum.description }}</p>
+                  <p v-if="!curriculum.access" class="bg-warnColor px-5 rounded-lg w-fit" aria-label="Статус учебной программы">Скрыто</p>
+                </div>
+              </template>
+            </Card>
           </div>
         </div>
+        <div v-else class="my-2">
+          <p>Учебные программы отсутствуют</p>
+        </div>
+
+        <button v-if="authStore.userInfo.role === 'ADMIN'" class="my-button" @click="showCurriculumAddDialog">Добавить учебную программу</button>
+
+        <Dialog v-model:show="addCurriculumDialogVisible" aria-labelledby="dialog-title">
+          <h2 id="dialog-title" class="sr-only">Окно для создания новой учебной программы</h2>
+          <CurriculumForm @saveCurriculumData="addCurriculum"/>
+        </Dialog>
+
+      </div>
+
+      <div v-else>
+        <div v-if="studentCurriculum && studentCurriculum.access">
+          <Card :key="studentCurriculum.id"
+                @click="router.push(`/curricula/${studentCurriculum.id}`)"
+                :title="studentCurriculum.name"
+                @keydown.enter="router.push(`/curricula/${studentCurriculum.id}`)">
+            <template #caption>
+              <div>
+                <p>{{ studentCurriculum.description }}</p>
+              </div>
+            </template>
+          </Card>
+        </div>
+        <div v-else class="my-2">
+          <p>Вы не обучаетесь ни на одной учебной программе</p>
+        </div>
+      </div>
     </div>
 </template>
 

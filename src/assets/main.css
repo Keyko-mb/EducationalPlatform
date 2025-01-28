@@ -44,10 +44,6 @@
     border-color: inherit;
   }
 
-  :focus {
-    outline: 3px solid;
-  }
-
   .navbar {
     font-size: var(--navbar-font-size);
     line-height: calc(var(--navbar-font-size) * var(--navbar-line-height-factor));
@@ -124,11 +120,15 @@
   --hyperlink-color: #333;
 }
 
-.disable-images img,
+.disable-images img:not([alt="Настройки интерфейса"]),
 .disable-images picture,
 .disable-images video,
 .disable-images iframe {
   display: none !important;
+}
+
+:focus {
+  @apply outline-2 outline-dashed outline-logoColor;
 }
 
 .navbar-text {
@@ -152,7 +152,7 @@
 }
 
 .my-td {
-  @apply border-b border-tertiary py-2 text-center
+  @apply border-b border-tertiary py-2 text-center align-middle
 }
 
 .my-file {
@@ -165,4 +165,8 @@
 
 .table-page {
   overflow-y: scroll;
+}
+
+.skip-link {
+  @apply absolute -top-40 left-10 bg-secondary p-1 rounded-lg transition-all duration-300 z-[1000] focus:top-6
 }

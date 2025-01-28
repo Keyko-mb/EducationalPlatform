@@ -29,7 +29,7 @@ const deleteHomework = async () => {
 <template>
   <div>
     <HomeworkForm :homework="homework" @saveHomeworkData="editHomework"/>
-    <button class="my-button-danger mt-2" @click="deleteHomework">Удалить</button>
+    <button class="my-button-danger mt-2" @click="deleteHomework" >Удалить</button>
   </div>
 </template>
 

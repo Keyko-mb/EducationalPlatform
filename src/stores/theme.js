@@ -11,9 +11,14 @@ export const useThemeStore = defineStore('theme', {
   }),
   actions: {
     setTheme(theme) {
-      this.theme = theme;
-      document.documentElement.classList.remove('theme-light', 'theme-dark', 'theme-blue');
-      document.documentElement.classList.add(`theme-${theme}`);
+      if (this.theme === theme) {
+        this.theme = '';
+        document.documentElement.classList.remove('theme-light', 'theme-dark', 'theme-blue');
+      } else {
+        this.theme = theme;
+        document.documentElement.classList.remove('theme-light', 'theme-dark', 'theme-blue');
+        document.documentElement.classList.add(`theme-${theme}`);
+      }
     },
     setLineHeight(value) {
       this.lineHeight = value;

@@ -104,26 +104,30 @@ const filteredPeople = computed(() => {
     <div>
         <h1>Пользователи</h1>
         <div class="flex justify-between my-3">
-          <input
+          <label for="search-input" class="sr-only">Полея для поиска пользователя по фамилии</label>
+                    <input
+              id="search-input"
               type="text"
               v-model="searchQuery"
               class="my-input"
               placeholder="Поиск по фамилии..."
           />
-            <div class="flex gap-5">
-              <button class="my-button bg-primary" @click="showAddPersonDialog">Добавить</button>
-              <input type="file" @change="importPeople" accept=".xlsx" ref="fileInput" style="display: none" />
-              <button class="my-button" @click="triggerFileSelectionAndUpload">Импорт</button>
-              <button class="my-button" @click="exportPeople">Экспорт</button>
-            </div>
+
+          <div class="flex gap-5">
+            <button class="my-button bg-primary" @click="showAddPersonDialog">Добавить</button>
+            <input type="file" @change="importPeople" accept=".xlsx" ref="fileInput" style="display: none" id="file-input"/>
+            <button class="my-button" @click="triggerFileSelectionAndUpload">Импорт</button>
+            <button class="my-button" @click="exportPeople">Экспорт</button>
+          </div>
         </div>
+
         <PeopleTable v-if="filteredPeople.length > 0" :people="filteredPeople"/>
         <p v-else>Пользователи не найдены</p>
     </div>
 
     <div>
       <Dialog v-model:show="addPersonDialogVisible">
-        <h1>Новый пользователь</h1>
+        <h2 id="dialog-title" class="sr-only">Окно для создания нового пользователя</h2>
         <PersonForm
             @savePersonData="createPerson"
             :person="person"/>

@@ -34,14 +34,14 @@ const logOut = () => {
     <div>
       <h1>{{`${studentStore.lastName} ${studentStore.firstName} ${studentStore.patronymic}`}}</h1>
         <div class="my-3">
-            <div class="space-y-3">
-                <div>
-                    <p class="text-sm">Роль</p>
-                    <p>{{ authStore.userInfo.role }}</p>
+            <div class="space-y-3" role="list">
+                <div role="listitem">
+                  <p>Роль</p>
+                  <p>{{ authStore.userInfo.role }}</p>
                 </div>
-                <div v-if="studentStore.classroomId">
-                    <p class="text-sm">Учебная группа</p>
-                    <p> {{classroomName}} </p>
+                <div v-if="studentStore.classroomId" role="listitem">
+                  <p class="text-sm">Учебная группа</p>
+                  <p>{{ classroomName }}</p>
                 </div>
 
             </div>

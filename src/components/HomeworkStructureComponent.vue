@@ -9,12 +9,11 @@ const homework = computed(() => homeworkStore.homework)
 
 <template>
   <div v-if="homework">
-      <h1>{{ homework.name }}</h1>
+    <h1>{{ homework.name }}</h1>
     <div class="my-5 space-y-2">
-      <h3>{{ homework.description }}</h3>
-      <p>{{  homework.text }}</p>
+      <p>{{ homework.description }}</p>
       <div v-if="homework.attachments &&homework.attachments.length > 0">
-        <h3 class="mb-2">Вложения</h3>
+        <h2 class="mb-2">Вложения</h2>
         <Files/>
       </div>
     </div>

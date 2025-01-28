@@ -35,20 +35,25 @@ const deleteClassroom = (classroomId) => {
 </script>
 
 <template>
-  <div class="flex flex-col">
+  <div class="flex flex-col" aria-labelledby="classroom-list-heading">
     <div class="flex justify-between items-center mb-5">
       <h1>Список учебных групп</h1>
       <button class="my-button" @click="showClassroomAddDialog">Добавить группу</button>
     </div>
-    <ClassroomTable v-if="classrooms.length > 0" class="w-full mb-5" v-for="classroom in classrooms"
-                    :key="classroom.id"
-                    :classroom="classroom"
-                    :users="classroom.persons"
-                    @deleteClassroom="deleteClassroom"/>
-    <div v-else>
-      <p>Учебные группы отсутствуют</p>
+    <div role="list">
+      <ClassroomTable v-if="classrooms.length > 0" class="w-full mb-5" v-for="classroom in classrooms"
+                      :key="classroom.id"
+                      :classroom="classroom"
+                      :users="classroom.persons"
+                      @deleteClassroom="deleteClassroom"
+                      role="listitem"/>
+      <div v-else>
+        <p>Учебные группы отсутствуют</p>
+      </div>
     </div>
-    <Dialog v-model:show="addClassroomDialogVisible">
+
+    <Dialog v-model:show="addClassroomDialogVisible" aria-labelledby="add-classroom-title">
+      <h2 id="add-classroom-title" class="sr-only">Окно для добавления учебной группы</h2>
       <ClassroomAddToCurriculumForm :currentClassrooms="classrooms" @addClassroom = "addClassroom"/>
     </Dialog>
   </div>

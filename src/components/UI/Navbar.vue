@@ -54,55 +54,55 @@ const makeAccessible = () => {
 </script>
 
 <template>
-  <header class="navbar">
+  <header class="navbar" role="banner">
     <div class="border-b border-gray-300 shadow py-5" >
       <div class="container mx-auto">
-        <header class="flex justify-between items-center">
+        <nav class="flex justify-between items-center" role="navigation" aria-label="Основная навигация">
           <div class="flex space-x-10">
-            <RouterLink to="/"><h1 class="font-extrabold text-logoColor hover:brightness-125 transition-all">МультиЗнайка</h1></RouterLink>
-            <div class="flex space-x-10 items-center">
-              <RouterLink active-class="active" to="/"><h3 class="navbar-text">Главная</h3></RouterLink>
-              <RouterLink active-class="active" to="/curricula" v-if="authStore.isAuthenticated"><h3 class="navbar-text">Обучение</h3></RouterLink>
-              <RouterLink active-class="active" to="/people" v-if="authStore.isAuthenticated && authStore.userInfo.role === 'ADMIN'"><h3 class="navbar-text">Пользователи</h3></RouterLink>
-              <RouterLink active-class="active" to="/classrooms" v-if="authStore.isAuthenticated && authStore.userInfo.role === 'ADMIN'"><h3 class="navbar-text">Учебные группы</h3></RouterLink>
+            <RouterLink to="/" aria-label="МультиЗнайка - Перейти на главную страницу">
+              <h1 class="font-extrabold text-logoColor hover:brightness-125 transition-all">МультиЗнайка</h1>
+            </RouterLink>
+            <div class="flex space-x-10 items-center" role="menubar" aria-labelledby="menu-label">
+              <h2 class="sr-only" id="menu-label">Пункты меню</h2>
+              <RouterLink active-class="active" to="/" role="menuitem"><h3 class="navbar-text">Главная</h3></RouterLink>
+              <RouterLink active-class="active" to="/curricula" v-if="authStore.isAuthenticated" role="menuitem" ><h3 class="navbar-text">Обучение</h3></RouterLink>
+              <RouterLink active-class="active" to="/people" v-if="authStore.isAuthenticated && authStore.userInfo.role === 'ADMIN'" role="menuitem" ><h3 class="navbar-text">Пользователи</h3></RouterLink>
+              <RouterLink active-class="active" to="/classrooms" v-if="authStore.isAuthenticated && authStore.userInfo.role === 'ADMIN'" role="menuitem" ><h3 class="navbar-text">Учебные группы</h3></RouterLink>
             </div>
           </div>
+
           <div class="flex items-center gap-20">
-            <input @click="makeAccessible"
-                   type="image"
-                   alt="visually impaired version"
-                   src='/eye.svg'
-                   class="w-10 h-10 hover:opacity-100"
-                   :class="[isAccessible ? 'opacity-100' : 'opacity-40']"/>
+            <button
+                @click="makeAccessible"
+                class="w-10 h-10 hover:opacity-100"
+                :class="[isAccessible ? 'opacity-100' : 'opacity-40']"
+                aria-label="Переключить версию для пользователей с ОВЗ"
+            >
+              <img src="/eye.svg" alt="Настройки интерфейса"/>
+            </button>
+
             <div v-if="authStore.isAuthenticated">
-              <RouterLink active-class="active" to="/account">
-                <label class="flex items-center gap-2 cursor-pointer">
+              <RouterLink active-class="active" to="/account" aria-label="Личный кабинет" role="menuitem"
+                          class="flex items-center gap-2 cursor-pointer">
                   <h3 class="hover:opacity-50">{{`${studentStore.lastName} ${studentStore.firstName}`}}</h3>
-                  <img src='/user.svg' class="w-10 h-10 opacity-80 hover:opacity-100" alt="">
-                </label>
+                  <img src='/user.svg' class="w-10 h-10 opacity-80 hover:opacity-100" alt="Иконка пользователя">
               </RouterLink>
             </div>
             <div v-else>
-              <RouterLink active-class="active" to="/signIn"><h3 class="hover:opacity-50">Вход</h3></RouterLink>
+              <RouterLink active-class="active" to="/signIn" aria-label="Авторизация"><h3 class="hover:opacity-50">Вход</h3></RouterLink>
             </div>
           </div>
-        </header>
+        </nav>
 
         <Transition
             enter-from-class="opacity-0"
             leave-to-class="opacity-0"
             enter-active-class="transition duration-500"
             leave-active-class="transition duration-500">
-          <SettingsPanel v-if="isAccessible" class="pt-5"/>
+          <SettingsPanel v-if="isAccessible" class="pt-8"/>
         </Transition>
 
       </div>
     </div>
   </header>
 </template>
-
-<style>
-.active {
-    @apply underline decoration-primary decoration-2
-}
-</style>

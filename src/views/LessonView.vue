@@ -56,39 +56,33 @@ onUnmounted(() => {
   filesStore.clearFiles();
 });
 
-const lessonFormRef = ref(null);
-
-const focusFirstElement = () => {
-  lessonFormRef.value?.focus();
-};
-
 </script>
 
 <template>
     <div>
-
-      <header class="flex justify-between">
+      <div class="flex justify-between mb-2">
         <h1>{{ lesson.name }}</h1>
         <div v-if="authStore.userInfo.role === 'ADMIN' || authStore.userInfo.role === 'TEACHER'" class="flex gap-2">
-          <button class="my-button" @click="showLessonEditDialog" aria-label="Открыть окно для редактирования урока">Редактировать</button>
-          <button class="my-button-danger" @click="deleteLesson" aria-label="Удалить урок">Удалить</button>
+          <button class="my-button" @click="showLessonEditDialog" >Редактировать</button>
+          <button class="my-button-danger" @click="deleteLesson">Удалить</button>
         </div>
-      </header>
+      </div>
 
-      <main>
+      <div>
         <section class="mb-5">
           <h2 class="mb-5">{{ lesson.description }}</h2>
           <p>{{lesson.content}}</p>
         </section>
 
-        <section v-if="lesson.attachments && lesson.attachments.length > 0" aria-labelledby="attachments-title">
-          <h2  id="attachments-title" class="mb-2">Вложения</h2>
+        <section v-if="lesson.attachments && lesson.attachments.length > 0">
+          <h2 class="mb-2">Вложения</h2>
           <Files/>
         </section>
-      </main>
+      </div>
 
-      <Dialog v-model:show="editLessonDialogVisible" @shown="focusFirstElement" aria-label="Окно редактирования урока">
-        <LessonForm ref="lessonFormRef" :lesson="lesson" @saveLessonData="editLesson"/>
+      <Dialog v-model:show="editLessonDialogVisible" aria-labelledby="dialog-title" >
+        <h2 id="dialog-title" class="sr-only">Окно для редактирования урока</h2>
+        <LessonForm :lesson="lesson" @saveLessonData="editLesson"/>
       </Dialog>
 
     </div>

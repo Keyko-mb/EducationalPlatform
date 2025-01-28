@@ -24,10 +24,13 @@ checkAuth()
 </script>
 
 <template>
-<main>
+<div id="app">
+  <a href="#main-content" class="skip-link">Перейти к основному контенту</a>
   <Navbar />
-  <div class="container mx-auto my-5">
-    <RouterView/>
-  </div>
-</main>
+  <main id="main-content">
+    <div class="container mx-auto my-5">
+      <RouterView/>
+    </div>
+  </main>
+</div>
 </template>
