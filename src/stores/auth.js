@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import axios from "axios";
 import {computed, ref} from "vue";
 import {useStudentStore} from "@/stores/studentInfo.js";
+import {useRouter} from "vue-router";
 
 export const useAuthStore = defineStore('auth', () => {
     const userInfo = ref({
@@ -12,27 +13,24 @@ export const useAuthStore = defineStore('auth', () => {
     })
     const isAuthenticated = computed(() => userInfo.value.token !== null);
 
-    const signIn = (payload) => {
+    const signIn = async (payload) => {
         try {
-            axios.post('auth/login', {
+            const response = await axios.post('auth/login', {
                 username: payload.username,
                 password: payload.password
-            }).then(async (response) => {
-                userInfo.value = {
-                    id: response.data.person.id,
-                    role: response.data.person.role,
-                    token: response.data.access_token,
-                    refresh_token: response.data.refresh_token
-                }
-                const studentStore = useStudentStore()
-                await studentStore.initStudent()
-                localStorage.setItem('userInfo', JSON.stringify({
-                    id: userInfo.value.id,
-                    role: userInfo.value.role,
-                    token: userInfo.value.token,
-                    refresh_token: userInfo.value.refresh_token
-                }))
-            })
+            });
+
+            userInfo.value = {
+                id: response.data.person.id,
+                role: response.data.person.role,
+                token: response.data.access_token,
+                refresh_token: response.data.refresh_token
+            };
+
+            localStorage.setItem('userInfo', JSON.stringify(userInfo.value));
+
+            const studentStore = useStudentStore()
+            await studentStore.initStudent()
         } catch (error) {
             console.error('Ошибка при аутентификации:', error);
         }
@@ -45,6 +43,10 @@ export const useAuthStore = defineStore('auth', () => {
             token: null,
             refresh_token: null
         }
+        localStorage.removeItem('userInfo');
+
+        const router = useRouter()
+        router.push('/signIn');
     }
 
     return {signIn, logOut, userInfo, isAuthenticated}

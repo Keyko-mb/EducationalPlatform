@@ -1,12 +1,10 @@
 <script setup>
 
 import {useAuthStore} from "@/stores/auth.js";
-import {useRouter} from "vue-router";
 import {useStudentStore} from "@/stores/studentInfo.js";
 import {onMounted, ref} from "vue";
 import axios from "axios";
 
-const router = useRouter()
 const studentStore = useStudentStore()
 const authStore = useAuthStore()
 const classroomName = ref('')
@@ -24,7 +22,6 @@ onMounted(() => {
 const logOut = () => {
   localStorage.removeItem('userInfo')
   authStore.logOut()
-  router.push('/signIn')
 }
 
 </script>

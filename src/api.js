@@ -13,29 +13,39 @@ axios.interceptors.request.use(config => {
     return config
 })
 
-// axios.interceptors.response.use((response) => {
-//     return response
-// }, (error) => {
-//     const authStore = useAuthStore()
-//     const originalRequest = error.config
-//     if (error.response.status === 401 && !originalRequest._retry) {
-//         originalRequest._retry = true
-//         try {
-//             axios.post('auth/refresh-token', {
-//                 refresh_token: JSON.parse(localStorage.getItem('userInfo')).refresh_token
-//             }).then((response) => {
-//                 const newToken = response.data
-//                 authStore.userInfo.token = newToken.access_token
-//                 authStore.userInfo.refresh_token = newToken.refresh_token
-//                 localStorage.setItem('userInfo', JSON.stringify({token: newToken.access_token, refresh_token: newToken.refresh_token}))
-//                 return axios(originalRequest)
-//             })
-//         } catch (error) {
-//             console.log('Ошибка при обновлении токена:', error)
-//             localStorage.removeItem('userInfo')
-//             router.push('/signIn')
-//             authStore.userInfo.token = ''
-//             authStore.userInfo.refresh_token = ''
-//         }
-//     }
-// })
+axios.interceptors.response.use(
+    response => response,
+    async error => {
+        const authStore = useAuthStore();
+        const originalRequest = error.config;
+
+        if (error.response.status === 401 && !originalRequest._retry) {
+            originalRequest._retry = true;
+
+            const storedUserInfo = JSON.parse(localStorage.getItem('userInfo'));
+            if (!storedUserInfo?.refresh_token) {
+                authStore.logOut();
+                return Promise.reject(error);
+            }
+
+            try {
+                const response = await axios.post('auth/refresh-token', null, {
+                    headers: {
+                        'Authorization': `Bearer ${storedUserInfo.refresh_token}`
+                    }
+                });
+
+                const newToken = response.data;
+                authStore.userInfo.token = newToken.access_token;
+                authStore.userInfo.refresh_token = newToken.refresh_token;
+                localStorage.setItem('userInfo', JSON.stringify(authStore.userInfo));
+
+                return axios(originalRequest);
+            } catch (refreshError) {
+                console.log('Ошибка при обновлении токена:', refreshError);
+                authStore.logOut();
+            }
+        }
+        return Promise.reject(error);
+    }
+);

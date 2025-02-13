@@ -14,6 +14,7 @@ import AccessDeniedView from "@/views/AccessDeniedView.vue";
 import TeacherHomeworkView from "@/views/TeacherHomeworkView.vue";
 import {useCurriculaStore} from "@/stores/curricula.js";
 import {useMaterialsStore} from "@/stores/materials.js";
+import NotFoundView from "@/views/NotFoundView.vue";
 
 const Role = {
   Admin: 'ADMIN',
@@ -127,8 +128,16 @@ const router = createRouter({
     },
     {
       path: '/access-denied',
+      name: 'access-denied',
       component: AccessDeniedView
     },
+    { path: "/404",
+      name: "not-found",
+      component: NotFoundView
+    },
+    { path: "/:pathMatch(.*)*",
+      redirect: "/404"
+    }
   ]
 })
 
