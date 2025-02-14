@@ -1,16 +1,19 @@
 <script setup>
-import {ref, defineEmits} from "vue";
+import {ref, defineEmits, watch} from "vue";
 
 const props = defineProps(['course'])
-const course = props.course ? ref(props.course) : ref({})
 const emit = defineEmits(['saveCourseData'])
+const course = ref({ ...props.course });
 
+watch(() => props.course, (newCourse) => {
+  course.value = { ...newCourse };
+}, { deep: true, immediate: true });
 
 const emitCourseData = () => {
   if (!course.value.access) {
     course.value.access = false
   }
-  emit('saveCourseData', course.value)
+  emit('saveCourseData', { ...course.value })
 }
 
 </script>
@@ -30,7 +33,7 @@ const emitCourseData = () => {
       <fieldset>
         <legend>Доступность</legend>
         <div class="flex gap-1">
-          <input type="checkbox" id="access" v-model="lesson.access"/>
+          <input type="checkbox" id="access" v-model="course.access"/>
           <label for="access">Доступно ученикам</label>
         </div>
       </fieldset>

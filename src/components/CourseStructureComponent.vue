@@ -42,6 +42,9 @@ onMounted( () => {
 const editCourse = (updatedCourse) => {
   axios
       .put(`courses/${updatedCourse.id}`, updatedCourse)
+      .then(() => {
+        Object.assign(props.course, updatedCourse);
+  });
   editCourseDialogVisible.value = false;
 }
 

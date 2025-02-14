@@ -10,9 +10,11 @@
     "test:unit": "vitest"
   },
   "dependencies": {
+    "@primevue/themes": "^4.2.5",
     "axios": "^1.7.2",
     "normalize.css": "^8.0.1",
     "pinia": "^2.1.7",
+    "primevue": "^4.2.5",
     "vue": "^3.4.27",
     "vue-router": "^4.3.0",
     "vue-toastification": "^2.0.0-rc.5"

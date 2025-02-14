@@ -3,6 +3,10 @@ import { RouterView } from 'vue-router';
 import Navbar from './components/UI/Navbar.vue'
 import {useAuthStore} from "@/stores/auth.js";
 import {useStudentStore} from "@/stores/studentInfo.js";
+import Toast from 'primevue/toast';
+import {useToast} from "primevue";
+import {initializeToastInterceptor} from "@/api.js";
+import {onMounted} from "vue";
 
 const authStore = useAuthStore()
 
@@ -19,8 +23,12 @@ const checkAuth = async () => {
   }
 }
 
-checkAuth()
+const toast = useToast();
+onMounted(() => {
+  initializeToastInterceptor(toast);
+});
 
+checkAuth();
 </script>
 
 <template>
@@ -30,6 +38,7 @@ checkAuth()
   <main id="main-content">
     <div class="container mx-auto my-5">
       <RouterView/>
+      <Toast/>
     </div>
   </main>
 </div>

@@ -12,11 +12,11 @@ export const useStudentStore = defineStore('student', {
         curriculumId: null,
     }),
     actions: {
-        initStudent() {
+        async initStudent() {
             const authStore = useAuthStore()
             this.studentId = authStore.userInfo.id
 
-            axios
+            await axios
                 .get('people/' + this.studentId).then((response) => {
                     this.firstName = response.data.firstName
                     this.lastName = response.data.lastName

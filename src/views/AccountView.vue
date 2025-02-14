@@ -4,11 +4,12 @@ import {useAuthStore} from "@/stores/auth.js";
 import {useStudentStore} from "@/stores/studentInfo.js";
 import {onMounted, ref} from "vue";
 import axios from "axios";
+import {useRouter} from "vue-router";
 
 const studentStore = useStudentStore()
 const authStore = useAuthStore()
 const classroomName = ref('')
-
+const router = useRouter()
 onMounted(() => {
   if (studentStore.classroomId) {
     axios
@@ -22,6 +23,7 @@ onMounted(() => {
 const logOut = () => {
   localStorage.removeItem('userInfo')
   authStore.logOut()
+  router.push('/signIn');
 }
 
 </script>
@@ -40,7 +42,6 @@ const logOut = () => {
                   <p class="text-sm">Учебная группа</p>
                   <p>{{ classroomName }}</p>
                 </div>
-
             </div>
         </div>
       <button @click="logOut" class="my-button w-auto">Выйти</button>

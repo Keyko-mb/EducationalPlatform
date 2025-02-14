@@ -2,7 +2,6 @@ import { defineStore } from 'pinia';
 import axios from "axios";
 import {computed, ref} from "vue";
 import {useStudentStore} from "@/stores/studentInfo.js";
-import {useRouter} from "vue-router";
 
 export const useAuthStore = defineStore('auth', () => {
     const userInfo = ref({
@@ -27,7 +26,7 @@ export const useAuthStore = defineStore('auth', () => {
                 refresh_token: response.data.refresh_token
             };
 
-            localStorage.setItem('userInfo', JSON.stringify(userInfo.value));
+            await localStorage.setItem('userInfo', JSON.stringify(userInfo.value));
 
             const studentStore = useStudentStore()
             await studentStore.initStudent()
@@ -44,9 +43,6 @@ export const useAuthStore = defineStore('auth', () => {
             refresh_token: null
         }
         localStorage.removeItem('userInfo');
-
-        const router = useRouter()
-        router.push('/signIn');
     }
 
     return {signIn, logOut, userInfo, isAuthenticated}

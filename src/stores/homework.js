@@ -42,7 +42,6 @@ export const useHomeworkStore = defineStore('homework', {
                      .put(`homeworks/${id}`, updatedHomework)
                      .then((response) => {
                          this.homework = response.data
-                         console.log(response.data)
                      })
              } catch (error) {
                  console.error("Ошибка при обновлении домашнего задания:", error);
