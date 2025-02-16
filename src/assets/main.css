@@ -16,6 +16,7 @@
     --tertiary-color: #d6d1f0;
     --form-color: #FFF;
     --text-color: #001021;
+    --error-text-color: #ff9999;
     --error-color: #ff9999;
     --truth-color: #a8ffab;
     --warning-color: #ffda99;
@@ -81,6 +82,7 @@
   --tertiary-color: #333;
   --form-color: #fff;
   --text-color: #333;
+  --error-text-color: #333;
   --error-color: #fff;
   --truth-color: #fff;
   --warning-color: #fff;
@@ -96,6 +98,7 @@
   --tertiary-color: #fff;
   --form-color: #333;
   --text-color: #fff;
+  --error-text-color: #fff;
   --error-color: #333;
   --truth-color: #333;
   --warning-color: #333;
@@ -111,6 +114,7 @@
   --tertiary-color: #063462;
   --form-color: #9dd1ff;
   --text-color: #333;
+  --error-text-color: #333;
   --error-color: #9dd1ff;
   --truth-color: #9dd1ff;
   --warning-color: #9dd1ff;
@@ -169,4 +173,12 @@
 
 .skip-link {
   @apply absolute -top-40 left-10 bg-secondary p-1 rounded-lg transition-all duration-300 z-[1000] focus:top-6
+}
+
+.error {
+  @apply text-errorTextColor
+}
+
+.access {
+  @apply bg-warnColor px-5 rounded-lg w-fit shadow-md
 }

@@ -152,6 +152,7 @@ router.beforeEach(async (to, from, next) => {
     return;
   }
   if (to.meta.roles && !to.meta.roles.includes(authStore.userInfo.role)) {
+    console.log(authStore.userInfo.role);
     next('/access-denied');
     return;
   }
@@ -195,6 +196,7 @@ router.beforeEach(async (to, from, next) => {
     const lesson = materialsStore.lessons.find(lesson => lesson.id.toString() === lessonId);
 
     if (!lesson || (authStore.userInfo.role === 'STUDENT' && !lesson.access)) {
+      console.log("не нашел урок похожу")
       next('/access-denied');
       return;
     }

@@ -37,7 +37,7 @@ const filteredCourses = computed(() => {
     <div>
       <h1 class="text-logoColor">{{curriculum.name}}</h1>
       <p>{{ curriculum.description }}</p>
-      <p v-if="!curriculum.access" class="bg-warnColor px-5 rounded-lg w-fit" aria-label="Статус программы: скрыто">Скрыто</p>
+      <p v-if="!curriculum.access" class="access" aria-label="Статус программы: скрыто">Скрыто</p>
     </div>
     <button v-if="authStore.userInfo.role === 'ADMIN' || authStore.userInfo.role === 'TEACHER'"
             class="my-button h-1/2"

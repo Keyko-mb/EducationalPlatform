@@ -50,7 +50,7 @@ const filteredHomeworks = computed(() => {
 
     <section>
       <p>{{ props.course.description }}</p>
-      <p v-if="!props.course.access" class="bg-warnColor px-5 rounded-lg w-fit" aria-label="Статус раздела: скрыто">Скрыто</p>
+      <p v-if="!props.course.access" class="access" aria-label="Статус раздела: скрыто">Скрыто</p>
     </section>
 
     <section>
@@ -66,7 +66,7 @@ const filteredHomeworks = computed(() => {
             <template #caption>
               <div>
                 <p>{{ lesson.description }}</p>
-                <p v-if="!lesson.access" class="bg-warnColor px-5 rounded-lg w-fit" aria-label="Статус урока: скрыто">Скрыто</p>
+                <p v-if="!lesson.access" class="access" aria-label="Статус урока: скрыто">Скрыто</p>
               </div>
             </template>
           </Card>
@@ -100,7 +100,7 @@ const filteredHomeworks = computed(() => {
               <template #caption>
                 <div>
                   <p>{{homework.description}}</p>
-                  <p v-if="!homework.access" class="bg-warnColor px-5 rounded-lg w-fit" aria-label="Статус задания: скрыто">Скрыто</p>
+                  <p v-if="!homework.access" class="access" aria-label="Статус задания: скрыто">Скрыто</p>
                 </div>
               </template>
             </Card>

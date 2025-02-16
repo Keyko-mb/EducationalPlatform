@@ -3,9 +3,8 @@ import './assets/main.css'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
-import PrimeVue from 'primevue/config';
-import ToastService from 'primevue/toastservice';
-import Aura from '@primevue/themes/aura';
+import Toast from 'vue-toastification';
+import 'vue-toastification/dist/index.css';
 
 import App from './App.vue'
 import router from './router'
@@ -14,12 +13,20 @@ const app = createApp(App)
 const pinia = createPinia()
 
 app.use(pinia)
-app.use(PrimeVue, {
-    theme: {
-        preset: Aura
-    }
+app.use(Toast, {
+    transition: "Vue-Toastification__fade",
+    position: 'top-right',
+    timeout: 5000,
+    closeOnClick: true,
+    pauseOnFocusLoss: true,
+    pauseOnHover: true,
+    draggable: false,
+    draggablePercent: 0.6,
+    showCloseButtonOnHover: true,
+    hideProgressBar: true,
+    closeButton: 'button',
+    icon: true,
 });
-app.use(ToastService);
 app.use(router)
 
 app.mount('#app')

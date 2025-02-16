@@ -73,7 +73,7 @@ const filteredCurricula = computed(() => {
               <template #caption>
                 <div>
                   <p>{{ curriculum.description }}</p>
-                  <p v-if="!curriculum.access" class="bg-warnColor px-5 rounded-lg w-fit" aria-label="Статус учебной программы">Скрыто</p>
+                  <p v-if="!curriculum.access" class="access" aria-label="Статус учебной программы">Скрыто</p>
                 </div>
               </template>
             </Card>

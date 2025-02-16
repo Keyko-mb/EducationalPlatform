@@ -20,6 +20,7 @@ export default {
         truthColor: "var(--truth-color)",
         warnColor: "var(--warning-color)",
         textColor: "var(--text-color)",
+        errorTextColor: "var(--error-text-color)",
         logoColor: "var(--logo-color)",
         tableColor: "var(--table-color)",
         hyperlinkColor: "var(--hyperlink-color)",

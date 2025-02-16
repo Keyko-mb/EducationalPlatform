@@ -30,8 +30,10 @@ export const useAuthStore = defineStore('auth', () => {
 
             const studentStore = useStudentStore()
             await studentStore.initStudent()
+            return { success: true};
         } catch (error) {
             console.error('Ошибка при аутентификации:', error);
+            return { success: false};
         }
     }
 

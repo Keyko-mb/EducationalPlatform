@@ -1,6 +1,9 @@
 import axios from "axios";
 import { useAuthStore } from "@/stores/auth.js";
 import router from '@/router';
+import { useToast } from 'vue-toastification';
+import ToastMessage from "@/components/UI/ToastMessage.vue";
+import {h} from "vue";
 
 let isRefreshing = false;
 let failedQueue = [];
@@ -91,27 +94,30 @@ axios.interceptors.response.use(
     }
 );
 
-export function initializeToastInterceptor(toast) {
+export function initializeToastInterceptor() {
+    const toast = useToast();
+
     axios.interceptors.response.use(
         response => response,
         error => {
             const status = error.response?.status;
             const message = error.response?.data?.error;
-            const details = error.response?.data?.details ? Object.values(error.response?.data?.details).join('\n') : 'Произошла ошибка';
+            const details = error.response?.data?.details;
 
+            const toastContent = h(ToastMessage, { message, details });
             // Обработка специфических статусов
             switch (status) {
                 case 401:
-                    toast.add({ severity: 'warn', summary: message, detail: details, life: 5000 });
+                    toast.error(toastContent);
                     break;
                 case 403:
-                    toast.add({ severity: 'error', summary: message, detail: details, life: 5000 });
+                    toast.error(toastContent);
                     break;
                 case 404:
-                    toast.add({ severity: 'warn', summary: message, detail: details, life: 5000 });
+                    toast.warning(toastContent);
                     break;
                 default:
-                    toast.add({ severity: 'error', summary: message, detail: details, life: 5000 });
+                    toast.error(toastContent);
             }
 
             return Promise.reject(error);
