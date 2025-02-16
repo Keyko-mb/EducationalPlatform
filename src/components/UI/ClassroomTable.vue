@@ -1,12 +1,20 @@
 <script setup lang="ts">
-import {defineProps} from "vue";
+import {defineProps, ref} from "vue";
+import Dialog from "@/components/UI/Dialog.vue";
+
 const props = defineProps(["users", "classroom"]);
+const deleteConfirmDialogVisible = ref(false);
 
 const emits = defineEmits(['deleteClassroom'])
+
+const showDeleteConfirm = () => {
+  deleteConfirmDialogVisible.value = true;
+}
 
 const emitDeleteClassroom = () => {
   const classroomId = props.classroom.id
   emits('deleteClassroom', classroomId)
+  deleteConfirmDialogVisible.value = false;
 }
 
 </script>
@@ -15,10 +23,11 @@ const emitDeleteClassroom = () => {
   <div>
     <div class="flex items-start gap-2">
       <details class="w-full" open>
-        <summary style=" font-size: 1.25em;"
+        <summary style="font-size: 1.25em;"
                  role="button"
                  aria-expanded="true">
-          {{props.classroom.name}}</summary>
+          {{props.classroom.name}}
+        </summary>
         <table class="w-full rounded-lg overflow-hidden border-collapse shadow-md mt-2">
           <caption class="sr-only">
             Список студентов учебной группы {{ props.classroom.name }}
@@ -40,16 +49,34 @@ const emitDeleteClassroom = () => {
         </table>
       </details>
       <button
-          @click="emitDeleteClassroom"
+          @click="showDeleteConfirm"
           class="cursor-pointer w-5 h-5 opacity-50 hover:opacity-100"
-          :aria-label='"Удалить учебную группу" + props.classroom.name'
+          :aria-label='"Удалить учебную группу " + props.classroom.name'
       >
         <img src="/delete.svg" alt="" role="presentation"/>
       </button>
     </div>
+
+    <Dialog v-model:show="deleteConfirmDialogVisible" aria-labelledby="confirm-dialog-title">
+      <h2 id="confirm-dialog-title" class="text-lg mb-4">Подтверждение удаления</h2>
+      <p class="mb-4">Вы уверены, что хотите удалить учебную группу "{{ props.classroom.name }}"?</p>
+      <div class="flex gap-4 justify-end">
+        <button
+            @click="deleteConfirmDialogVisible = false"
+            class="my-button"
+        >
+          Отмена
+        </button>
+        <button
+            @click="emitDeleteClassroom"
+            class="my-button-danger"
+        >
+          Удалить
+        </button>
+      </div>
+    </Dialog>
   </div>
 </template>
-
 
 <style>
 th, td {

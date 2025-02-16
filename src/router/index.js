@@ -109,14 +109,6 @@ const router = createRouter({
         roles: [Role.Admin]
       }
     },
-    // {
-    //   path: '/people/:id/edit',
-    //   name: 'editUser',
-    //   component: PersonEditionView,
-    //   meta: {
-    //     auth: true
-    //   }
-    // },
     {
       path: '/classrooms',
       name: 'classrooms',

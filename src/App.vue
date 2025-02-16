@@ -1,6 +1,7 @@
 <script setup>
 import { RouterView } from 'vue-router';
 import Navbar from './components/UI/Navbar.vue'
+import Breadcrumbs from './components/UI/Breadcrumbs.vue'
 import {useAuthStore} from "@/stores/auth.js";
 import {useStudentStore} from "@/stores/studentInfo.js";
 import {initializeToastInterceptor} from "@/api.js";
@@ -26,16 +27,19 @@ onMounted(() => {
 });
 
 checkAuth();
+
+
 </script>
 
 <template>
-<div id="app">
-  <a href="#main-content" class="skip-link">Перейти к основному контенту</a>
-  <Navbar />
-  <main id="main-content">
-    <div class="container mx-auto my-5">
-      <RouterView/>
-    </div>
-  </main>
-</div>
+  <div id="app">
+    <a href="#main-content" class="skip-link">Перейти к основному контенту</a>
+    <Navbar />
+    <main id="main-content">
+      <div class="container mx-auto my-5">
+        <Breadcrumbs />
+        <RouterView/>
+      </div>
+    </main>
+  </div>
 </template>
