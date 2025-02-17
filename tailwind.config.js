@@ -24,6 +24,7 @@ export default {
         logoColor: "var(--logo-color)",
         tableColor: "var(--table-color)",
         hyperlinkColor: "var(--hyperlink-color)",
+        breadcrumbColor: "var(--breadcrumb-color)",
       }
   },
   plugins: [],

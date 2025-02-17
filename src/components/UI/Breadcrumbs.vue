@@ -78,7 +78,7 @@ const breadcrumbs = computed(() => {
               c => c.id.toString() === segments[i + 1]
           );
           name = course ? course.name : 'Курс';
-          // Страницы курса не существует, сделаем элемент не кликабельным
+          // Страницы курса не существует, делаем элемент не кликабельным
           clickable = false;
         } else if (segment.toLowerCase() === 'lessons') {
           const lesson = materialsStore.lessons.find(
@@ -104,7 +104,7 @@ const breadcrumbs = computed(() => {
         // Для остальных сегментов
         accumulatedPath += '/' + segment;
         let name = segment;
-        // Можно добавить дополнительные переводы здесь
+        // Возможные дополнительные переводы для сегментов
         switch (segment.toLowerCase()) {
           case 'settings':
             name = 'Настройки';
@@ -130,9 +130,19 @@ const breadcrumbs = computed(() => {
       }
       accumulatedPath += '/' + segment;
       let name = segment;
+      // Переводим ключевые сегменты на русский язык
       switch (segment.toLowerCase()) {
         case 'settings':
           name = 'Настройки';
+          break;
+        case 'classrooms':
+          name = 'Учебные группы';
+          break;
+        case 'account':
+          name = 'Личный кабинет';
+          break;
+        case 'people':
+          name = 'Пользователи';
           break;
       }
       if (!isNumeric(segment)) {
@@ -155,10 +165,10 @@ const breadcrumbs = computed(() => {
 
 <template>
   <nav aria-label="Навигация по сайту" class="mb-4">
-    <ol class="flex gap-2 text-sm">
+    <ol class="flex gap-2">
       <!-- "Главная" всегда отображается -->
       <li>
-        <router-link to="/" class="text-blue-600 hover:text-blue-800">
+        <router-link to="/" class="text-breadcrumbColor hover:brightness-125">
           Главная
         </router-link>
       </li>
@@ -168,7 +178,7 @@ const breadcrumbs = computed(() => {
           <span class="text-gray-500">{{ item.name }}</span>
         </template>
         <template v-else>
-          <router-link :to="item.path" class="text-blue-600 hover:text-blue-800">
+          <router-link :to="item.path" class="text-breadcrumbColor hover:brightness-125">
             {{ item.name }}
           </router-link>
         </template>

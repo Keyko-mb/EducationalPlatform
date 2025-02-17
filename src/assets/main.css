@@ -24,6 +24,7 @@
     --logo-color: #ff8b90;
     --table-color: #d6d1f0;
     --hyperlink-color: #0000FF;
+    --breadcrumb-color: #6a58c9;
     --line-height-factor: 1.5;
     --letter-spacing-factor: 0;
     --navbar-line-height-factor: 1.5;
@@ -90,6 +91,7 @@
   --logo-color: #333;
   --table-color: #fff;
   --hyperlink-color: #333;
+  --breadcrumb-color: #333;
 }
 
 .theme-dark {
@@ -106,6 +108,7 @@
   --logo-color: #fff;
   --table-color: #333;
   --hyperlink-color: #fff;
+  --breadcrumb-color: #fff;
 }
 
 .theme-blue {
@@ -122,6 +125,7 @@
   --logo-color: #063462;
   --table-color: #9dd1ff;
   --hyperlink-color: #333;
+  --breadcrumb-color: #063462;
 }
 
 .disable-images img:not([alt="Настройки интерфейса"]),

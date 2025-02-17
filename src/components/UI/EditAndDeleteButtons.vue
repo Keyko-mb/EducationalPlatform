@@ -59,7 +59,7 @@ const cancelDelete = () => {
       aria-labelledby="confirm-dialog-title"
   >
     <div class="m-auto min-w-[300px] border border-tertiary rounded-lg p-5 bg-bgColor">
-      <h2 id="confirm-dialog-title" class="text-lg mb-4">Подтверждение удаления</h2>
+      <h2 id="confirm-dialog-title" class="text-lg mb-4 text-left">Подтверждение удаления</h2>
       <p class="mb-4">Вы уверены, что хотите удалить этот элемент?</p>
       <div class="flex gap-4 justify-end">
         <button

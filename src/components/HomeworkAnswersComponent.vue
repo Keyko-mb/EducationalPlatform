@@ -15,11 +15,15 @@ const answers = computed(() => homeworkStore.answers)
 const answerStore = useAnswerStore()
 const isSaved = ref(false);
 
+const totalPages = computed(() => homeworkStore.totalPages);
+const currentPage = ref(0);
+const pageSize = ref(10);
+
 const selectedAnswer = ref(null)
 const showFilesDialogVisible = ref(false)
 
 onMounted(async () => {
-  await homeworkStore.fetchAnswers(homeworkId)
+  await homeworkStore.fetchAnswers(homeworkId, currentPage.value, pageSize.value);
 })
 
 const saveComment = async (answer) => {
@@ -68,6 +72,41 @@ const getReport = async () => {
     console.error("Ошибка при экспорте файла:", error);
   }
 }
+
+const handlePageChange = async (page) => {
+  if (page >= 0 && page < totalPages.value) {
+    currentPage.value = page;
+    await homeworkStore.fetchAnswers(homeworkId, currentPage.value, pageSize.value);
+  }
+};
+
+const visiblePages = computed(() => {
+  const maxVisible = 10;
+  const pages = [];
+  const total = totalPages.value;
+  // Если количество страниц меньше или равно максимальному количеству отображаемых элементов, // возвращаем все страницы
+  if (total <= maxVisible) {
+    for (let i = 1; i <= total; i++) {
+      pages.push(i);
+    }
+  } else {
+    // Определяем диапазон так, чтобы currentPage была примерно по центру
+    const half = Math.floor(maxVisible / 2);
+    let start = currentPage.value + 1 - half; // +1, т.к. currentPage начинается с 0
+    if (start < 1) {
+      start = 1;
+    }
+    let end = start + maxVisible - 1;
+    if (end > total) {
+      end = total;
+      start = end - maxVisible + 1;
+    }
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+  }
+  return pages;
+});
 </script>
 
 <template>
@@ -133,6 +172,35 @@ const getReport = async () => {
         </tr>
       </tbody>
     </table>
+
+    <div class="flex items-center justify-center mt-4">
+      <button
+          class="px-3 py-1 border border-tertiary rounded-lg shadow-md bg-formColor transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:brightness-95"
+          :disabled="currentPage <= 0"
+          @click="handlePageChange(currentPage - 1)">
+        <
+      </button>
+      <div class="mx-3 flex space-x-1">
+      <span
+          v-for="n in visiblePages"
+          :key="n"
+          @click="handlePageChange(n - 1)"
+          class="cursor-pointer px-3 py-1 rounded-lg"
+          :class="{
+          'bg-logoColor text-formColor': currentPage + 1 === n,
+          'bg-formColor border border-tertiary': currentPage + 1 !== n
+        }">
+        {{ n }}
+      </span>
+      </div>
+      <button
+          class="px-3 py-1 border border-tertiary rounded-lg shadow-md bg-formColor transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:brightness-95"
+          :disabled="currentPage >= totalPages - 1"
+          @click="handlePageChange(currentPage + 1)">
+        >
+      </button>
+    </div>
+
     <Dialog v-model:show="showFilesDialogVisible">
       <h2 id="dialog-title" class="sr-only" aria-labelledby="dialog-title">Окно с вложениями</h2>
       <FilesModal :answer="selectedAnswer"/>

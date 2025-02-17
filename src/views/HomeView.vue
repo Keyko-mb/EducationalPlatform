@@ -1,5 +1,5 @@
 <template>
-    <div class="my-10 flex flex-col items-start gap-5">
+    <div class="mb-10 flex flex-col items-start gap-5">
         <h1>
             Сайт детского центра раннего развития и дополнительного образования "Мультизнайка"
         </h1>

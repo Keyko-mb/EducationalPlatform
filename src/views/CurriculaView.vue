@@ -15,9 +15,13 @@ const authStore = useAuthStore()
 const studentStore = useStudentStore()
 const studentCurriculum = computed(() => studentStore.curriculumId);
 
+const totalPages = computed(() => curriculaStore.totalPages);
+const currentPage = ref(0);
+const pageSize = ref(10);
+
 onMounted (async () => {
   if (authStore.userInfo.role !== "STUDENT") {
-    await curriculaStore.fetchCurricula();
+    await curriculaStore.fetchCurriculaPaginated(currentPage.value, pageSize.value);
   }
   document.body.classList.add('table-page');
 })
@@ -28,6 +32,13 @@ onUnmounted(() => {
 
 const router = useRouter();
 const addCurriculumDialogVisible = ref(false)
+
+const handlePageChange = async (page) => {
+  if (page >= 0 && page < totalPages.value) {
+    currentPage.value = page;
+    await curriculaStore.fetchCurriculaPaginated(currentPage.value, pageSize.value);
+  }
+};
 
 const showCurriculumAddDialog = () => {
   addCurriculumDialogVisible.value = true;
@@ -49,19 +60,51 @@ const filteredCurricula = computed(() => {
   });
 });
 
+const visiblePages = computed(() => {
+  const maxVisible = 10;
+  const pages = [];
+  const total = totalPages.value;
+  // Если количество страниц меньше или равно максимальному количеству отображаемых элементов, // возвращаем все страницы
+  if (total <= maxVisible) {
+    for (let i = 1; i <= total; i++) {
+      pages.push(i);
+    }
+  } else {
+    // Определяем диапазон так, чтобы currentPage была примерно по центру
+    const half = Math.floor(maxVisible / 2);
+    let start = currentPage.value + 1 - half; // +1, т.к. currentPage начинается с 0
+    if (start < 1) {
+      start = 1;
+    }
+    let end = start + maxVisible - 1;
+    if (end > total) {
+      end = total;
+      start = end - maxVisible + 1;
+    }
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+  }
+  return pages;
+});
+
 </script>
 
 <template>
     <h1>Обучение</h1>
     <div class="my-3">
-      <label for="searchInput" class="sr-only">Поле для поиска учебной программы по названию</label>
-      <input
-          type="text"
-          id="searchInput"
-          v-model="searchQuery"
-          class="my-input"
-          placeholder="Поиск по названию..."
-      />
+      <div class="flex justify-between">
+        <label for="searchInput" class="sr-only">Поле для поиска учебной программы по названию</label>
+        <input
+            type="text"
+            id="searchInput"
+            v-model="searchQuery"
+            class="my-input"
+            placeholder="Поиск по названию..."
+        />
+        <button v-if="authStore.userInfo.role === 'ADMIN'" class="my-button" @click="showCurriculumAddDialog">Добавить учебную программу</button>
+
+      </div>
 
       <div v-if="authStore.userInfo.role === 'ADMIN' || authStore.userInfo.role === 'TEACHER'">
         <h2 class="sr-only" id="homeworks-heading">Список учебных программ</h2>
@@ -83,7 +126,33 @@ const filteredCurricula = computed(() => {
           <p>Учебные программы отсутствуют</p>
         </div>
 
-        <button v-if="authStore.userInfo.role === 'ADMIN'" class="my-button" @click="showCurriculumAddDialog">Добавить учебную программу</button>
+        <div class="flex items-center my-4">
+          <button
+              class="px-3 py-1 border border-tertiary rounded-lg shadow-md bg-formColor transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:brightness-95"
+              :disabled="currentPage <= 0"
+              @click="handlePageChange(currentPage - 1)">
+            <
+          </button>
+          <div class="mx-3 flex space-x-1">
+      <span
+          v-for="n in visiblePages"
+          :key="n"
+          @click="handlePageChange(n - 1)"
+          class="cursor-pointer px-3 py-1 rounded-lg"
+          :class="{
+          'bg-logoColor text-formColor': currentPage + 1 === n,
+          'bg-formColor border border-tertiary': currentPage + 1 !== n
+        }">
+        {{ n }}
+      </span>
+          </div>
+          <button
+              class="px-3 py-1 border border-tertiary rounded-lg shadow-md bg-formColor transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:brightness-95"
+              :disabled="currentPage >= totalPages - 1"
+              @click="handlePageChange(currentPage + 1)">
+            >
+          </button>
+        </div>
 
         <Dialog v-model:show="addCurriculumDialogVisible" aria-labelledby="dialog-title">
           <h2 id="dialog-title" class="sr-only">Окно для создания новой учебной программы</h2>
