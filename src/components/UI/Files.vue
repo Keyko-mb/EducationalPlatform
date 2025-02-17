@@ -30,7 +30,7 @@ const links = computed(() => filesStore.links);
             id="image-{{index}}"
             class="sr-only"
         >
-          Изображение {{index + 1}}: {{file.name || 'Без названия'}}
+          Изображение {{index + 1}}: {{file.fileName || 'Без названия'}}
         </figcaption>
       </figure>
     </div>
@@ -46,9 +46,9 @@ const links = computed(() => filesStore.links);
             class="text-center"
             role="listitem">
           <a :href="file.url"
-             :download="'file-' + index"
+             :download="file.fileName"
              class="my-link">
-            Скачать файл {{ index + 1 }}
+            Скачать файл {{ file.fileName }}
           </a>
         </li>
       </ul>

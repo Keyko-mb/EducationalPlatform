@@ -10,6 +10,8 @@ import CourseForm from "@/components/Forms/CourseForm.vue";
 import LessonForm from "@/components/Forms/LessonForm.vue";
 import HomeworkForm from "@/components/Forms/HomeworkForm.vue";
 import {useAuthStore} from "@/stores/auth.js";
+import {useFilesStore} from "@/stores/files.js";
+import {useMaterialsStore} from "@/stores/materials.js";
 
 const curriculumId = useRoute().params.id
 const router = useRouter()
@@ -18,6 +20,8 @@ const props = defineProps(["course"])
 const emit = defineEmits(['deleteClick'])
 
 const authStore = useAuthStore()
+const filesStore = useFilesStore();
+const materialsStore = useMaterialsStore();
 
 const editCourseDialogVisible = ref(false)
 const addLessonDialogVisible = ref(false)
@@ -48,26 +52,52 @@ const editCourse = (updatedCourse) => {
   editCourseDialogVisible.value = false;
 }
 
-const addLesson = (lesson) => {
+const addLesson = (lesson, newFiles) => {
   lesson.courseId = props.course.id
+  lesson.attachments = []
   axios
       .post("lessons", lesson)
-      .then((response) => {
-        lessons.value.push(response.data)
-        axios
+      .then(async (response) => {
+        lesson = response.data
+        await axios
             .put(`lessons/${response.data.id}/course/${props.course.id}`)
+        let uploadedFiles = []
+        for (const file of newFiles) {
+          const filename = await filesStore.uploadFile('lessons', response.data.id, file);
+          uploadedFiles.push(filename);
+        }
+        lesson.attachments = uploadedFiles
+        await axios
+            .put(`lessons/${response.data.id}`, lesson).then((response) => {
+              lessons.value.push(response.data)
+            })
+        filesStore.clearFiles();
+        await materialsStore.fetchLessons();
       })
   addLessonDialogVisible.value = false;
 }
 
-const addHomework = (homework) => {
+const addHomework = (homework, newFiles) => {
   homework.courseId = props.course.id
+  homework.attachments = []
   axios
       .post("homeworks", homework)
-      .then((response) => {
-        homeworks.value.push(response.data)
-        axios
+      .then(async (response) => {
+        homework = response.data
+        await axios
             .put(`homeworks/${response.data.id}/course/${props.course.id}`)
+        let uploadedFiles = []
+        for (const file of newFiles) {
+          const filename = await filesStore.uploadFile('homeworks', response.data.id, file);
+          uploadedFiles.push(filename);
+        }
+        homework.attachments = uploadedFiles
+        await axios
+            .put(`homeworks/${response.data.id}`, homework).then((response) => {
+              homeworks.value.push(response.data)
+            })
+        filesStore.clearFiles();
+        await materialsStore.fetchHomeworks();
       })
   addHomeworkDialogVisible.value = false;
 }
@@ -96,7 +126,7 @@ const showHomeworkAddDialog = () => {
       </Dialog>
     </div>
     <p>{{ props.course.description }}</p>
-    <p v-if="!props.course.access" class="bg-warnColor px-5 rounded-lg w-fit" aria-label="Статус раздела: скрыто">Скрыто</p>
+    <p v-if="!props.course.access" class="access" aria-label="Статус раздела: скрыто">Скрыто</p>
     <div class="cards-container space-y-3" role="list">
       <h2 class="sr-only">Список уроков</h2>
 
@@ -105,7 +135,7 @@ const showHomeworkAddDialog = () => {
         <template #caption>
           <div>
             <p>{{ lesson.description }}</p>
-            <p v-if="!lesson.access" class="bg-warnColor px-5 rounded-lg w-fit" aria-label="Статус урока: скрыто">Скрыто</p>
+            <p v-if="!lesson.access" class="access" aria-label="Статус урока: скрыто">Скрыто</p>
           </div>
         </template>
       </Card>
@@ -116,7 +146,7 @@ const showHomeworkAddDialog = () => {
         <template #caption>
           <div>
             <p>{{homework.description}}</p>
-            <p v-if="!homework.access" class="bg-warnColor px-5 rounded-lg w-fit" aria-label="Статус задания: скрыто">Скрыто</p>
+            <p v-if="!homework.access" class="access" aria-label="Статус задания: скрыто">Скрыто</p>
           </div>
         </template>
       </Card>

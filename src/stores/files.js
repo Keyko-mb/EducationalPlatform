@@ -13,10 +13,20 @@ export const useFilesStore = defineStore("files", () => {
                 responseType: "blob",
             });
             const contentType = response.headers["content-type"];
+            const contentDisposition = response.headers["content-disposition"];
+            let fileName = file;
+            if (contentDisposition) {
+                const fileNameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                const matches = fileNameRegex.exec(contentDisposition);
+                if (matches != null && matches[1]) {
+                    fileName = matches[1].replace(/['"]/g, '');
+                }
+            }
             const fileURL = URL.createObjectURL(response.data);
 
             decodedFiles.value.push({
                 name: file,
+                fileName: fileName,
                 url: fileURL,
                 type: contentType,
             });
@@ -30,7 +40,9 @@ export const useFilesStore = defineStore("files", () => {
         formData.append('image', file);
         try {
             const response = await axios.post(`${baseUrl}/${id}/attachments`, formData)
-            return response.data;
+            if (!response.data.error) {
+                return response.data;
+            }
         } catch (error) {
             console.error("Ошибка при загрузке вложения:", error);
         }
@@ -52,9 +64,9 @@ export const useFilesStore = defineStore("files", () => {
         );
     }
 
-    const deleteFile = async (baseUrl, id, file) => {
-        await axios.delete(`${baseUrl}/${id}/attachments/${file}`);
-        decodedFiles.value = decodedFiles.value.filter((f) => f.name !== file);
+    const deleteFile = async (baseUrl, id, name) => {
+        await axios.delete(`${baseUrl}/${id}/attachments/${name}`);
+        decodedFiles.value = decodedFiles.value.filter((f) => f.name !== name);
     }
 
     const clearFiles = () => {

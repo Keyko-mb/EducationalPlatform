@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import {defineProps, ref} from "vue";
 import EditAndDeleteButtons from "@/components/UI/EditAndDeleteButtons.vue";
 import Dialog from "@/components/UI/Dialog.vue";
@@ -48,6 +48,26 @@ const showClassroomEditDialog = (classroom) => {
   editClassroomDialogVisible.value = true;
 }
 
+const getReport = async () => {
+  try {
+    const response = await axios.get("reports/group/" + props.classroom.id, {
+      responseType: "blob",
+    });
+
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    link.href = url;
+
+    link.setAttribute("download", "Отчет по группе - " + props.classroom.name + ".xlsx");
+    document.body.appendChild(link);
+    link.click();
+
+    link.remove();
+  } catch (error) {
+    console.error("Ошибка при экспорте файла:", error);
+  }
+}
+
 </script>
 
 <template>
@@ -57,6 +77,9 @@ const showClassroomEditDialog = (classroom) => {
                  aria-controls="students-table"
                  aria-expanded="true"
         >{{props.classroom.name}}</summary>
+        <div class="flex justify-end mb-2">
+          <button class="px-6 py-2 rounded-lg shadow-md transition duration-300 hover:brightness-110 border border-tertiary" @click="getReport">Отчет по учебной группе</button>
+        </div>
         <div>
           <table v-if="props.classroom.persons.length > 0" class="w-full rounded-lg overflow-hidden border-collapse shadow-md mt-2">
             <thead role="rowgroup">

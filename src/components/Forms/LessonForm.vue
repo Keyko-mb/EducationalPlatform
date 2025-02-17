@@ -1,69 +1,112 @@
 <script setup>
-import {defineEmits, ref} from "vue";
+import {defineEmits, ref, watch} from "vue";
 import {useFilesStore} from "@/stores/files.js";
 
+import {useForm} from "vee-validate";
+import * as yup from "yup";
+
 const props = defineProps(['lesson'])
-const lesson =  ref({ ...props.lesson });
 const emit = defineEmits(['saveLessonData'])
 const filesStore = useFilesStore();
 const files = ref(filesStore.decodedFiles);
 const newFiles = ref([]);
 const removedFiles = ref([]);
 
-const emitLessonData = async () => {
-  if (!lesson.value.access) {
-    lesson.value.access = false
+const schema = yup.object({
+  name: yup.string()
+      .min(2, "Название урока должно содержать от 2 символов")
+      .max(150, "Название урока должно содержать до 150 символов")
+      .required("Название урока не может быть пустым"),
+  content: yup.string()
+      .max(5000, "Содержимое урока не должно превышать 5000 символов")
+      .nullable(),
+  attachments: yup.array(),
+  description: yup.string()
+      .max(5000, "Описание урока не должно превышать 5000 символов")
+      .nullable(),
+  access: yup.boolean()
+});
+
+const { handleSubmit, errors, defineField, resetForm, setFieldValue } = useForm({
+  validationSchema: schema,
+  initialValues: props.lesson
+});
+
+const [nameField, nameAttrs] = defineField('name');
+const [descriptionField, descriptionAttrs] = defineField('description');
+const [contentField, contentAttrs] = defineField('content');
+const [accessField, accessAttrs] = defineField('access');
+
+watch(() => props.lesson, (newValue) => {
+  resetForm({ values: newValue });
+});
+
+const emitLessonData = handleSubmit(async (values) => {
+  if (!values.access) {
+    values.access = false
   }
-  for (const file of removedFiles.value) {
-    await filesStore.deleteFile('lessons', lesson.value.id, file.name);
-    lesson.value.attachments = lesson.value.attachments.filter(f => f !== file.name);
+  if (values.id) {
+    for (const file of removedFiles.value) {
+      await filesStore.deleteFile('lessons', values.id, file.name);
+      values.attachments = values.attachments.filter(f => f !== file.name);
+    }
+    for (const file of newFiles.value) {
+      const filename = await filesStore.uploadFile('lessons', values.id, file);
+      if (filename) {
+        await filesStore.fetchFile('lessons', values.id, filename);
+        values.attachments.push(filename);
+      }
+    }
+    setFieldValue("attachments", values.attachments);
+
+    filesStore.refreshFiles();
   }
-  for (const file of newFiles.value) {
-    const filename = await filesStore.uploadFile('lessons', lesson.value.id, file);
-    await filesStore.fetchFile('lessons', lesson.value.id, filename);
-    lesson.value.attachments.push(filename);
-  }
-  filesStore.refreshFiles();
-  emit('saveLessonData', lesson.value, newFiles.value);
+  emit('saveLessonData', values, newFiles.value);
   newFiles.value = [];
   removedFiles.value = [];
-}
+});
 
 const handleFileUpload = (event) => {
   newFiles.value = Array.from(event.target.files);
 }
 
-const removeFile = (file) => {
+const removeFile = async (file) => {
   try {
-    files.value = Object.values(files.value).filter(f => f.name !== file.name);
+    files.value = files.value.filter(f => f.name !== file.name);
     removedFiles.value.push(file);
   } catch (error) {
-      console.error('Ошибка при удалении вложения:', error);
+    console.error('Ошибка при удалении вложения:', error);
   }
 }
-
 </script>
 
 <template>
   <form @submit.prevent="emitLessonData" aria-labelledby="lesson-title">
-    <div class="my-5">
+    <div>
       <h1 id="lesson-title">Урок</h1>
 
       <fieldset aria-labelledby="basic-info">
         <legend  id="basic-info" class="sr-only">Основная информация</legend>
         <div class="my-5">
           <label for="name">Название</label>
-          <input class="my-input w-full" type="text" id="name" v-model="lesson.name" aria-label="Поле для ввода названия урока">
+          <input class="my-input w-full" type="text" id="name" v-model="nameField"
+                 v-bind="nameAttrs" aria-label="Поле для ввода названия урока"
+                 placeholder="Введите название урока">
+          <p v-if="errors.name" class="error">{{ errors.name }}</p>
         </div>
 
         <div class="mb-3">
           <label for="description">Описание</label>
-          <textarea  class="my-input w-full" id="description" v-model="lesson.description" aria-label="Поле для ввода описания урока"/>
+          <textarea  class="my-input w-full min-h-32" id="description" v-model="descriptionField"
+                     v-bind="descriptionAttrs" aria-label="Поле для ввода описания урока" placeholder="Введите описание урока"/>
+          <p v-if="errors.description" class="error">{{ errors.description }}</p>
         </div>
 
         <div class="mb-3">
           <label for="text">Текст</label>
-          <textarea class="my-input w-full min-h-52" id="text" v-model="lesson.content" aria-label="Поле для ввода текстового содержания урока"/>
+          <textarea class="my-input w-full min-h-52" id="text" v-model="contentField"
+                    v-bind="contentAttrs" aria-label="Поле для ввода текстового содержания урока" placeholder="Введите содержание урока"/>
+          <p v-if="errors.content" class="error">{{ errors.content }}</p>
         </div>
       </fieldset>
 
@@ -81,7 +124,7 @@ const removeFile = (file) => {
               <button
                   @click="removeFile(file)"
                   type="button"
-                  class="w-6 h-6 opacity-80 hover:opacity-100 mt-2 bg-errColor rounded-full p-1"
+                  class="absolute top-2 right-2 w-6 h-6 bg-errColor rounded-full px-1 hover:shadow-lg hover:opacity-100 opacity-80"
                   :aria-label='"Удалить изображение" + index + 1'
               >
                 <img src="/delete.svg" alt="Удалить" class="w-6 h-6" role="presentation"/>
@@ -95,7 +138,7 @@ const removeFile = (file) => {
               <button
                   @click="removeFile(file)"
                   type="button"
-                  class="w-6 h-6 opacity-80 hover:opacity-100 mt-2 bg-errColor rounded-full p-1"
+                  class="w-6 h-6 opacity-80 hover:opacity-100 mt-2 bg-errColor rounded-full px-1"
                   :aria-label='"Удалить файл" + index + 1'
               >
                 <img src="/delete.svg" alt="Удалить" class="w-6 h-6" role="presentation"/>
@@ -115,12 +158,14 @@ const removeFile = (file) => {
                ref="fileInput"
                class="my-file"
                aria-label="Выберите файлы для загрузки">
+        <p v-if="errors.attachments" class="error">{{ errors.attachments }}</p>
       </fieldset>
 
       <fieldset class="my-5">
         <legend>Доступность</legend>
         <div class="flex gap-1">
-          <input type="checkbox" id="access" v-model="lesson.access"/>
+          <input type="checkbox" id="access" v-model="accessField"
+                 v-bind="accessAttrs"/>
           <label for="access">Доступно ученикам</label>
         </div>
       </fieldset>

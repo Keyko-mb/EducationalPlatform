@@ -104,7 +104,7 @@ const filteredPeople = computed(() => {
     <div>
         <h1>Пользователи</h1>
         <div class="flex justify-between my-3">
-          <label for="search-input" class="sr-only">Полея для поиска пользователя по фамилии</label>
+          <label for="search-input" class="sr-only">Поле для поиска пользователя по фамилии</label>
                     <input
               id="search-input"
               type="text"

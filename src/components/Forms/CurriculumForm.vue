@@ -15,7 +15,7 @@ const schema = yup.object({
   description: yup.string()
       .max(5000, "Описание не должно превышать 5000 символов")
       .nullable(),
-  access: yup.boolean().required()
+  access: yup.boolean()
 });
 
 const { handleSubmit, errors, defineField, resetForm } = useForm({

@@ -36,7 +36,6 @@ export const useHomeworkStore = defineStore('homework', {
          },
 
          async updateHomework(id, updatedHomework) {
-             console.log(updatedHomework)
              try {
                  await axios
                      .put(`homeworks/${id}`, updatedHomework)

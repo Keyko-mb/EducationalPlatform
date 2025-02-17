@@ -6,6 +6,7 @@ import {useAnswerStore} from "@/stores/answer.js";
 import {formatDate} from "../utils/dateFormatter.js";
 import Dialog from "@/components/UI/Dialog.vue";
 import FilesModal from "@/components/UI/FilesModal.vue";
+import axios from "axios";
 
 const homeworkStore = useHomeworkStore()
 const homework = computed(() => homeworkStore.homework)
@@ -47,12 +48,34 @@ const Status = {
 onUnmounted(() => {
   answerStore.clearAnswer();
 });
+
+const getReport = async () => {
+  try {
+    const response = await axios.get("reports/homework/" + homeworkId, {
+      responseType: "blob",
+    });
+
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    link.href = url;
+
+    link.setAttribute("download", "Отчет по заданию - " + homework.value.name + ".xlsx");
+    document.body.appendChild(link);
+    link.click();
+
+    link.remove();
+  } catch (error) {
+    console.error("Ошибка при экспорте файла:", error);
+  }
+}
 </script>
 
 <template>
   <div v-if="answers && answers.length">
     <h2 class="sr-only">Таблица ответов студентов</h2>
-
+    <div class="flex justify-end mb-5">
+      <button class="px-6 py-2 rounded-lg shadow-md transition duration-300 hover:brightness-110 border border-tertiary" @click="getReport">Отчет по заданию</button>
+    </div>
     <table class="w-full table-fixed rounded-lg overflow-hidden border-collapse shadow-md">
       <thead>
         <tr class="bg-tableColor border border-tertiary rounded-t-lg">
