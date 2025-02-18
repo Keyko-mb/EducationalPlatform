@@ -7,30 +7,32 @@ import Dialog from "@/components/UI/Dialog.vue";
 
 const classrooms = ref([])
 const addClassroomDialogVisible = ref(false)
+const isLoading = ref(true)
 
 const currentPage = ref(0);
 const pageSize = ref(10);
 const totalPages =  ref(0);
 
-const fetchClassrooms = () => {
-  axios
-      .get("classrooms/paginated", {
-        params: {
-          offset: currentPage.value,
-          pageSize: pageSize.value,
-        }
-      })
-      .then((response) => {
-        classrooms.value = response.data.content;
-        totalPages.value = response.data.totalPages;
-      })
-      .catch((error) => {
-        console.error("Ошибка при загрузке учебных групп:", error);
-      });
+const fetchClassrooms = async () => {
+  try {
+    isLoading.value = true;
+    const response = await axios.get("classrooms/paginated", {
+      params: {
+        offset: currentPage.value,
+        pageSize: pageSize.value,
+      }
+    });
+    classrooms.value = response.data.content;
+    totalPages.value = response.data.totalPages;
+  } catch (error) {
+    console.error("Ошибка при загрузке учебных групп:", error);
+  } finally {
+    isLoading.value = false;
+  }
 };
 
-onMounted(() => {
-  fetchClassrooms();
+onMounted(async () => {
+  await fetchClassrooms();
   document.body.classList.add('table-page');
 })
 
@@ -38,10 +40,10 @@ onUnmounted(() => {
   document.body.classList.remove('table-page');
 });
 
-const handlePageChange = (pageNumber) => {
+const handlePageChange = async (pageNumber) => {
   if (pageNumber >= 0 && pageNumber < totalPages.value) {
     currentPage.value = pageNumber;
-    fetchClassrooms();
+    await fetchClassrooms();
   }
 };
 
@@ -49,60 +51,61 @@ const showAddClassroomDialog = () => {
   addClassroomDialogVisible.value = true;
 }
 
-const addClassroom = (classroom) => {
-  let currentId = 0;
+const addClassroom = async (classroom) => {
+  try {
+    isLoading.value = true;
+    const response = await axios.post("classrooms", classroom);
+    const currentId = response.data.id;
 
-  axios
-      .post("classrooms", classroom)
-      .then((response) => {
-        classrooms.value.push(classroom);
+    classrooms.value.push(classroom);
 
-        currentId = response.data.id;
+    await Promise.all(classroom.persons.map(async (student) => {
+      await axios.put(`classrooms/${currentId}/students/${student.id}`);
+      const classIndex = classrooms.value.findIndex(c => c.id === currentId);
+      if (classIndex !== -1) {
+        classrooms.value[classIndex].persons = [
+          ...(classrooms.value[classIndex].persons || []),
+          student
+        ];
+      }
+    }));
 
-        classroom.persons.forEach((student) => {
-          axios
-              .put(`classrooms/${currentId}/students/${student.id}`)
-              .then(() => {
-                const classIndex = classrooms.value.findIndex(c => c.id === currentId);
-                if (classIndex !== -1) {
-                  if (!classrooms.value[classIndex].persons) {
-                    classrooms.value[classIndex].persons = [];
-                  }
-                  classrooms.value[classIndex].persons.push(student);
-                }
-              })
-              .catch((error) => {
-                console.error(`Error adding student ${student.id}:`, error);
-              });
-        });
-      })
-      .catch((error) => {
-        console.error("Error creating classroom:", error);
-      })
-      .finally(() => {
-        addClassroomDialogVisible.value = false;
-      });
+  } catch (error) {
+    console.error("Error creating classroom:", error);
+  } finally {
+    isLoading.value = false;
+    addClassroomDialogVisible.value = false;
+  }
 };
 
-const editClassroom = (updatedClassroom) => {
-  axios
-      .put(`classrooms/${updatedClassroom.id}`, updatedClassroom)
-      .then(() => {
-        const index = classrooms.value.findIndex(classroom => classroom.id === updatedClassroom.id);
-        if (index !== -1) {
-          classrooms.value[index] = { ...updatedClassroom };
-        }
-      })
+const editClassroom = async (updatedClassroom) => {
+  try {
+    isLoading.value = true;
+    await axios.put(`classrooms/${updatedClassroom.id}`, updatedClassroom);
+    const index = classrooms.value.findIndex(c => c.id === updatedClassroom.id);
+    if (index !== -1) {
+      classrooms.value[index] = { ...updatedClassroom };
+    }
+  } catch (error) {
+    console.error("Ошибка при обновлении группы:", error);
+  } finally {
+    isLoading.value = false;
+  }
 }
 
-const deleteClassroom = (id) => {
-  axios.delete(`classrooms/${id}`)
-      .then(() => {
-        const index = classrooms.value.findIndex(classroom => classroom.id === id);
-        if (index !== -1) {
-          classrooms.value.splice(index, 1);
-        }
-      })
+const deleteClassroom = async (id) => {
+  try {
+    isLoading.value = true;
+    await axios.delete(`classrooms/${id}`);
+    const index = classrooms.value.findIndex(c => c.id === id);
+    if (index !== -1) {
+      classrooms.value.splice(index, 1);
+    }
+  } catch (error) {
+    console.error("Ошибка при удалении группы:", error);
+  } finally {
+    isLoading.value = false;
+  }
 }
 
 const searchQuery = ref('');
@@ -117,33 +120,32 @@ const visiblePages = computed(() => {
   const maxVisible = 10;
   const pages = [];
   const total = totalPages.value;
-  // Если количество страниц меньше или равно максимальному количеству отображаемых элементов, // возвращаем все страницы
+
   if (total <= maxVisible) {
-    for (let i = 1; i <= total; i++) {
-      pages.push(i);
-    }
+    for (let i = 1; i <= total; i++) pages.push(i);
   } else {
-    // Определяем диапазон так, чтобы currentPage была примерно по центру
     const half = Math.floor(maxVisible / 2);
-    let start = currentPage.value + 1 - half; // +1, т.к. currentPage начинается с 0
-    if (start < 1) {
-      start = 1;
-    }
+    let start = currentPage.value + 1 - half;
+    start = start < 1 ? 1 : start;
     let end = start + maxVisible - 1;
+
     if (end > total) {
       end = total;
       start = end - maxVisible + 1;
     }
-    for (let i = start; i <= end; i++) {
-      pages.push(i);
-    }
+
+    for (let i = start; i <= end; i++) pages.push(i);
   }
   return pages;
 });
 </script>
 
 <template>
-  <div>
+  <div v-if="isLoading" class="loader-container">
+    <div class="loader"></div>
+  </div>
+
+  <div v-else>
     <h1>Учебные группы</h1>
     <div class="flex justify-between my-3">
       <label for="search-classroom" class="sr-only">Форма для поиска учебных групп</label>
@@ -156,12 +158,13 @@ const visiblePages = computed(() => {
       />
       <button class="my-button" @click="showAddClassroomDialog">Добавить группу</button>
     </div>
+
     <div v-if="filteredClassrooms.length > 0" role="list">
       <div v-for="classroom in filteredClassrooms"
            :key="classroom.id" role="listitem">
         <Classroom :classroom="classroom"
-            @deleteClassroom="deleteClassroom"
-            @editClassroom="editClassroom"
+                   @deleteClassroom="deleteClassroom"
+                   @editClassroom="editClassroom"
         />
       </div>
     </div>
@@ -177,17 +180,17 @@ const visiblePages = computed(() => {
         <
       </button>
       <div class="mx-3 flex space-x-1">
-      <span
-          v-for="n in visiblePages"
-          :key="n"
-          @click="handlePageChange(n - 1)"
-          class="cursor-pointer px-3 py-1 rounded-lg"
-          :class="{
-          'bg-logoColor text-formColor': currentPage + 1 === n,
-          'bg-formColor border border-tertiary': currentPage + 1 !== n
-        }">
-        {{ n }}
-      </span>
+        <span
+            v-for="n in visiblePages"
+            :key="n"
+            @click="handlePageChange(n - 1)"
+            class="cursor-pointer px-3 py-1 rounded-lg"
+            :class="{
+              'bg-logoColor text-formColor': currentPage + 1 === n,
+              'bg-formColor border border-tertiary': currentPage + 1 !== n
+            }">
+          {{ n }}
+        </span>
       </div>
       <button
           class="px-3 py-1 border border-tertiary rounded-lg shadow-md bg-formColor transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:brightness-95"
@@ -197,15 +200,9 @@ const visiblePages = computed(() => {
       </button>
     </div>
 
-    <div>
-      <Dialog v-model:show="addClassroomDialogVisible" aria-labelledby="dialog-title" >
-        <h2 id="dialog-title" class="sr-only">Окно для создания новой учебной группы</h2>
-        <ClassroomForm @saveClassroomData="addClassroom"/>
-      </Dialog>
-    </div>
+    <Dialog v-model:show="addClassroomDialogVisible" aria-labelledby="dialog-title">
+      <h2 id="dialog-title" class="sr-only">Окно для создания новой учебной группы</h2>
+      <ClassroomForm @saveClassroomData="addClassroom"/>
+    </Dialog>
   </div>
 </template>
-
-<style scoped>
-
-</style>

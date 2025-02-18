@@ -1,5 +1,4 @@
 <script setup>
-
 import {computed, onMounted, onUnmounted, ref} from 'vue';
 import Card from '../components/UI/Card.vue'
 import {useRouter} from "vue-router";
@@ -18,12 +17,19 @@ const studentCurriculum = computed(() => studentStore.curriculumId);
 const totalPages = computed(() => curriculaStore.totalPages);
 const currentPage = ref(0);
 const pageSize = ref(10);
+const isLoading = ref(true);
 
 onMounted (async () => {
-  if (authStore.userInfo.role !== "STUDENT") {
-    await curriculaStore.fetchCurriculaPaginated(currentPage.value, pageSize.value);
+  try {
+    if (authStore.userInfo.role !== "STUDENT") {
+      await curriculaStore.fetchCurriculaPaginated(currentPage.value, pageSize.value);
+    }
+    document.body.classList.add('table-page');
+  } catch (error) {
+    console.error('Ошибка загрузки:', error);
+  } finally {
+    isLoading.value = false; // Выключаем лоадер
   }
-  document.body.classList.add('table-page');
 })
 
 onUnmounted(() => {
@@ -36,7 +42,12 @@ const addCurriculumDialogVisible = ref(false)
 const handlePageChange = async (page) => {
   if (page >= 0 && page < totalPages.value) {
     currentPage.value = page;
-    await curriculaStore.fetchCurriculaPaginated(currentPage.value, pageSize.value);
+    isLoading.value = true; // Включаем лоадер при смене страницы
+    try {
+      await curriculaStore.fetchCurriculaPaginated(currentPage.value, pageSize.value);
+    } finally {
+      isLoading.value = false;
+    }
   }
 };
 
@@ -64,15 +75,13 @@ const visiblePages = computed(() => {
   const maxVisible = 10;
   const pages = [];
   const total = totalPages.value;
-  // Если количество страниц меньше или равно максимальному количеству отображаемых элементов, // возвращаем все страницы
   if (total <= maxVisible) {
     for (let i = 1; i <= total; i++) {
       pages.push(i);
     }
   } else {
-    // Определяем диапазон так, чтобы currentPage была примерно по центру
     const half = Math.floor(maxVisible / 2);
-    let start = currentPage.value + 1 - half; // +1, т.к. currentPage начинается с 0
+    let start = currentPage.value + 1 - half;
     if (start < 1) {
       start = 1;
     }
@@ -87,10 +96,14 @@ const visiblePages = computed(() => {
   }
   return pages;
 });
-
 </script>
 
 <template>
+  <div v-if="isLoading" class="loader-container">
+    <div class="loader"></div>
+  </div>
+
+  <div v-else>
     <h1>Обучение</h1>
     <div class="my-3">
       <div class="flex justify-between">
@@ -103,7 +116,6 @@ const visiblePages = computed(() => {
             placeholder="Поиск по названию..."
         />
         <button v-if="authStore.userInfo.role === 'ADMIN'" class="my-button" @click="showCurriculumAddDialog">Добавить учебную программу</button>
-
       </div>
 
       <div v-if="authStore.userInfo.role === 'ADMIN' || authStore.userInfo.role === 'TEACHER'">
@@ -134,17 +146,17 @@ const visiblePages = computed(() => {
             <
           </button>
           <div class="mx-3 flex space-x-1">
-      <span
-          v-for="n in visiblePages"
-          :key="n"
-          @click="handlePageChange(n - 1)"
-          class="cursor-pointer px-3 py-1 rounded-lg"
-          :class="{
-          'bg-logoColor text-formColor': currentPage + 1 === n,
-          'bg-formColor border border-tertiary': currentPage + 1 !== n
-        }">
-        {{ n }}
-      </span>
+            <span
+                v-for="n in visiblePages"
+                :key="n"
+                @click="handlePageChange(n - 1)"
+                class="cursor-pointer px-3 py-1 rounded-lg"
+                :class="{
+                  'bg-logoColor text-formColor': currentPage + 1 === n,
+                  'bg-formColor border border-tertiary': currentPage + 1 !== n
+                }">
+              {{ n }}
+            </span>
           </div>
           <button
               class="px-3 py-1 border border-tertiary rounded-lg shadow-md bg-formColor transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:brightness-95"
@@ -158,7 +170,6 @@ const visiblePages = computed(() => {
           <h2 id="dialog-title" class="sr-only">Окно для создания новой учебной программы</h2>
           <CurriculumForm @saveCurriculumData="addCurriculum"/>
         </Dialog>
-
       </div>
 
       <div v-else>
@@ -179,8 +190,6 @@ const visiblePages = computed(() => {
         </div>
       </div>
     </div>
+  </div>
 </template>
 
-<style scoped>
-
-</style>

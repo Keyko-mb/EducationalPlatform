@@ -8,8 +8,8 @@ import PeopleTable from "@/components/UI/PeopleTable.vue";
 const people = ref([])
 const person = ref({})
 const addPersonDialogVisible = ref(false)
-
 const fileInput = ref(null);
+const isLoading = ref(true);
 
 const currentPage = ref(0);
 const pageSize = ref(10);
@@ -24,27 +24,28 @@ onUnmounted(() => {
   document.body.classList.remove('table-page');
 });
 
-const loadPeople = () => {
-  axios
-      .get("people/paginated", {
-        params: {
-          page: currentPage.value,
-          size: pageSize.value,
-        }
-      })
-      .then((response) => {
-        people.value = response.data.content;
-        totalPages.value = response.data.totalPages;
-      })
-      .catch((error) => {
-        console.error("Ошибка при загрузке пользователей:", error);
-      });
+const loadPeople = async () => {
+  isLoading.value = true;
+  try {
+    const response = await axios.get("people/paginated", {
+      params: {
+        page: currentPage.value,
+        size: pageSize.value,
+      }
+    });
+    people.value = response.data.content;
+    totalPages.value = response.data.totalPages;
+  } catch (error) {
+    console.error("Ошибка при загрузке пользователей:", error);
+  } finally {
+    isLoading.value = false;
+  }
 }
 
 const handlePageChange = async (pageNumber) => {
   if (pageNumber >= 0 && pageNumber < totalPages.value) {
     currentPage.value = pageNumber;
-    loadPeople();
+    await loadPeople();
   }
 };
 
@@ -52,46 +53,40 @@ const showAddPersonDialog = () => {
   addPersonDialogVisible.value = true;
 }
 
-const createPerson = (person) => {
-  axios
-      .post("auth/register", person)
-      .then(() => {
-        people.value.push(person)
-      })
-  addPersonDialogVisible.value = false
+const createPerson = async (person) => {
+  try {
+    await axios.post("auth/register", person);
+    people.value.push(person);
+  } catch (error) {
+    console.error("Ошибка при создании пользователя:", error);
+  } finally {
+    addPersonDialogVisible.value = false;
+  }
 }
 
 const triggerFileSelectionAndUpload = () => {
-  if (fileInput.value) {
-    fileInput.value.click(); // Открываем файловую систему
-  }
+  fileInput.value?.click();
 };
 
-const importPeople = async (event) =>
-    {
-      const file = event.target.files[0];
-      if (!file) {
-        return;
-      }
+const importPeople = async (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
 
-      const formData = new FormData();
-      formData.append("file", file);
+  isLoading.value = true;
+  const formData = new FormData();
+  formData.append("file", file);
 
-      try {
-        await axios.post("admin/users/import", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-
-        await loadPeople();
-      } catch (error) {
-        console.error("Ошибка при импорте:", error);
-        importResult.value =
-            error.response?.data || "Произошла ошибка при загрузке файла.";
-      }
-    }
-;
+  try {
+    await axios.post("admin/users/import", formData, {
+      headers: {"Content-Type": "multipart/form-data"}
+    });
+    await loadPeople();
+  } catch (error) {
+    console.error("Ошибка при импорте:", error);
+  } finally {
+    isLoading.value = false;
+  }
+};
 
 const exportPeople = async () => {
   try {
@@ -102,11 +97,9 @@ const exportPeople = async () => {
     const url = window.URL.createObjectURL(new Blob([response.data]));
     const link = document.createElement("a");
     link.href = url;
-
     link.setAttribute("download", "users.xlsx");
     document.body.appendChild(link);
     link.click();
-
     link.remove();
   } catch (error) {
     console.error("Ошибка при экспорте файла:", error);
@@ -125,37 +118,37 @@ const visiblePages = computed(() => {
   const maxVisible = 10;
   const pages = [];
   const total = totalPages.value;
-  // Если количество страниц меньше или равно максимальному количеству отображаемых элементов, // возвращаем все страницы
+
   if (total <= maxVisible) {
-    for (let i = 1; i <= total; i++) {
-      pages.push(i);
-    }
+    for (let i = 1; i <= total; i++) pages.push(i);
   } else {
-    // Определяем диапазон так, чтобы currentPage была примерно по центру
     const half = Math.floor(maxVisible / 2);
-    let start = currentPage.value + 1 - half; // +1, т.к. currentPage начинается с 0
-    if (start < 1) {
-      start = 1;
-    }
+    let start = currentPage.value + 1 - half;
+    start = start < 1 ? 1 : start;
     let end = start + maxVisible - 1;
+
     if (end > total) {
       end = total;
       start = end - maxVisible + 1;
     }
-    for (let i = start; i <= end; i++) {
-      pages.push(i);
-    }
+
+    for (let i = start; i <= end; i++) pages.push(i);
   }
   return pages;
 });
 </script>
 
 <template>
-  <div>
+  <div v-if="isLoading" class="loader-container">
+    <div class="loader"></div>
+  </div>
+
+  <div v-else>
+    <div>
       <h1>Пользователи</h1>
       <div class="flex justify-between my-3">
         <label for="search-input" class="sr-only">Поле для поиска пользователя по фамилии</label>
-                  <input
+        <input
             id="search-input"
             type="text"
             v-model="searchQuery"
@@ -165,7 +158,7 @@ const visiblePages = computed(() => {
 
         <div class="flex gap-5">
           <button class="my-button bg-primary" @click="showAddPersonDialog">Добавить</button>
-          <input type="file" @change="importPeople" accept=".xlsx" ref="fileInput" style="display: none" id="file-input"/>
+          <input type="file" @change="importPeople" accept=".xlsx" ref="fileInput" hidden />
           <button class="my-button" @click="triggerFileSelectionAndUpload">Импорт</button>
           <button class="my-button" @click="exportPeople">Экспорт</button>
         </div>
@@ -173,37 +166,36 @@ const visiblePages = computed(() => {
 
       <PeopleTable v-if="filteredPeople.length > 0" :people="filteredPeople"/>
       <p v-else>Пользователи не найдены</p>
-  </div>
-
-  <div class="flex items-center justify-center my-4">
-    <button
-        class="px-3 py-1 border border-tertiary rounded-lg shadow-md bg-formColor transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:brightness-95"
-        :disabled="currentPage <= 0"
-        @click="handlePageChange(currentPage - 1)">
-      <
-    </button>
-    <div class="mx-3 flex space-x-1">
-      <span
-          v-for="n in visiblePages"
-          :key="n"
-          @click="handlePageChange(n - 1)"
-          class="cursor-pointer px-3 py-1 rounded-lg"
-          :class="{
-          'bg-logoColor text-formColor': currentPage + 1 === n,
-          'bg-formColor border border-tertiary': currentPage + 1 !== n
-        }">
-        {{ n }}
-      </span>
     </div>
-    <button
-        class="px-3 py-1 border border-tertiary rounded-lg shadow-md bg-formColor transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:brightness-95"
-        :disabled="currentPage >= totalPages - 1"
-        @click="handlePageChange(currentPage + 1)">
-      >
-    </button>
-  </div>
 
-  <div>
+    <div class="flex items-center justify-center my-4">
+      <button
+          class="px-3 py-1 border border-tertiary rounded-lg shadow-md bg-formColor transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:brightness-95"
+          :disabled="currentPage <= 0"
+          @click="handlePageChange(currentPage - 1)">
+        <
+      </button>
+      <div class="mx-3 flex space-x-1">
+        <span
+            v-for="n in visiblePages"
+            :key="n"
+            @click="handlePageChange(n - 1)"
+            class="cursor-pointer px-3 py-1 rounded-lg"
+            :class="{
+            'bg-logoColor text-formColor': currentPage + 1 === n,
+            'bg-formColor border border-tertiary': currentPage + 1 !== n
+          }">
+          {{ n }}
+        </span>
+      </div>
+      <button
+          class="px-3 py-1 border border-tertiary rounded-lg shadow-md bg-formColor transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:brightness-95"
+          :disabled="currentPage >= totalPages - 1"
+          @click="handlePageChange(currentPage + 1)">
+        >
+      </button>
+    </div>
+
     <Dialog v-model:show="addPersonDialogVisible">
       <h2 id="dialog-title" class="sr-only">Окно для создания нового пользователя</h2>
       <PersonForm

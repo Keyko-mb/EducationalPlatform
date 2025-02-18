@@ -23,6 +23,7 @@ const tabs = ref([
 ])
 
 const currentTab = ref(0)
+const isLoading = ref(true)
 
 const homeworkStore = useHomeworkStore()
 const filesStore = useFilesStore();
@@ -30,13 +31,21 @@ const homework = computed(() => homeworkStore.homework)
 const homeworkId = useRoute().params.homeworkId
 
 onMounted(async () => {
-  await homeworkStore.fetchHomework(homeworkId)
-  currentTab.value = tabs.value[0]
-  if (homework.value.attachments) {
-    for (const file of homework.value.attachments) {
-      await filesStore.fetchFile("homeworks", homeworkId, file)
+  try {
+    await homeworkStore.fetchHomework(homeworkId)
+
+    if (homework.value.attachments) {
+      await Promise.all(homework.value.attachments.map(file =>
+          filesStore.fetchFile("homeworks", homeworkId, file)
+      ))
+      filesStore.refreshFiles()
     }
-    filesStore.refreshFiles();
+
+    currentTab.value = tabs.value[0]
+  } catch (error) {
+    console.error("Ошибка загрузки задания:", error)
+  } finally {
+    isLoading.value = false
   }
 })
 
@@ -51,13 +60,15 @@ const handleArrowNav = (currentIndex, direction) => {
 
   document.getElementById(`tab-${newIndex}`).focus();
 };
-
 </script>
 
-
 <template>
-  <div v-if="homework">
-    <h1>{{homework.name}}</h1>
+  <div v-if="isLoading" class="loader-container">
+    <div class="loader"></div>
+  </div>
+
+  <div v-else-if="homework">
+    <h1>{{ homework.name }}</h1>
     <h2 class="sr-only">Навигация по разделам задания</h2>
     <div class="my-5" role="navigation">
       <div role="tablist" aria-orientation="horizontal" class="flex">
