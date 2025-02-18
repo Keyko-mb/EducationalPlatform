@@ -134,7 +134,7 @@ const removeFile = async (file) => {
             <div v-else class="flex h-full w-full px-2 py-1 rounded-lg border border-tertiary ">
               <a :href="file.url"
                  :download="'file-' + index"
-                 class="hover:opacity-75 transition-all underline flex-grow p-2">Скачать файл {{ index + 1 }}</a>
+                 class="hover:opacity-75 transition-all underline flex-grow p-2">Скачать файл {{ file.fileName }}</a>
               <button
                   @click="removeFile(file)"
                   type="button"

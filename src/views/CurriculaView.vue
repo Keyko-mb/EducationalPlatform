@@ -99,11 +99,7 @@ const visiblePages = computed(() => {
 </script>
 
 <template>
-  <div v-if="isLoading" class="loader-container">
-    <div class="loader"></div>
-  </div>
-
-  <div v-else>
+  <div>
     <h1>Обучение</h1>
     <div class="my-3">
       <div class="flex flex-col lg:flex-row justify-between gap-2">

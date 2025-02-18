@@ -21,8 +21,16 @@ const pageSize = ref(10);
 const selectedAnswer = ref(null)
 const showFilesDialogVisible = ref(false)
 
+const isLoading = ref(true)
+
 onMounted(async () => {
-  await homeworkStore.fetchAnswers(homeworkId, currentPage.value, pageSize.value);
+  try {
+    await homeworkStore.fetchAnswers(homeworkId, currentPage.value, pageSize.value);
+  } catch (error) {
+    console.error("Ошибка при получении ответов:", error);
+  } finally {
+    isLoading.value = false;
+  }
 })
 
 const saveComment = async (answer) => {
@@ -115,7 +123,7 @@ const visiblePages = computed(() => {
       <button class="px-6 py-2 rounded-lg shadow-md transition duration-300 hover:brightness-110 border border-tertiary" @click="getReport">Отчет по заданию</button>
     </div>
     <table class="w-full rounded-lg lg:overflow-hidden border-collapse shadow-md">
-      <thead>
+      <thead :class="{ 'fade-in': !isLoading }">
         <tr class="bg-tableColor border border-tertiary rounded-t-lg">
           <th class="my-th" scope="col" >Фамилия</th>
           <th class="my-th" scope="col" >Имя</th>
@@ -128,7 +136,7 @@ const visiblePages = computed(() => {
           <th class="my-th" scope="col" >Действия</th>
         </tr>
       </thead>
-      <tbody>
+      <TransitionGroup name="table-row" tag="tbody" appear>
         <tr v-for="answer in answers" :key="answer.id" class="bg-formColor" role="row">
           <td class="my-td border-l border-tertiary">{{ answer.student?.lastName }}</td>
           <td class="my-td">{{ answer.student?.firstName }}</td>
@@ -169,7 +177,7 @@ const visiblePages = computed(() => {
   <!--          <p v-if="isSaved" class="opacity-80">Сохранено</p>-->
           </td>
         </tr>
-      </tbody>
+      </TransitionGroup>>
     </table>
 
     <h2 id="dialog-title" class="sr-only" aria-labelledby="dialog-title">Окно с вложениями</h2>
@@ -207,5 +215,26 @@ const visiblePages = computed(() => {
 </template>
 
 <style scoped>
+thead {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+thead.fade-in {
+  opacity: 1;
+}
 
+.table-row-enter-active,
+.table-row-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.table-row-enter-from,
+.table-row-leave-to {
+  opacity: 0;
+  transform: translateY(10px);
+}
+.table-row-enter-to,
+.table-row-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}
 </style>

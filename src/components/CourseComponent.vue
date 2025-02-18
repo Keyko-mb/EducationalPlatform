@@ -48,11 +48,7 @@ const filteredHomeworks = computed(() => {
 </script>
 
 <template>
-  <div v-if="isLoading" class="loader-container">
-    <div class="loader"></div>
-  </div>
-
-  <div v-else class="my-3">
+  <div class="my-3">
     <h1 class="bg-bg">{{ props.course.name }}</h1>
 
     <section>

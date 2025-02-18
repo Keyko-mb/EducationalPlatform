@@ -48,11 +48,7 @@ const handleArrowNav = (currentIndex, direction) => {
 </script>
 
 <template>
-  <div v-if="isLoading" class="loader-container">
-    <div class="loader"></div>
-  </div>
-
-  <div v-else>
+  <div>
     <h1>{{ curriculum.name }}</h1>
     <h2 class="sr-only">Навигация по настройкам учебной программы</h2>
     <div class="my-5" role="navigation">

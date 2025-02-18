@@ -38,11 +38,7 @@ const filteredCourses = computed(() => {
 </script>
 
 <template>
-  <div v-if="isLoading" class="loader-container">
-    <div class="loader"></div>
-  </div>
-
-  <div v-else>
+  <div>
     <div class="lg:flex justify-between items-center">
       <div>
         <h1 class="text-logoColor">{{curriculum.name}}</h1>

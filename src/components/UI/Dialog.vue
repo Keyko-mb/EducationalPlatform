@@ -10,7 +10,7 @@
   >
     <div
         @click.stop
-        class="m-auto max-h-[52rem] min-w-sm max-w-[1100px] border border-tertiary rounded-lg p-5 bg-bgColor relative overflow-y-auto"
+        class="m-auto max-h-[52rem] min-w-sm sm:min-w-[500px] max-w-[1100px] border border-tertiary rounded-lg p-5 bg-bgColor relative overflow-y-auto"
         ref="dialogRef"
         tabindex="-1">
       <input

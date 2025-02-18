@@ -12,7 +12,7 @@ const fileInput = ref(null);
 const isLoading = ref(true);
 
 const currentPage = ref(0);
-const pageSize = ref(10);
+const pageSize = ref(20);
 const totalPages =  ref(0);
 
 onMounted(() => {
@@ -139,11 +139,7 @@ const visiblePages = computed(() => {
 </script>
 
 <template>
-  <div v-if="isLoading" class="loader-container">
-    <div class="loader"></div>
-  </div>
-
-  <div v-else>
+  <div>
     <div>
       <h1>Пользователи</h1>
       <div class="flex flex-col sm:flex-row md:flex-row lg:flex-row justify-between my-3 gap-2">

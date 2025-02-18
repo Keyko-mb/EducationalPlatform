@@ -38,11 +38,7 @@ const Role = {
 </script>
 
 <template>
-  <div v-if="isLoading" class="loader-container">
-    <div class="loader"></div>
-  </div>
-
-  <div v-else>
+  <div>
     <h1>{{ `${studentStore.lastName} ${studentStore.firstName} ${studentStore.patronymic}` }}</h1>
     <div class="my-3">
       <div class="space-y-3" role="list">

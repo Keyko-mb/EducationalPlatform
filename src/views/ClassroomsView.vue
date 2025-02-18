@@ -141,11 +141,7 @@ const visiblePages = computed(() => {
 </script>
 
 <template>
-  <div v-if="isLoading" class="loader-container">
-    <div class="loader"></div>
-  </div>
-
-  <div v-else>
+  <div>
     <h1>Учебные группы</h1>
     <div class="flex flex-col lg:flex-row gap-2 justify-between my-3">
       <label for="search-classroom" class="sr-only">Форма для поиска учебных групп</label>
