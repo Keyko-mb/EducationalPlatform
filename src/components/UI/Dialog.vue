@@ -1,6 +1,6 @@
 <template>
   <div
-      class="bg-black/50 flex fixed inset-x-0 inset-y-0"
+      class="bg-black/50 flex fixed inset-x-0 inset-y-0 z-50"
       v-if="show"
       @mousedown="handleMouseDown"
       @mouseup="handleMouseUp"
@@ -10,7 +10,7 @@
   >
     <div
         @click.stop
-        class="m-auto max-h-[52rem] min-w-[600px] max-w-[1100px] border border-tertiary rounded-lg p-5 bg-bgColor relative overflow-y-auto"
+        class="m-auto max-h-[52rem] min-w-sm max-w-[1100px] border border-tertiary rounded-lg p-5 bg-bgColor relative overflow-y-auto"
         ref="dialogRef"
         tabindex="-1">
       <input

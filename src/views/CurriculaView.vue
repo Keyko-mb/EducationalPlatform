@@ -93,7 +93,7 @@ const visiblePages = computed(() => {
 <template>
     <h1>Обучение</h1>
     <div class="my-3">
-      <div class="flex justify-between">
+      <div class="flex flex-col lg:flex-row justify-between gap-2">
         <label for="searchInput" class="sr-only">Поле для поиска учебной программы по названию</label>
         <input
             type="text"

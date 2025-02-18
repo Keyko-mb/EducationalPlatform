@@ -232,7 +232,7 @@ export default {
 </script>
 
 <template>
-  <div class="flex flex-col gap-2 max-w-52">
+  <div class="flex flex-col gap-2 max-w-40">
     <!-- Тумблер включения/выключения диктора -->
     <label :aria-controls="'screen-reader-dropdown'"
            class="flex items-center gap-2 cursor-pointer">

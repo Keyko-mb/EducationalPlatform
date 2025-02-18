@@ -71,35 +71,35 @@ const getReport = async () => {
 </script>
 
 <template>
-  <div class="flex items-start gap-2 mb-5" >
-      <details class="w-full" open>
-        <summary style=" font-size: 1.25em;"
-                 aria-controls="students-table"
-                 aria-expanded="true"
-        >{{props.classroom.name}}</summary>
-        <div class="flex justify-end mb-2">
-          <button class="px-6 py-2 rounded-lg shadow-md transition duration-300 hover:brightness-110 border border-tertiary" @click="getReport">Отчет по учебной группе</button>
-        </div>
-        <div>
-          <table v-if="props.classroom.persons.length > 0" class="w-full rounded-lg overflow-hidden border-collapse shadow-md mt-2">
-            <thead role="rowgroup">
-            <tr class="bg-tableColor border border-tertiary bg-opacity-75" role="row">
-              <th class="my-th" role="columnheader" scope="col">Фамилия</th>
-              <th class="my-th" role="columnheader" scope="col">Имя</th>
-              <th class="my-th" role="columnheader" scope="col">Отчество</th>
-            </tr>
-            </thead>
-            <tbody role="rowgroup">
-            <tr v-for="person in props.classroom.persons" :key="person.id" class="bg-formColor" role="row">
-              <td class="my-td border-l border-tertiary" role="cell">{{ person.lastName }}</td>
-              <td class="my-td" role="cell">{{ person.firstName }}</td>
-              <td class="my-td border-r border-tertiary" role="cell">{{ person.patronymic }}</td>
-            </tr>
-            </tbody>
-          </table>
-          <p class="mt-2" v-else>Группа пуста</p>
-        </div>
-      </details>
+  <div class="flex items-start lg:gap-2 mb-5 overflow-auto" >
+    <details class="w-full" open>
+      <summary style=" font-size: 1.25em;"
+               aria-controls="students-table"
+               aria-expanded="true"
+      >{{props.classroom.name}}</summary>
+      <div class="flex lg:justify-end my-2">
+        <button class="px-6 py-2 rounded-lg shadow-md transition duration-300 hover:brightness-110 border border-tertiary" @click="getReport">Отчет по учебной группе</button>
+      </div>
+      <div>
+        <table v-if="props.classroom.persons.length > 0" class="w-full rounded-lg overflow-hidden border-collapse shadow-md mt-2">
+          <thead role="rowgroup">
+          <tr class="bg-tableColor border border-tertiary bg-opacity-75" role="row">
+            <th class="my-th" role="columnheader" scope="col">Фамилия</th>
+            <th class="my-th" role="columnheader" scope="col">Имя</th>
+            <th class="my-th" role="columnheader" scope="col">Отчество</th>
+          </tr>
+          </thead>
+          <tbody role="rowgroup">
+          <tr v-for="person in props.classroom.persons" :key="person.id" class="bg-formColor" role="row">
+            <td class="my-td border-l border-tertiary" role="cell">{{ person.lastName }}</td>
+            <td class="my-td" role="cell">{{ person.firstName }}</td>
+            <td class="my-td border-r border-tertiary" role="cell">{{ person.patronymic }}</td>
+          </tr>
+          </tbody>
+        </table>
+        <p class="mt-2" v-else>Группа пуста</p>
+      </div>
+    </details>
     <EditAndDeleteButtons @deleteClick="emitDeleteClassroom" @editClick="showClassroomEditDialog(classroom)" class="mt-1" :aria-label="`Действия над учебной группой ${props.classroom.name}`"/>
   </div>
   <Dialog v-model:show="editClassroomDialogVisible" aria-labelledby="dialog-title" >

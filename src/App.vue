@@ -36,7 +36,7 @@ checkAuth();
     <a href="#main-content" class="skip-link">Перейти к основному контенту</a>
     <Navbar />
     <main id="main-content">
-      <div class="container mx-auto my-5">
+      <div class="container px-5 mx-auto my-5">
         <Breadcrumbs />
         <RouterView/>
       </div>

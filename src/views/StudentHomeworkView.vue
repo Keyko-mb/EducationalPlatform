@@ -170,7 +170,7 @@ onUnmounted(() => {
                     <a :href="file.url"
                        :download="'file-' + index"
                        class="hover:opacity-75 transition-all underline flex-grow p-2"
-                       :aria-label="`Скачать файл: ${file.name || 'Без названия'}`">Скачать файл {{ index + 1 }}</a>
+                       :aria-label="`Скачать файл: ${file.name || 'Без названия'}`">Скачать файл {{ file.fileName }}</a>
                     <button
                         @click.prevent="removeFile(file)"
                         class="w-6 h-6 opacity-80 hover:opacity-100 mt-2 bg-errColor rounded-full p-1"
@@ -201,7 +201,7 @@ onUnmounted(() => {
 <!--              </p>-->
             </div>
 
-            <button type="submit" class="my-button mt-5 w-1/5">Отправить на проверку</button>
+            <button type="submit" class="my-button mt-5 lg:w-1/5">Отправить на проверку</button>
           </form>
 
           <div v-if="answer.comment" class="mt-5">
@@ -213,7 +213,7 @@ onUnmounted(() => {
         <div v-else>
           <form @submit.prevent="submitAnswer" class="flex flex-col">
             <label for="answer-text" class="sr-only">Текст ответа</label>
-            <textarea id="answer-text" v-model="answerText" class="my-input h-28 w-1/2" type="text" placeholder="Начните писать ответ..." :aria-label="answerText"/>
+            <textarea id="answer-text" v-model="answerText" class="my-input h-28 w-full" type="text" placeholder="Начните писать ответ..." :aria-label="answerText"/>
             <div v-if="answerFiles.length > 0" class="mt-3">
               <label class="form-label">Вложения</label>
 
@@ -230,7 +230,7 @@ onUnmounted(() => {
                     <a :href="file.url"
                        :download="'file-' + index"
                        class="hover:opacity-75 transition-all underline flex-grow p-2"
-                       :aria-label="`Скачать файл: ${file.name || 'Без названия'}`">Скачать файл {{ index + 1 }}</a>
+                       :aria-label="`Скачать файл: ${file.name || 'Без названия'}`">Скачать файл {{ file.fileName }}</a>
                   </div>
                 </div>
               </div>
@@ -248,7 +248,7 @@ onUnmounted(() => {
 <!--              </p>-->
             </div>
 
-            <button type="submit" class="my-button mt-5 w-1/5" aria-label="Отправить ответ на проверку">Отправить на проверку</button>
+            <button type="submit" class="my-button mt-5 lg:w-1/5" aria-label="Отправить ответ на проверку">Отправить на проверку</button>
           </form>
         </div>
       </div>

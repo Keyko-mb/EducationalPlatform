@@ -82,3 +82,9 @@ const handleArrowNav = (currentIndex, direction) => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.active {
+  @apply brightness-95 rounded-t-lg
+}
+</style>

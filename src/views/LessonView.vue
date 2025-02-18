@@ -63,7 +63,7 @@ onUnmounted(() => {
 
 <template>
   <div>
-    <div class="flex justify-between mb-2">
+    <div class="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between mb-2">
       <h1>{{ lesson.name }}</h1>
       <div v-if="authStore.userInfo.role === 'ADMIN' || authStore.userInfo.role === 'TEACHER'" class="flex gap-2">
         <button class="my-button" @click="showLessonEditDialog">Редактировать</button>

@@ -164,21 +164,21 @@ const breadcrumbs = computed(() => {
 </script>
 
 <template>
-  <nav aria-label="Навигация по сайту" class="mb-4">
-    <ol class="flex gap-2">
+  <nav aria-label="Навигация по сайту" class="mb-4 overflow-auto">
+    <ol class="flex gap-1">
       <!-- "Главная" всегда отображается -->
       <li>
-        <router-link to="/" class="text-breadcrumbColor hover:brightness-125">
+        <router-link to="/" class="text-breadcrumbColor hover:brightness-125 mr-1">
           Главная
         </router-link>
       </li>
-      <li v-for="(item, index) in breadcrumbs" :key="index">
-        <span class="mx-2">/</span>
+      <li v-for="(item, index) in breadcrumbs" :key="index" class="text-nowrap">
+        <span>/</span>
         <template v-if="item.isLast || !item.clickable">
-          <span class="text-gray-500">{{ item.name }}</span>
+          <span class="text-gray-500 mx-1 text-nowrap">{{ item.name }}</span>
         </template>
         <template v-else>
-          <router-link :to="item.path" class="text-breadcrumbColor hover:brightness-125">
+          <router-link :to="item.path" class="text-breadcrumbColor hover:brightness-125 mx-1">
             {{ item.name }}
           </router-link>
         </template>

@@ -4,7 +4,6 @@ import {computed, onMounted, onUnmounted, ref} from "vue";
 import {useRoute} from "vue-router";
 import {useAnswerStore} from "@/stores/answer.js";
 import {formatDate} from "../utils/dateFormatter.js";
-import Dialog from "@/components/UI/Dialog.vue";
 import FilesModal from "@/components/UI/FilesModal.vue";
 import axios from "axios";
 
@@ -110,22 +109,22 @@ const visiblePages = computed(() => {
 </script>
 
 <template>
-  <div v-if="answers && answers.length">
+  <div v-if="answers && answers.length" class="overflow-auto">
     <h2 class="sr-only">Таблица ответов студентов</h2>
-    <div class="flex justify-end mb-5">
+    <div class="flex lg:justify-end mb-5">
       <button class="px-6 py-2 rounded-lg shadow-md transition duration-300 hover:brightness-110 border border-tertiary" @click="getReport">Отчет по заданию</button>
     </div>
-    <table class="w-full table-fixed rounded-lg overflow-hidden border-collapse shadow-md">
+    <table class="w-full rounded-lg lg:overflow-hidden border-collapse shadow-md">
       <thead>
         <tr class="bg-tableColor border border-tertiary rounded-t-lg">
           <th class="my-th" scope="col" >Фамилия</th>
           <th class="my-th" scope="col" >Имя</th>
           <th class="my-th" scope="col" >Отчество</th>
-          <th class="my-th" scope="col" >Статус</th>
-          <th class="my-th" scope="col" >Текст ответа</th>
+          <th class="my-th min-w-40" scope="col" >Статус</th>
+          <th class="my-th min-w-40" scope="col" >Текст ответа</th>
           <th class="my-th" scope="col" >Вложения</th>
           <th class="my-th" scope="col" >Дата изменения</th>
-          <th class="my-th" scope="col" >Комментарий</th>
+          <th class="my-th min-w-40" scope="col" >Комментарий</th>
           <th class="my-th" scope="col" >Действия</th>
         </tr>
       </thead>
@@ -173,6 +172,9 @@ const visiblePages = computed(() => {
       </tbody>
     </table>
 
+    <h2 id="dialog-title" class="sr-only" aria-labelledby="dialog-title">Окно с вложениями</h2>
+    <FilesModal v-model:show="showFilesDialogVisible" :answer="selectedAnswer"/>
+
     <div class="flex items-center justify-center mt-4">
       <button
           class="px-3 py-1 border border-tertiary rounded-lg shadow-md bg-formColor transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:brightness-95"
@@ -200,11 +202,6 @@ const visiblePages = computed(() => {
         >
       </button>
     </div>
-
-    <Dialog v-model:show="showFilesDialogVisible">
-      <h2 id="dialog-title" class="sr-only" aria-labelledby="dialog-title">Окно с вложениями</h2>
-      <FilesModal :answer="selectedAnswer"/>
-    </Dialog>
   </div>
   <div v-else>Ответов нет</div>
 </template>

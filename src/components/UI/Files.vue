@@ -37,13 +37,13 @@ const links = computed(() => filesStore.links);
 
     <div
         v-if="links.length > 0"
-        class="mt-4">
+        class="mt-4 py-1 overflow-auto">
       <h2 class="sr-only">Прикрепленные файлы</h2>
-      <ul class="flex flex-col gap-4 items-start">
+      <ul class="flex flex-wrap lg:flex-col gap-4 items-start">
         <li
             v-for="(file, index) in links"
             :key="'link-' + index"
-            class="text-center"
+            class="lg:text-center text-nowrap"
             role="listitem">
           <a :href="file.url"
              :download="file.fileName"

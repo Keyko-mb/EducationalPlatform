@@ -53,7 +53,7 @@ const handleArrowNav = (currentIndex, direction) => {
     <div class="my-5" role="navigation" >
       <div role="tablist" aria-orientation="horizontal" class="flex">
         <button
-            v-for="tab in tabs"
+            v-for="(tab, index) in tabs"
             :key="tab.name"
             :id="`tab-${index}`"
             role="tab"
@@ -72,3 +72,9 @@ const handleArrowNav = (currentIndex, direction) => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.active {
+  @apply brightness-95 rounded-t-lg
+}
+</style>

@@ -52,6 +52,7 @@ const emitCurriculumData = handleSubmit((values) => {
           v-model="nameField"
           v-bind="nameAttrs"
           aria-label="Поле для ввода названия учебной программы"
+          placeholder="Введите название раздела"
       >
       <p v-if="errors.name" class="error">{{ errors.name }}</p>
     </div>
@@ -64,6 +65,7 @@ const emitCurriculumData = handleSubmit((values) => {
           v-model="descriptionField"
           v-bind="descriptionAttrs"
           aria-label="Поле для ввода описания учебной программы"
+          placeholder="Введите описание учебной программы"
       />
       <p v-if="errors.description" class="error">{{ errors.description }}</p>
     </div>

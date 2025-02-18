@@ -153,7 +153,7 @@ const visiblePages = computed(() => {
 <template>
   <div>
       <h1>Пользователи</h1>
-      <div class="flex justify-between my-3">
+      <div class="flex flex-col sm:flex-row md:flex-row lg:flex-row justify-between my-3 gap-2">
         <label for="search-input" class="sr-only">Поле для поиска пользователя по фамилии</label>
                   <input
             id="search-input"
@@ -163,7 +163,7 @@ const visiblePages = computed(() => {
             placeholder="Поиск по фамилии..."
         />
 
-        <div class="flex gap-5">
+        <div class="flex flex-col sm:flex-row md:flex-row lg:flex-row gap-2 lg:gap-5">
           <button class="my-button bg-primary" @click="showAddPersonDialog">Добавить</button>
           <input type="file" @change="importPeople" accept=".xlsx" ref="fileInput" style="display: none" id="file-input"/>
           <button class="my-button" @click="triggerFileSelectionAndUpload">Импорт</button>

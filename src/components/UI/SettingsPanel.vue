@@ -44,7 +44,7 @@ const setImgHiding = () => {
 </script>
 
 <template>
-  <div class="flex gap-10 items-center" aria-labelledby="accessibility-settings-title">
+  <div class="flex gap-8 items-center lg:flex-row flex-wrap" aria-labelledby="accessibility-settings-title">
     <h2 id="accessibility-settings-title" class="sr-only">Настройки доступности</h2>
 
     <div class="flex gap-3 items-center flex-col" aria-labelledby="font-size-label">

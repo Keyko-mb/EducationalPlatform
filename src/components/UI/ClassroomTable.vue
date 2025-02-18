@@ -20,8 +20,8 @@ const emitDeleteClassroom = () => {
 </script>
 
 <template>
-  <div>
-    <div class="flex items-start gap-2">
+  <div class="overflow-auto">
+    <div class="flex items-start lg:gap-2">
       <details class="w-full" open>
         <summary style="font-size: 1.25em;"
                  role="button"

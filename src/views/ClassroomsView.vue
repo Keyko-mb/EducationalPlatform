@@ -145,7 +145,7 @@ const visiblePages = computed(() => {
 <template>
   <div>
     <h1>Учебные группы</h1>
-    <div class="flex justify-between my-3">
+    <div class="flex flex-col lg:flex-row gap-2 justify-between my-3">
       <label for="search-classroom" class="sr-only">Форма для поиска учебных групп</label>
       <input
           id="search-classroom"

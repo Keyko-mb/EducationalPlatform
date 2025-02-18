@@ -90,7 +90,7 @@ const visiblePages = computed(() => {
 
 <template>
   <div class="flex flex-col" aria-labelledby="classroom-list-heading">
-    <div class="flex justify-between items-center mb-5">
+    <div class="flex flex-col gap-2 lg:flex-row justify-between lg:items-center mb-5">
       <h1>Список учебных групп</h1>
       <button class="my-button" @click="showClassroomAddDialog">Добавить группу</button>
     </div>
