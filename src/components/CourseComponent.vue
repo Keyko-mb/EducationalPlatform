@@ -1,5 +1,4 @@
 <script setup>
-
 import Card from "@/components/UI/Card.vue";
 import {computed, onMounted, ref} from "vue";
 import {useRoute} from "vue-router";
@@ -9,20 +8,25 @@ import router from "@/router/index.js";
 
 const curriculumId = useRoute().params.id
 const authStore = useAuthStore()
-
 const props = defineProps(["course"])
 
 const lessons = ref([])
 const homeworks = ref([])
+const isLoading = ref(true)
 
-onMounted( () => {
-  axios.get(`courses/${props.course.id}/lessons`).then((response) => {
-    lessons.value = response.data
-  })
-  axios.get(`courses/${props.course.id}/homeworks`).then((response) => {
-    homeworks.value = response.data
-  })
-});
+onMounted(() => {
+  const requests = [
+    axios.get(`courses/${props.course.id}/lessons`)
+        .then(response => lessons.value = response.data),
+
+    axios.get(`courses/${props.course.id}/homeworks`)
+        .then(response => homeworks.value = response.data)
+  ]
+
+  Promise.all(requests)
+      .catch(error => console.error(error))
+      .finally(() => isLoading.value = false)
+})
 
 const filteredLessons = computed(() => {
   return lessons.value.filter(lesson => {
@@ -41,11 +45,14 @@ const filteredHomeworks = computed(() => {
     return true;
   });
 });
-
 </script>
 
 <template>
-  <div class="my-3">
+  <div v-if="isLoading" class="loader-container">
+    <div class="loader"></div>
+  </div>
+
+  <div v-else class="my-3">
     <h1 class="bg-bg">{{ props.course.name }}</h1>
 
     <section>
@@ -72,7 +79,6 @@ const filteredHomeworks = computed(() => {
           </Card>
         </div>
       </div>
-
     </section>
 
     <section>
@@ -92,20 +98,21 @@ const filteredHomeworks = computed(() => {
         </div>
       </div>
 
-        <div v-else role="list">
-          <div v-for="homework in filteredHomeworks" :key="homework.id" role="listitem">
-            <Card :title="homework.name"
-                  @click="router.push(`/curricula/${curriculumId}/courses/${props.course.id}/homeworks/${homework.id}/teacher`)"
-                  @keydown.enter="router.push(`/curricula/${curriculumId}/courses/${props.course.id}/homeworks/${homework.id}/teacher`)">
-              <template #caption>
-                <div>
-                  <p>{{homework.description}}</p>
-                  <p v-if="!homework.access" class="access" aria-label="Статус задания: скрыто">Скрыто</p>
-                </div>
-              </template>
-            </Card>
-          </div>
+      <div v-else role="list">
+        <div v-for="homework in filteredHomeworks" :key="homework.id" role="listitem">
+          <Card :title="homework.name"
+                @click="router.push(`/curricula/${curriculumId}/courses/${props.course.id}/homeworks/${homework.id}/teacher`)"
+                @keydown.enter="router.push(`/curricula/${curriculumId}/courses/${props.course.id}/homeworks/${homework.id}/teacher`)">
+            <template #caption>
+              <div>
+                <p>{{homework.description}}</p>
+                <p v-if="!homework.access" class="access" aria-label="Статус задания: скрыто">Скрыто</p>
+              </div>
+            </template>
+          </Card>
         </div>
+      </div>
     </section>
   </div>
 </template>
+

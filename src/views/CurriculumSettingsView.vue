@@ -6,10 +6,9 @@ import CurriculumSettings from '../components/CurriculumSettingsComponent.vue'
 import {useRoute} from "vue-router";
 import axios from "axios";
 
-
 const tabs = ref([
   {
-    name: "Стуктура",
+    name: "Структура",
     component: shallowRef(CurriculumStructure)
   },
   {
@@ -23,16 +22,20 @@ const tabs = ref([
 ])
 
 const currentTab = ref(0)
-
 const curriculum = ref({})
-
 const id = useRoute().params.id
+const isLoading = ref(true)
 
-onMounted(() => {
-  currentTab.value = tabs.value[0]
-  axios.get(`curricula/${id}`).then((response) => {
+onMounted(async () => {
+  try {
+    currentTab.value = tabs.value[0]
+    const response = await axios.get(`curricula/${id}`)
     curriculum.value = response.data
-  })
+  } catch (error) {
+    console.error("Ошибка загрузки программы:", error)
+  } finally {
+    isLoading.value = false
+  }
 })
 
 const handleArrowNav = (currentIndex, direction) => {
@@ -42,15 +45,17 @@ const handleArrowNav = (currentIndex, direction) => {
 
   document.getElementById(`tab-${newIndex}`).focus();
 };
-
-
 </script>
 
 <template>
-  <div>
-    <h1>{{curriculum.name}}</h1>
+  <div v-if="isLoading" class="loader-container">
+    <div class="loader"></div>
+  </div>
+
+  <div v-else>
+    <h1>{{ curriculum.name }}</h1>
     <h2 class="sr-only">Навигация по настройкам учебной программы</h2>
-    <div class="my-5" role="navigation" >
+    <div class="my-5" role="navigation">
       <div role="tablist" aria-orientation="horizontal" class="flex">
         <button
             v-for="(tab, index) in tabs"
@@ -66,12 +71,15 @@ const handleArrowNav = (currentIndex, direction) => {
           {{ tab.name }}
         </button>
       </div>
-      <component :is="currentTab.component" class="border border-tertiary rounded-b-lg bg-formColor p-5"
-                 :curriculum="curriculum"
+      <component
+          :is="currentTab.component"
+          class="border border-tertiary rounded-b-lg bg-formColor p-5"
+          :curriculum="curriculum"
       ></component>
     </div>
   </div>
 </template>
+
 
 <style scoped>
 .active {
