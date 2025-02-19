@@ -94,6 +94,7 @@ const makeAccessible = () => {
               >
                 <h3 class="navbar-text">Главная</h3>
               </RouterLink>
+              <hr class="border-t border-logoColor opacity-30"/>
               <RouterLink
                   active-class="active"
                   to="/curricula"
@@ -104,6 +105,7 @@ const makeAccessible = () => {
               >
                 <h3 class="navbar-text">Обучение</h3>
               </RouterLink>
+              <hr v-if="authStore.isAuthenticated && authStore.userInfo.role === 'ADMIN'" class="border-t border-logoColor opacity-30"/>
               <RouterLink
                   active-class="active"
                   to="/people"
@@ -114,6 +116,7 @@ const makeAccessible = () => {
               >
                 <h3 class="navbar-text">Пользователи</h3>
               </RouterLink>
+              <hr v-if="authStore.isAuthenticated && authStore.userInfo.role === 'ADMIN'" class="border-t border-logoColor opacity-30"/>
               <RouterLink
                   active-class="active"
                   to="/classrooms"
@@ -135,7 +138,7 @@ const makeAccessible = () => {
                 :class="[isAccessible ? 'opacity-100' : 'opacity-40']"
                 aria-label="Переключить версию для пользователей с ОВЗ"
             >
-              <img src="/eye.svg" alt="Настройки интерфейса" class="w-full h-full"/>
+              <img src="/eye.svg" alt="Настройки" class="w-full h-full"/>
             </button>
 
             <div v-if="authStore.isAuthenticated">
@@ -146,7 +149,11 @@ const makeAccessible = () => {
                   role="menuitem"
                   class="flex items-center gap-2 cursor-pointer"
               >
-                <h3 class="hover:opacity-50">{{`${studentStore.lastName} ${studentStore.firstName}`}}</h3>
+                <Transition name="fade" appear>
+                  <h3 class="hover:opacity-50">
+                    {{ `${studentStore.lastName} ${studentStore.firstName}` }}
+                  </h3>
+                </Transition>
 <!--                <img src='/user.svg' class="w-8 h-8 lg:w-10 lg:h-10 opacity-80 hover:opacity-100" alt="Иконка пользователя">-->
               </RouterLink>
             </div>
@@ -164,9 +171,26 @@ const makeAccessible = () => {
             enter-active-class="transition duration-500"
             leave-active-class="transition duration-500"
         >
-          <SettingsPanel v-if="isAccessible" class="pt-8"/>
+          <SettingsPanel v-show="isAccessible" class="pt-8"/>
         </Transition>
       </div>
     </div>
   </header>
 </template>
+
+<style>
+.fade-enter-active, .fade-appear-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+
+.fade-enter-from, .fade-appear-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.fade-enter-to, .fade-appear-to,
+.fade-leave-from {
+  opacity: 1;
+}
+</style>

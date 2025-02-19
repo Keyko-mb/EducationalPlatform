@@ -5,21 +5,15 @@ import ScreenReaderComponent from "@/components/ScreenReaderComponent.vue";
 
 const themeStore = useThemeStore();
 
-const isSerif = ref(false);
-const imgHiddenFlag = ref(false);
-
 const currentTheme = computed(() => themeStore.theme);
 const currentFontSize = computed(() => themeStore.fontSize);
 const currentLineHeight = computed(() => themeStore.lineHeight);
 const currentLetterSpacing = computed(() => themeStore.letterSpacing);
+const isSerif = ref(themeStore.isSerifFlag);
+const imgHiddenFlag = ref(themeStore.imgHidingFlag);
 
 const setSerif = () => {
-    if (isSerif.value) {
-        themeStore.setFontFamily('serif');
-    }
-    else {
-        themeStore.setFontFamily('Nunito, sans-serif');
-    }
+  themeStore.setFontFamily(isSerif.value);
 }
 
 const setLineHeight = (value) => {

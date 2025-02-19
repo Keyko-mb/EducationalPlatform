@@ -4,9 +4,11 @@ import {useAuthStore} from "@/stores/auth.js";
 
 import { useForm } from "vee-validate";
 import * as yup from "yup";
+import {ref} from "vue";
 
 const authStore = useAuthStore()
 const router = useRouter()
+const showPassword = ref(false)
 
 const schema = yup.object({
   username: yup.string().required("Обязательное поле"),
@@ -41,12 +43,19 @@ const signIn = handleSubmit(async (values) => {
       <div class="my-5 space-y-5">
         <div class="flex flex-col">
           <label for="username">Логин</label>
-          <input class="my-input" type="text" id="username" v-model="usernameField" v-bind="usernameAttrs" aria-label="Поле для ввода логина">
+          <input class="my-input min-w-72" type="text" id="username" v-model="usernameField" v-bind="usernameAttrs" aria-label="Поле для ввода логина">
           <p v-if="errors.username" class="error">{{ errors.username }}</p>
         </div>
-        <div class="flex flex-col">
+        <div class="flex flex-col relative">
           <label for="password">Пароль</label>
-          <input class="my-input" type="password" id="password" v-model="passwordField" v-bind="passwordAttrs" aria-label="Поле для ввода пароля">
+          <input class="my-input" :type="showPassword ? 'text' : 'password'" id="password" v-model="passwordField" v-bind="passwordAttrs" aria-label="Поле для ввода пароля">
+          <button
+              type="button"
+              @click="showPassword = !showPassword"
+              class="absolute right-2 top-8 opacity-50 w-6 h-6 hover:opacity-80"
+              aria-label="Показать пароль">
+            <img src="/eye.svg" alt="Настройки" class="w-full h-full"/>
+          </button>
           <p v-if="errors.password" class="error">{{ errors.password }}</p>
         </div>
       </div>

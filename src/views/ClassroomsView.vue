@@ -32,8 +32,8 @@ const fetchClassrooms = async () => {
 };
 
 onMounted(async () => {
-  await fetchClassrooms();
   document.body.classList.add('table-page');
+  await fetchClassrooms();
 })
 
 onUnmounted(() => {
@@ -143,14 +143,14 @@ const visiblePages = computed(() => {
 <template>
   <div>
     <h1>Учебные группы</h1>
-    <div class="flex flex-col lg:flex-row gap-2 justify-between my-3">
+    <div class="flex flex-col lg:flex-row gap-2 justify-between mt-3 mb-5">
       <label for="search-classroom" class="sr-only">Форма для поиска учебных групп</label>
       <input
           id="search-classroom"
           type="text"
           v-model="searchQuery"
-          class="my-input"
-          placeholder="Поиск по названию..."
+          class="my-input min-w-80"
+          placeholder="Поиск группы по названию..."
       />
       <button class="my-button" @click="showAddClassroomDialog">Добавить группу</button>
     </div>
@@ -165,7 +165,7 @@ const visiblePages = computed(() => {
       </div>
     </div>
     <div v-else class="my-2">
-      <p>Учебные группы отсутствуют</p>
+      <p>Учебные группы не найдены</p>
     </div>
 
     <div class="flex items-center justify-center my-4">

@@ -32,7 +32,7 @@ const cancelDelete = () => {
       >
         <img
             src="/edit.svg"
-            alt=""
+            alt="Настройки"
             class="w-7 h-7"
             role="presentation"
         >
@@ -46,14 +46,14 @@ const cancelDelete = () => {
       >
         <img
             src="/delete.svg"
-            alt=""
+            alt="Настройки"
             class="w-6 h-6"
             role="presentation"
         >
       </button>
     </div>
     <div
-        class="bg-black/50 flex fixed inset-x-0 inset-y-0"
+        class="bg-black/50 flex fixed inset-x-0 inset-y-0 z-50"
         v-if="showConfirmDialog"
         role="dialog"
         aria-modal="true"

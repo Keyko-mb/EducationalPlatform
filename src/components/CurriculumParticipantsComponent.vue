@@ -86,23 +86,38 @@ const visiblePages = computed(() => {
   }
   return pages;
 });
+
+const searchQuery = ref('');
+
+const filteredClassrooms = computed(() => {
+  return classrooms.value.filter(classroom =>
+      classroom.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
+});
 </script>
 
 <template>
   <div class="flex flex-col" aria-labelledby="classroom-list-heading">
-    <div class="flex flex-col gap-2 lg:flex-row justify-between lg:items-center mb-5">
-      <h1>Список учебных групп</h1>
+    <h1>Список учебных групп</h1>
+    <div class="flex flex-col gap-2 lg:flex-row justify-between mt-3 mb-5">
+      <label for="search-classroom" class="sr-only">Форма для поиска учебных групп</label>
+      <input
+          id="search-classroom"
+          type="text"
+          v-model="searchQuery"
+          class="my-input min-w-72"
+          placeholder="Поиск группы по названию..."
+      />
       <button class="my-button" @click="showClassroomAddDialog">Добавить группу</button>
     </div>
     <div role="list">
-      <ClassroomTable v-if="classrooms.length > 0" class="w-full mb-5" v-for="classroom in classrooms"
+      <ClassroomTable v-if="filteredClassrooms.length > 0" class="w-full mb-5" v-for="classroom in filteredClassrooms"
                       :key="classroom.id"
                       :classroom="classroom"
-                      :users="classroom.persons"
                       @deleteClassroom="deleteClassroom"
                       role="listitem"/>
       <div v-else>
-        <p>Учебные группы отсутствуют</p>
+        <p>Учебные группы не найдены</p>
       </div>
     </div>
 

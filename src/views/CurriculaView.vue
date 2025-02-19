@@ -131,7 +131,7 @@ const visiblePages = computed(() => {
           </div>
         </div>
         <div v-else class="my-2">
-          <p>Учебные программы отсутствуют</p>
+          <p>Учебные программы не найдены</p>
         </div>
 
         <div class="flex items-center my-4">

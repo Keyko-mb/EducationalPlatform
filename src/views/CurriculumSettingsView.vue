@@ -38,6 +38,10 @@ onMounted(async () => {
   }
 })
 
+const updateCurriculum = (updatedCurriculum) => {
+  curriculum.value = updatedCurriculum;
+}
+
 const handleArrowNav = (currentIndex, direction) => {
   const newIndex = direction === 'left'
       ? Math.max(0, currentIndex - 1)
@@ -71,6 +75,7 @@ const handleArrowNav = (currentIndex, direction) => {
           :is="currentTab.component"
           class="border border-tertiary rounded-b-lg bg-formColor p-5"
           :curriculum="curriculum"
+          @updateCurriculum="updateCurriculum"
       ></component>
     </div>
   </div>

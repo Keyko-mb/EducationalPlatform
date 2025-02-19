@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, watch } from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import axios from "axios";
 import { useForm } from "vee-validate";
 import * as yup from "yup";
@@ -39,7 +39,7 @@ const studentsInOtherClassrooms = ref([]);
 
 onMounted(() => {
   axios.get("people").then((response) => {
-    people.value = response.data;
+    people.value = response.data.filter(person => person.role === "STUDENT");
   });
 
   axios.get("classrooms").then((response) => {
@@ -48,7 +48,7 @@ onMounted(() => {
       currentClassroom.persons.forEach((person) => {
         if (
             !studentsInOtherClassrooms.value.includes(person.id) &&
-            currentClassroom.id !== props.classroom.id // Исправлено
+            currentClassroom.id !== props.classroom.id
         ) {
           studentsInOtherClassrooms.value.push(person.id);
         }
@@ -76,6 +76,16 @@ const isPersonInAnotherClassroom = (person) => {
 
 const emitClassroomData = handleSubmit((values) => {
   emit("saveClassroomData", values);
+  people.value = [];
+  studentsInOtherClassrooms.value = [];
+});
+
+const searchQuery = ref('');
+
+const filteredPeople = computed(() => {
+  return people.value.filter(person =>
+      person.lastName.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
 });
 </script>
 
@@ -94,8 +104,16 @@ const emitClassroomData = handleSubmit((values) => {
 
       <div aria-labelledby="participants-label">
         <p id="participants-label">Участники</p>
+        <label for="search-person" class="sr-only">Форма для поиска ученика</label>
+        <input
+            id="search-person"
+            type="text"
+            v-model="searchQuery"
+            class="my-input w-full mb-1"
+            placeholder="Поиск по фамилии..."
+        />
         <div class="h-80 w-full border rounded-lg overflow-y-auto p-2 bg-formColor border-tertiary" role="listbox" aria-multiselectable="true">
-          <div v-for="person in people" :key="person.id" role="option"
+          <div v-if="filteredPeople.length > 0" v-for="person in filteredPeople" :key="person.id" role="option"
                :aria-selected="isPersonSelected(person)"
                :aria-disabled="isPersonInAnotherClassroom(person)">
             <input type="checkbox"
@@ -107,6 +125,7 @@ const emitClassroomData = handleSubmit((values) => {
                    class="mr-2">
             <label :for="person.id">{{ person.lastName + " " + person.firstName + " " + person.patronymic }}</label>
           </div>
+          <div v-else>Пользователи не найдены</div>
         </div>
         <p v-if="errors.persons" class="error">{{ errors.persons }}</p>
       </div>

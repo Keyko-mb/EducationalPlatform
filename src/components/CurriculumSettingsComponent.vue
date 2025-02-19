@@ -14,10 +14,14 @@ const props = defineProps([
   "curriculum"
 ]);
 
+const emit = defineEmits(['updateCurriculum']);
+
 const editCurriculum = (curriculum) => {
   axios
       .put("curricula/" + curriculum.id, curriculum)
-      .then(response => console.log(response))
+      .then(response => {
+        emit('updateCurriculum', response.data)
+      })
 }
 
 const showDeleteConfirmDialog = () => {

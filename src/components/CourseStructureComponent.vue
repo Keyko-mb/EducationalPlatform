@@ -130,7 +130,7 @@ const showHomeworkAddDialog = () => {
     <div class="cards-container space-y-3" role="list">
       <h2 class="sr-only">Список уроков</h2>
 
-      <Card v-for="lesson in lessons" :key="lesson.id" :title="lesson.name" @click="router.push(`/curricula/${curriculumId}/courses/${course.id}/lessons/${lesson.id}`)"
+      <Card v-for="lesson in lessons" :key="lesson.id" :title="lesson.name" type="lesson" @click="router.push(`/curricula/${curriculumId}/courses/${course.id}/lessons/${lesson.id}`)"
             role="listitem">
         <template #caption>
           <div>
@@ -141,7 +141,7 @@ const showHomeworkAddDialog = () => {
       </Card>
 
       <h2 class="sr-only">Список домашних заданий</h2>
-      <Card v-for="homework in homeworks" :key="homework.id" :title="homework.name" @click="router.push(`/curricula/${curriculumId}/courses/${course.id}/homeworks/${homework.id}/teacher`)"
+      <Card v-for="homework in homeworks" :key="homework.id" :title="homework.name" type="homework" @click="router.push(`/curricula/${curriculumId}/courses/${course.id}/homeworks/${homework.id}/teacher`)"
             role="listitem">
         <template #caption>
           <div>

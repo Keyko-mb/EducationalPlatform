@@ -8,9 +8,11 @@ const route = useRoute();
 const curriculaStore = useCurriculaStore();
 const materialsStore = useMaterialsStore();
 
+const excludedPaths = ['/signIn', '/not-found', '/access-denied'];
+
 const breadcrumbs = computed(() => {
   // Если на главной странице – возвращаем пустой массив (в шаблоне будет показана только "Главная")
-  if (route.path === '/' || route.path === '') {
+  if (excludedPaths.includes(route.path) || route.path === '/' || route.path === '') {
     return [];
   }
 
@@ -100,7 +102,8 @@ const breadcrumbs = computed(() => {
         });
         i++; // Пропускаем числовой ID
         continue;
-      } else {
+      }
+      else {
         // Для остальных сегментов
         accumulatedPath += '/' + segment;
         let name = segment;
@@ -164,7 +167,7 @@ const breadcrumbs = computed(() => {
 </script>
 
 <template>
-  <nav aria-label="Навигация по сайту" class="mb-4 overflow-auto">
+  <nav v-if="breadcrumbs.length" aria-label="Навигация по сайту" class="mb-4 overflow-auto">
     <ol class="flex gap-1">
       <!-- "Главная" всегда отображается -->
       <li>

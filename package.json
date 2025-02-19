@@ -10,13 +10,17 @@
     "test:unit": "vitest"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
+    "add": "^2.0.6",
     "axios": "^1.7.2",
     "normalize.css": "^8.0.1",
     "pinia": "^2.1.7",
+    "pinia-plugin-persistedstate": "^4.2.0",
     "vee-validate": "^4.15.0",
     "vue": "^3.4.27",
     "vue-router": "^4.3.0",
     "vue-toastification": "^2.0.0-rc.5",
+    "yarn": "^1.22.22",
     "yup": "^1.6.1"
   },
   "devDependencies": {

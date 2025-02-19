@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import {defineProps, ref} from "vue";
+import {computed, defineProps, ref} from "vue";
 import Dialog from "@/components/UI/Dialog.vue";
 
-const props = defineProps(["users", "classroom"]);
+const props = defineProps(["classroom"]);
 const deleteConfirmDialogVisible = ref(false);
 
 const emits = defineEmits(['deleteClassroom'])
@@ -17,18 +17,33 @@ const emitDeleteClassroom = () => {
   deleteConfirmDialogVisible.value = false;
 }
 
+const searchQuery = ref('');
+
+const filteredPeople = computed(() => {
+  return props.classroom.persons.filter(person =>
+      person.lastName.toLowerCase().startsWith(searchQuery.value.toLowerCase())
+  );
+});
 </script>
 
 <template>
   <div class="overflow-auto">
     <div class="flex items-start lg:gap-2">
-      <details class="w-full" open>
+      <details class="w-full mx-0.5" open>
         <summary style="font-size: 1.25em;"
                  role="button"
                  aria-expanded="true">
           {{props.classroom.name}}
         </summary>
-        <table class="w-full rounded-lg overflow-hidden border-collapse shadow-md mt-2">
+        <label for="search-input" class="sr-only">Поле для поиска пользователя в группе по фамилии</label>
+        <input
+            id="search-input"
+            type="text"
+            v-model="searchQuery"
+            class="my-input mt-2"
+            placeholder="Поиск по фамилии..."
+        />
+        <table v-if="filteredPeople.length > 0" class="w-full rounded-lg overflow-hidden border-collapse shadow-md mt-2">
           <caption class="sr-only">
             Список студентов учебной группы {{ props.classroom.name }}
           </caption>
@@ -40,13 +55,14 @@ const emitDeleteClassroom = () => {
           </tr>
           </thead>
           <tbody>
-          <tr v-for="user in props.users" :key="user.id" class="bg-formColor" role="row">
-            <td class="my-td border-l border-tertiary">{{ user.lastName }}</td>
-            <td class="my-td">{{ user.firstName }}</td>
-            <td class="my-td border-r border-tertiary">{{ user.patronymic }}</td>
+          <tr v-for="person in filteredPeople" :key="person.id" class="bg-formColor" role="row">
+            <td class="my-td border-l border-tertiary">{{ person.lastName }}</td>
+            <td class="my-td">{{ person.firstName }}</td>
+            <td class="my-td border-r border-tertiary">{{ person.patronymic }}</td>
           </tr>
           </tbody>
         </table>
+        <p class="mt-2" v-else>Участники группы не найдены</p>
       </details>
       <button
           @click="showDeleteConfirm"

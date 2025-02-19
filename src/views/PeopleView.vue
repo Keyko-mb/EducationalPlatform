@@ -4,16 +4,17 @@ import axios from "axios";
 import Dialog from "@/components/UI/Dialog.vue";
 import PersonForm from "@/components/Forms/PersonForm.vue";
 import PeopleTable from "@/components/UI/PeopleTable.vue";
+import Loader from "@/components/UI/Loader.vue";
 
 const people = ref([])
 const person = ref({})
 const addPersonDialogVisible = ref(false)
 const fileInput = ref(null);
-const isLoading = ref(true);
+const isLoading = ref(false);
 
 const currentPage = ref(0);
 const pageSize = ref(20);
-const totalPages =  ref(0);
+const totalPages = ref(0);
 
 onMounted(() => {
   loadPeople();
@@ -25,7 +26,7 @@ onUnmounted(() => {
 });
 
 const loadPeople = async () => {
-  isLoading.value = true;
+  // isLoading.value = true;
   try {
     const response = await axios.get("people/paginated", {
       params: {
@@ -42,6 +43,10 @@ const loadPeople = async () => {
   }
 }
 
+const updatePeople = (updatedPeople) => {
+  people.value = updatedPeople;
+}
+
 const handlePageChange = async (pageNumber) => {
   if (pageNumber >= 0 && pageNumber < totalPages.value) {
     currentPage.value = pageNumber;
@@ -55,11 +60,13 @@ const showAddPersonDialog = () => {
 
 const createPerson = async (person) => {
   try {
+    isLoading.value = true;
     await axios.post("auth/register", person);
     people.value.push(person);
   } catch (error) {
     console.error("Ошибка при создании пользователя:", error);
   } finally {
+    isLoading.value = false;
     addPersonDialogVisible.value = false;
   }
 }
@@ -90,6 +97,7 @@ const importPeople = async (event) => {
 
 const exportPeople = async () => {
   try {
+    isLoading.value = true;
     const response = await axios.get("admin/users/export", {
       responseType: "blob",
     });
@@ -103,6 +111,8 @@ const exportPeople = async () => {
     link.remove();
   } catch (error) {
     console.error("Ошибка при экспорте файла:", error);
+  } finally {
+    isLoading.value = false;
   }
 }
 
@@ -140,7 +150,8 @@ const visiblePages = computed(() => {
 
 <template>
   <div>
-    <div>
+    <Loader class="min-h-60" :is-active="isLoading"/>
+    <div v-if="!isLoading">
       <h1>Пользователи</h1>
       <div class="flex flex-col sm:flex-row md:flex-row lg:flex-row justify-between my-3 gap-2">
         <label for="search-input" class="sr-only">Поле для поиска пользователя по фамилии</label>
@@ -154,13 +165,13 @@ const visiblePages = computed(() => {
 
         <div class="flex flex-col sm:flex-row md:flex-row lg:flex-row gap-2 lg:gap-5">
           <button class="my-button bg-primary" @click="showAddPersonDialog">Добавить</button>
-          <input type="file" @change="importPeople" accept=".xlsx" ref="fileInput" hidden />
+          <input type="file" @change="importPeople" accept=".xlsx" ref="fileInput" hidden/>
           <button class="my-button" @click="triggerFileSelectionAndUpload">Импорт</button>
           <button class="my-button" @click="exportPeople">Экспорт</button>
         </div>
       </div>
 
-      <PeopleTable v-if="filteredPeople.length > 0" :people="filteredPeople"/>
+      <PeopleTable v-if="filteredPeople.length > 0" :people="filteredPeople" @updatePeople="updatePeople"/>
       <p v-else>Пользователи не найдены</p>
     </div>
 
@@ -194,7 +205,8 @@ const visiblePages = computed(() => {
 
     <Dialog v-model:show="addPersonDialogVisible">
       <h2 id="dialog-title" class="sr-only">Окно для создания нового пользователя</h2>
-      <PersonForm
+      <Loader class="min-h-60" :is-active="isLoading"/>
+      <PersonForm v-if="!isLoading"
           @savePersonData="createPerson"
           :person="person"/>
     </Dialog>

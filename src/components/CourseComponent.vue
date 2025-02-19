@@ -64,6 +64,7 @@ const filteredHomeworks = computed(() => {
              :key="lesson.id"
              role="listitem">
           <Card :title="lesson.name"
+                type="lesson"
                 @keydown.enter="router.push(`/curricula/${curriculumId}/courses/${props.course.id}/lessons/${lesson.id}`)"
                 @click="router.push(`/curricula/${curriculumId}/courses/${props.course.id}/lessons/${lesson.id}`)">
             <template #caption>
@@ -83,6 +84,7 @@ const filteredHomeworks = computed(() => {
       <div v-if="authStore.userInfo.role === 'STUDENT'" role="list">
         <div v-for="homework in filteredHomeworks" :key="homework.id" role="listitem">
           <Card :title="homework.name"
+                type="homework"
                 @click="router.push(`/curricula/${curriculumId}/courses/${props.course.id}/homeworks/${homework.id}`)"
                 @keydown.enter="router.push(`/curricula/${curriculumId}/courses/${props.course.id}/homeworks/${homework.id}`)">
             <template #caption>
@@ -97,6 +99,7 @@ const filteredHomeworks = computed(() => {
       <div v-else role="list">
         <div v-for="homework in filteredHomeworks" :key="homework.id" role="listitem">
           <Card :title="homework.name"
+                type="homework"
                 @click="router.push(`/curricula/${curriculumId}/courses/${props.course.id}/homeworks/${homework.id}/teacher`)"
                 @keydown.enter="router.push(`/curricula/${curriculumId}/courses/${props.course.id}/homeworks/${homework.id}/teacher`)">
             <template #caption>

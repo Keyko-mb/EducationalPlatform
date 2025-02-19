@@ -1,5 +1,5 @@
 <script setup>
-import {defineProps, ref} from "vue";
+import {computed, defineProps, ref} from "vue";
 import EditAndDeleteButtons from "@/components/UI/EditAndDeleteButtons.vue";
 import Dialog from "@/components/UI/Dialog.vue";
 import ClassroomForm from "@/components/Forms/ClassroomForm.vue";
@@ -68,20 +68,37 @@ const getReport = async () => {
   }
 }
 
+const searchQuery = ref('');
+
+const filteredPeople = computed(() => {
+  return props.classroom.persons.filter(person =>
+      person.lastName.toLowerCase().startsWith(searchQuery.value.toLowerCase())
+  );
+});
+
 </script>
 
 <template>
-  <div class="flex items-start lg:gap-2 mb-5 overflow-auto" >
-    <details class="w-full" open>
+  <hr class="pt-5 opacity-10"/>
+  <div class="flex items-start lg:gap-2 overflow-auto pb-5">
+    <details class="w-full mx-0.5" open>
       <summary style=" font-size: 1.25em;"
                aria-controls="students-table"
                aria-expanded="true"
       >{{props.classroom.name}}</summary>
-      <div class="flex lg:justify-end my-2">
+      <div class="flex flex-col gap-2 lg:flex-row lg:justify-between my-2">
+        <label for="search-input" class="sr-only">Поле для поиска пользователя в группе по фамилии</label>
+        <input
+            id="search-input"
+            type="text"
+            v-model="searchQuery"
+            class="my-input"
+            placeholder="Поиск по фамилии..."
+        />
         <button class="px-6 py-2 rounded-lg shadow-md transition duration-300 hover:brightness-110 border border-tertiary" @click="getReport">Отчет по учебной группе</button>
       </div>
       <div>
-        <table v-if="props.classroom.persons.length > 0" class="w-full rounded-lg overflow-hidden border-collapse shadow-md mt-2">
+        <table v-if="filteredPeople.length > 0" class="w-full rounded-lg overflow-hidden border-collapse shadow-md mt-2">
           <thead role="rowgroup">
           <tr class="bg-tableColor border border-tertiary bg-opacity-75" role="row">
             <th class="my-th" role="columnheader" scope="col">Фамилия</th>
@@ -90,14 +107,14 @@ const getReport = async () => {
           </tr>
           </thead>
           <tbody role="rowgroup">
-          <tr v-for="person in props.classroom.persons" :key="person.id" class="bg-formColor" role="row">
+          <tr v-for="person in filteredPeople" :key="person.id" class="bg-formColor" role="row">
             <td class="my-td border-l border-tertiary" role="cell">{{ person.lastName }}</td>
             <td class="my-td" role="cell">{{ person.firstName }}</td>
             <td class="my-td border-r border-tertiary" role="cell">{{ person.patronymic }}</td>
           </tr>
           </tbody>
         </table>
-        <p class="mt-2" v-else>Группа пуста</p>
+        <p class="mt-2" v-else>Участники группы не найдены</p>
       </div>
     </details>
     <EditAndDeleteButtons @deleteClick="emitDeleteClassroom" @editClick="showClassroomEditDialog(classroom)" class="mt-1" :aria-label="`Действия над учебной группой ${props.classroom.name}`"/>

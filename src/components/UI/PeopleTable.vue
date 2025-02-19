@@ -7,6 +7,7 @@ import axios from "axios";
 
 const props = defineProps(['people'])
 const people = toRef(props, 'people');
+const emit = defineEmits(['updatePeople'])
 
 const selectedPerson = ref(null)
 const editPersonDialogVisible = ref(false)
@@ -18,6 +19,7 @@ const deletePerson = (id) => {
         if (index !== -1) {
           people.value.splice(index, 1);
         }
+        emit('updatePeople', people.value);
       })
 }
 
@@ -29,6 +31,7 @@ const editPerson = (updatedPerson) => {
         if (index !== -1) {
           people.value[index] = { ...updatedPerson };
         }
+        emit('updatePeople', people.value);
       });
   editPersonDialogVisible.value = false;
 }

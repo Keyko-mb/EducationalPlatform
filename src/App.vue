@@ -7,8 +7,11 @@ import {useStudentStore} from "@/stores/studentInfo.js";
 import {initializeToastInterceptor} from "@/api.js";
 import {onMounted} from "vue";
 import Footer from "@/components/UI/Footer.vue";
+import {useThemeStore} from "@/stores/theme.js";
 
 const authStore = useAuthStore()
+const themeStore = useThemeStore();
+const studentStore = useStudentStore()
 
 const checkAuth = async () => {
   const userInfo = JSON.parse(localStorage.getItem('userInfo'))
@@ -18,13 +21,14 @@ const checkAuth = async () => {
     authStore.userInfo.token = userInfo.token
     authStore.userInfo.refresh_token = userInfo.refresh_token
 
-    const studentStore = useStudentStore()
-    await studentStore.initStudent()
+    await studentStore.initStudent();
+    await studentStore.fetchSettings();
   }
 }
 
 onMounted(() => {
   initializeToastInterceptor();
+  themeStore.applyPersistedSettings();
 });
 
 checkAuth();
@@ -40,8 +44,7 @@ checkAuth();
       <div class="container px-5 mx-auto my-5">
         <Breadcrumbs />
         <RouterView v-slot="{ Component, route }">
-          <Transition name="global" mode="out-in">
-            <!-- Используем ключ, чтобы Vue знал, когда нужно анимировать смену компонента -->
+          <Transition name="global" mode="out-in" appear>
             <Component :is="Component" :key="route.fullPath" />
           </Transition>
         </RouterView>
