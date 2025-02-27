@@ -1,9 +1,11 @@
 <script setup>
-import {defineEmits, ref, watch} from "vue";
+import {defineEmits, h, ref, watch} from "vue";
 import {useFilesStore} from "@/stores/files.js";
 
 import {useForm} from "vee-validate";
 import * as yup from "yup";
+import ToastMessage from "@/components/UI/ToastMessage.vue";
+import {useToast} from "vue-toastification";
 
 const props = defineProps(['lesson'])
 const emit = defineEmits(['saveLessonData'])
@@ -11,6 +13,8 @@ const filesStore = useFilesStore();
 const files = ref(filesStore.decodedFiles);
 const newFiles = ref([]);
 const removedFiles = ref([]);
+
+const toast = useToast();
 
 const schema = yup.object({
   name: yup.string()
@@ -27,7 +31,7 @@ const schema = yup.object({
   access: yup.boolean()
 });
 
-const { handleSubmit, errors, defineField, resetForm, setFieldValue } = useForm({
+const {handleSubmit, errors, defineField, resetForm, setFieldValue} = useForm({
   validationSchema: schema,
   initialValues: props.lesson
 });
@@ -38,7 +42,7 @@ const [contentField, contentAttrs] = defineField('content');
 const [accessField, accessAttrs] = defineField('access');
 
 watch(() => props.lesson, (newValue) => {
-  resetForm({ values: newValue });
+  resetForm({values: newValue});
 });
 
 const emitLessonData = handleSubmit(async (values) => {
@@ -67,7 +71,27 @@ const emitLessonData = handleSubmit(async (values) => {
 });
 
 const handleFileUpload = (event) => {
-  newFiles.value = Array.from(event.target.files);
+  const MAX_FILE_SIZE = 10485760; // 10 МБ
+  const filesArray = Array.from(event.target.files);
+  const validFiles = [];
+  let hasOversizedFiles = false;
+
+  for (const file of filesArray) {
+    if (file.size > MAX_FILE_SIZE) {
+      const toastContent = h(ToastMessage, {
+        message: "Ошибка загрузки",
+        details: { info: `Файл ${file.name} превышает допустимый размер (10 МБ)` }
+      });
+      toast.error(toastContent);
+      hasOversizedFiles = true;
+    } else {
+      validFiles.push(file);
+    }
+  }
+  if (hasOversizedFiles) {
+    event.target.value = '';
+  }
+  newFiles.value = validFiles;
 }
 
 const removeFile = async (file) => {
@@ -86,7 +110,7 @@ const removeFile = async (file) => {
       <h1 id="lesson-title">Урок</h1>
 
       <fieldset aria-labelledby="basic-info">
-        <legend  id="basic-info" class="sr-only">Основная информация</legend>
+        <legend id="basic-info" class="sr-only">Основная информация</legend>
         <div class="my-5">
           <label for="name">Название</label>
           <input class="my-input w-full" type="text" id="name" v-model="nameField"
@@ -97,15 +121,17 @@ const removeFile = async (file) => {
 
         <div class="mb-3">
           <label for="description">Описание</label>
-          <textarea  class="my-input w-full min-h-32" id="description" v-model="descriptionField"
-                     v-bind="descriptionAttrs" aria-label="Поле для ввода описания урока" placeholder="Введите описание урока"/>
+          <textarea class="my-input w-full min-h-32" id="description" v-model="descriptionField"
+                    v-bind="descriptionAttrs" aria-label="Поле для ввода описания урока"
+                    placeholder="Введите описание урока"/>
           <p v-if="errors.description" class="error">{{ errors.description }}</p>
         </div>
 
         <div class="mb-3">
           <label for="text">Текст</label>
           <textarea class="my-input w-full min-h-52" id="text" v-model="contentField"
-                    v-bind="contentAttrs" aria-label="Поле для ввода текстового содержания урока" placeholder="Введите содержание урока"/>
+                    v-bind="contentAttrs" aria-label="Поле для ввода текстового содержания урока"
+                    placeholder="Введите содержание урока"/>
           <p v-if="errors.content" class="error">{{ errors.content }}</p>
         </div>
       </fieldset>
@@ -120,7 +146,7 @@ const removeFile = async (file) => {
               class="flex items-center mb-2"
               role="listitem">
             <div v-if="file.type.startsWith('image')" class="relative">
-              <img :src="file.url" :alt="file.name || 'Изображение без названия'" width="150" class="rounded-lg" />
+              <img :src="file.url" :alt="file.name || 'Изображение без названия'" width="150" class="rounded-lg"/>
               <button
                   @click="removeFile(file)"
                   type="button"
@@ -131,7 +157,7 @@ const removeFile = async (file) => {
               </button>
             </div>
 
-            <div v-else class="flex h-full w-full px-2 py-1 rounded-lg border border-tertiary ">
+            <div v-else class="flex w-full px-2 py-1 rounded-lg border border-tertiary ">
               <a :href="file.url"
                  :download="'file-' + index"
                  class="hover:opacity-75 transition-all underline flex-grow p-2">Скачать файл {{ file.fileName }}</a>
@@ -150,7 +176,7 @@ const removeFile = async (file) => {
 
       <fieldset>
         <legend class="sr-only">Добавление вложений</legend>
-        <label for="new-attachments">Добавить вложения:</label>
+        <label for="new-attachments">Добавить вложения (размер файла не должен превышать 10 МБ):</label>
         <input type="file"
                multiple
                id="new-attachments"

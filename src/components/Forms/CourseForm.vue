@@ -8,7 +8,7 @@ const emit = defineEmits(['saveCourseData'])
 
 const schema = yup.object({
   name: yup.string()
-      .min(3, "Название должно содержать от 2 символов")
+      .min(3, "Название должно содержать от 3 символов")
       .max(150, "Название должно содержать до 150 символов")
       .required("Название не может быть пустым"),
   description: yup.string()

@@ -12,7 +12,7 @@ const curriculaStore = useCurriculaStore();
 const curricula = computed(() => curriculaStore.curricula)
 const authStore = useAuthStore()
 const studentStore = useStudentStore()
-const studentCurriculum = computed(() => studentStore.curriculumId);
+const studentCurricula = computed(() => studentStore.curricula);
 
 const totalPages = computed(() => curriculaStore.totalPages);
 const currentPage = ref(0);
@@ -169,8 +169,9 @@ const visiblePages = computed(() => {
       </div>
 
       <div v-else>
-        <div v-if="studentCurriculum && studentCurriculum.access">
-          <Card :key="studentCurriculum.id"
+        <div v-if="studentCurricula" v-for="studentCurriculum in studentCurricula">
+          <Card v-if="studentCurriculum.access"
+                :key="studentCurriculum.id"
                 @click="router.push(`/curricula/${studentCurriculum.id}`)"
                 :title="studentCurriculum.name"
                 @keydown.enter="router.push(`/curricula/${studentCurriculum.id}`)">

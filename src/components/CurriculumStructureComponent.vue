@@ -34,7 +34,7 @@ const addCourse = (course) => {
 }
 
 const deleteCourse = (courseId) => {
-  axios.delete(`courses/${courseId}/curriculum/${curriculum.value.id}`)
+  axios.delete(`courses/${courseId}`)
       .then(() => {
         courses.value = courses.value.filter(course => course.id !== courseId)
       })

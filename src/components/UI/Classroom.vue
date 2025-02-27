@@ -80,8 +80,8 @@ const filteredPeople = computed(() => {
 
 <template>
   <hr class="pt-5 opacity-10"/>
-  <div class="flex items-start lg:gap-2 overflow-auto pb-5">
-    <details class="w-full mx-0.5" open>
+  <div class="flex items-start lg:gap-2 overflow-auto pb-5 px-1 pt-1">
+    <details class="w-full" open>
       <summary style=" font-size: 1.25em;"
                aria-controls="students-table"
                aria-expanded="true"

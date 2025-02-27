@@ -33,7 +33,10 @@ export const useThemeStore = defineStore('theme', {
       //           {
       //             theme: theme,
       //             fontSize: this.fontSize,
-      //             isSerif: this.fontFamily
+      //             isSerif: this.fontFamily,
+      //             lineHeight: this.lineHeight,
+      //             letterSpacing: this.letterSpacing,
+      //             imgHiding: this.imgHidingFlag
       //           });
       // } catch (error) {
       //   console.error('Ошибка сохранения размера шрифта', error);

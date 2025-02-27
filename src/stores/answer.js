@@ -53,7 +53,6 @@ export const useAnswerStore = defineStore('answer', {
                 .put(`answers/${id}`, updatedAnswer)
                 .then((response) => {
                     this.answer = response.data
-                    console.log(this.decodedFiles);
                 })
         },
 
@@ -68,6 +67,7 @@ export const useAnswerStore = defineStore('answer', {
                 if (answerIndex !== -1) {
                     homeworkStore.answers[answerIndex].comment = response.data.comment;
                 }
+                return response.data;
             } catch (error) {
                 console.error("Ошибка при обновлении комментария:", error);
             }
@@ -79,10 +79,20 @@ export const useAnswerStore = defineStore('answer', {
                     responseType: "blob",
                 });
                 const contentType = response.headers["content-type"];
+                const contentDisposition = response.headers["content-disposition"];
+                let fileName = file;
+                if (contentDisposition) {
+                    const fileNameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                    const matches = fileNameRegex.exec(contentDisposition);
+                    if (matches != null && matches[1]) {
+                        fileName = matches[1].replace(/['"]/g, '');
+                    }
+                }
                 const fileURL = URL.createObjectURL(response.data);
 
                 this.decodedFiles.push({
                     name: file,
+                    fileName: fileName,
                     url: fileURL,
                     type: contentType,
                 });
@@ -121,7 +131,6 @@ export const useAnswerStore = defineStore('answer', {
         async deleteFile(id, file) {
             await axios.delete(`answers/${id}/attachments/${file}`);
             this.decodedFiles = this.decodedFiles.filter((f) => f.name !== file);
-            console.log(this.decodedFiles);
         },
 
         clearAnswer() {

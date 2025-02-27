@@ -1,9 +1,12 @@
-<script setup lang="ts">
-import {ref, toRef} from "vue";
+<script setup>
+import {h, ref, toRef} from "vue";
 import Dialog from "@/components/UI/Dialog.vue";
 import PersonForm from "@/components/Forms/PersonForm.vue";
 import EditAndDeleteButtons from "@/components/UI/EditAndDeleteButtons.vue";
 import axios from "axios";
+import {useToast} from "vue-toastification";
+import ToastMessage from "@/components/UI/ToastMessage.vue";
+import {useAuthStore} from "@/stores/auth.js";
 
 const props = defineProps(['people'])
 const people = toRef(props, 'people');
@@ -11,16 +14,27 @@ const emit = defineEmits(['updatePeople'])
 
 const selectedPerson = ref(null)
 const editPersonDialogVisible = ref(false)
+const authStore = useAuthStore();
+
+const toast = useToast();
 
 const deletePerson = (id) => {
-  axios.delete(`people/${id}`)
-      .then(() => {
-        const index = people.value.findIndex(person => person.id === id);
-        if (index !== -1) {
-          people.value.splice(index, 1);
-        }
-        emit('updatePeople', people.value);
-      })
+  if (authStore.userInfo.id === id) {
+    const toastContent = h(ToastMessage, {
+      message: "Ошибка при удалении",
+      details: { info: `Нельзя удалить самого себя :)` }
+    });
+    toast.error(toastContent);
+  } else {
+    axios.delete(`people/${id}`)
+        .then(() => {
+          const index = people.value.findIndex(person => person.id === id);
+          if (index !== -1) {
+            people.value.splice(index, 1);
+          }
+          emit('updatePeople', people.value);
+        })
+  }
 }
 
 const editPerson = (updatedPerson) => {
@@ -32,6 +46,10 @@ const editPerson = (updatedPerson) => {
           people.value[index] = { ...updatedPerson };
         }
         emit('updatePeople', people.value);
+        if (authStore.userInfo.id === updatedPerson.id) {
+          authStore.userInfo.role = updatedPerson.role
+          localStorage.setItem('userInfo', JSON.stringify(authStore.userInfo));
+        }
       });
   editPersonDialogVisible.value = false;
 }

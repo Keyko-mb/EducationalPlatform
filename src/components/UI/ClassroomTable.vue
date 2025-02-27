@@ -28,8 +28,8 @@ const filteredPeople = computed(() => {
 
 <template>
   <div class="overflow-auto">
-    <div class="flex items-start lg:gap-2">
-      <details class="w-full mx-0.5" open>
+    <div class="flex items-start lg:gap-2 px-1 pt-1">
+      <details class="w-full" open>
         <summary style="font-size: 1.25em;"
                  role="button"
                  aria-expanded="true">

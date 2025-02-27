@@ -1,9 +1,11 @@
 <script setup>
-import {defineEmits, defineProps, ref, watch} from "vue";
+import {defineEmits, defineProps, h, ref, watch} from "vue";
 import {useFilesStore} from "@/stores/files.js";
 
 import { useForm } from "vee-validate";
 import * as yup from "yup";
+import {useToast} from "vue-toastification";
+import ToastMessage from "@/components/UI/ToastMessage.vue";
 
 const props = defineProps(['homework'])
 const emit = defineEmits(['saveHomeworkData'])
@@ -13,6 +15,8 @@ const newFiles = ref([]);
 const fileInput = ref(null);
 const removedFiles = ref([]);
 const isSaved = ref(false);
+
+const toast = useToast();
 
 const schema = yup.object({
   name: yup
@@ -72,7 +76,27 @@ const emitHomeworkData = handleSubmit(async (values) => {
 })
 
 const handleFileUpload = (event) => {
-  newFiles.value = Array.from(event.target.files);
+  const MAX_FILE_SIZE = 10485760; // 10 МБ
+  const filesArray = Array.from(event.target.files);
+  const validFiles = [];
+  let hasOversizedFiles = false;
+
+  for (const file of filesArray) {
+    if (file.size > MAX_FILE_SIZE) {
+      const toastContent = h(ToastMessage, {
+        message: "Ошибка загрузки",
+        details: { info: `Файл ${file.name} превышает допустимый размер (10 МБ)` }
+      });
+      toast.error(toastContent);
+      hasOversizedFiles = true;
+    } else {
+      validFiles.push(file);
+    }
+  }
+  if (hasOversizedFiles) {
+    event.target.value = '';
+  }
+  newFiles.value = validFiles;
 }
 
 const removeFile = (file) => {
@@ -124,7 +148,7 @@ const removeFile = (file) => {
               </button>
             </div>
 
-            <div v-else class="flex h-full w-full px-2 py-1 rounded-lg border border-tertiary ">
+            <div v-else class="flex w-full px-2 py-1 rounded-lg border border-tertiary ">
               <a :href="file.url"
                  :download="file.fileName"
                  class="hover:opacity-75 transition-all underline flex-grow p-2">Скачать файл {{ file.fileName }}</a>
@@ -141,7 +165,7 @@ const removeFile = (file) => {
         </ul>
       </div>
       <div>
-        <label for="new-attachments">Добавить вложения:</label>
+        <label for="new-attachments">Добавить вложения (размер файла не должен превышать 10 МБ):</label>
         <input type="file" multiple id="new-attachments"
                @change="handleFileUpload"
                ref="fileInput"

@@ -10,7 +10,7 @@ export const useStudentStore = defineStore('student', {
         lastName: "",
         patronymic: null,
         classroomId: null,
-        curriculumId: null,
+        curricula: [],
         settings: null
     }),
     actions: {
@@ -23,13 +23,14 @@ export const useStudentStore = defineStore('student', {
                     this.firstName = response.data.firstName
                     this.lastName = response.data.lastName
                     this.patronymic = response.data.patronymic
+                    this.settings = response.data.settings
                     if (response.data.classroomId) {
                         this.classroomId = response.data.classroomId
                         axios
                             .get(`classrooms/${this.classroomId}/curriculum`)
                             .then((response) => {
                                 if (response.data) {
-                                    this.curriculumId = response.data
+                                    this.curricula = response.data
                                 }
                             })
                     }
@@ -40,11 +41,11 @@ export const useStudentStore = defineStore('student', {
             if (this.settings) {
                 if (this.settings.theme) {
                     const themeMapping = {
-                        'Светлый': 'theme-light',
-                        'Темный': 'theme-dark',
-                        'Голубой': 'theme-blue'
+                        'Светлый': 'light',
+                        'Темный': 'dark',
+                        'Голубой': 'blue'
                     };
-                    themeStore.setTheme(themeMapping[this.settings.theme.name] || '');
+                    themeStore.setTheme(themeMapping[this.settings.theme.name], false);
                 }
                 if (this.settings.fontSize) {
                     const fontSizeMapping = {
@@ -52,10 +53,19 @@ export const useStudentStore = defineStore('student', {
                         'Увеличенный': 'large',
                         'Большой': 'xlarge'
                     };
-                    themeStore.setFontSize(fontSizeMapping[this.settings.fontSize.name] || 'normal');
+                    themeStore.setFontSize(fontSizeMapping[this.settings.fontSize.name]);
                 }
                 if (this.settings.isSerif) {
-                    themeStore.setFontFamily(this.settings.isSerif ? 'serif' : 'Nunito, sans-serif');
+                    themeStore.setFontFamily(this.settings.isSerif );
+                }
+                if (this.settings.lineHeight) {
+                    themeStore.setFontFamily(this.settings.lineHeight.name );
+                }
+                if (this.settings.letterSpacing) {
+                    themeStore.setFontFamily(this.settings.letterSpacing.name );
+                }
+                if (this.settings.imgHiding) {
+                    themeStore.setFontFamily(this.settings.imgHiding);
                 }
             }
         }

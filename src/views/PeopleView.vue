@@ -61,8 +61,8 @@ const showAddPersonDialog = () => {
 const createPerson = async (person) => {
   try {
     isLoading.value = true;
-    await axios.post("auth/register", person);
-    people.value.push(person);
+    const response = await axios.post("auth/register", person);
+    people.value.push(response.data.person);
   } catch (error) {
     console.error("Ошибка при создании пользователя:", error);
   } finally {

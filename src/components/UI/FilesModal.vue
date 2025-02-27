@@ -1,30 +1,25 @@
 <script setup>
-
 import {useAnswerStore} from "@/stores/answer.js";
 import {onUnmounted} from "vue";
 import { defineEmits, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import Loader from "@/components/UI/Loader.vue";
 
 const answerStore = useAnswerStore()
 const files = ref(answerStore.decodedFiles);
 
-onMounted(() => {
+const props = defineProps(["show", "answer"]);
+const emit = defineEmits(["hideDialog", "update:show"]);
+
+const isLoading = ref(false)
+
+onMounted(async () => {
   document.addEventListener("keydown", handleEscape);
   document.addEventListener("keydown", trapFocus);
-
-  if (props.answer && props.answer.attachments) {
-    for (const file of props.answer.attachments) {
-      answerStore.fetchFile(props.answer.id, file)
-    }
-    answerStore.refreshFiles();
-  }
 })
 
 onUnmounted(() => {
   answerStore.clearAnswer();
 });
-
-const props = defineProps(["show", "answer"]);
-const emit = defineEmits(["hideDialog", "update:show"]);
 
 const dialogRef = ref(null);
 const previouslyFocusedElement = ref(null);
@@ -98,13 +93,34 @@ watch(
           }
         });
       }
+      else {
+        answerStore.clearAnswer();
+      }
     }
+);
+
+watch(
+    () => props.answer,
+    async (newAnswer) => {
+      try {
+        isLoading.value = true
+        if (newAnswer && newAnswer.attachments?.length) {
+          for (const file of newAnswer.attachments) {
+            await answerStore.fetchFile(newAnswer.id, file);
+          }
+          await answerStore.refreshFiles();
+        }
+      } finally {
+        isLoading.value = false
+      }
+    },
+    { immediate: false }
 );
 </script>
 
 <template>
   <div
-      class="bg-black/50 flex fixed inset-x-0 inset-y-0"
+      class="bg-black/50 flex fixed inset-x-0 inset-y-0 z-50"
       v-if="show"
       @mousedown="handleMouseDown"
       @mouseup="handleMouseUp"
@@ -128,7 +144,8 @@ watch(
       <h1 id="dialog-title" class="sr-only">Диалоговое окно</h1>
         <div>
           <h1 class="my-2">Вложения к ответу</h1>
-          <div class="border rounded-lg max-h-96 flex-wrap overflow-y-auto bg-formColor p-4 flex gap-4" role="list">
+          <Loader :is-active="isLoading" class="min-h-60"/>
+          <div v-if="!isLoading" class="border rounded-lg max-h-96 flex-wrap overflow-y-auto bg-formColor p-4 flex gap-4" role="list">
             <div
                 v-for="(file, index) in files"
                 :key="'file-' + index"
@@ -138,10 +155,10 @@ watch(
                 <img :src="file.url" :alt="'Изображение ' + (index + 1)" class="rounded-lg max-w-80" />
               </div>
 
-              <div v-else class="flex h-full w-full px-2 py-1 rounded-lg border border-tertiary ">
+              <div v-else class="flex w-full px-2 py-1 rounded-lg border border-tertiary ">
                 <a :href="file.url"
                    :download="'file-' + index"
-                   class="hover:opacity-75 transition-all underline flex-grow p-2">Скачать файл {{ index + 1 }}</a>
+                   class="hover:opacity-75 transition-all underline flex-grow p-2">Скачать файл {{ file.fileName }}</a>
               </div>
             </div>
           </div>

@@ -4,7 +4,6 @@
 ## Устанавливаем рабочую директорию
 #WORKDIR /app
 #
-#RUN rm -rf node_modules package-lock.json
 ## Копируем package.json и package-lock.json для установки зависимостей
 #COPY package*.json ./
 #

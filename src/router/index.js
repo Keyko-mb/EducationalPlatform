@@ -16,7 +16,6 @@ import {useCurriculaStore} from "@/stores/curricula.js";
 import {useMaterialsStore} from "@/stores/materials.js";
 import NotFoundView from "@/views/NotFoundView.vue";
 import {useStudentStore} from "@/stores/studentInfo.js";
-import {computed} from "vue";
 
 const Role = {
   Admin: 'ADMIN',
@@ -162,7 +161,7 @@ router.beforeEach(async (to, from, next) => {
     const curriculumId = to.params.id || to.params.curriculumId;
     const curriculum = curriculaStore.curricula.find(curriculum => curriculum.id.toString() === curriculumId);
 
-    if (!curriculum || (authStore.userInfo.role === 'STUDENT' && !curriculum.access) || (authStore.userInfo.role === 'STUDENT' && studentStore.curriculumId.id.toString() !== curriculumId)) {
+    if (!curriculum || (authStore.userInfo.role === 'STUDENT' && !curriculum.access) || (authStore.userInfo.role === 'STUDENT' && studentStore.curricula.filter(curriculum => curriculum.id.toString() === curriculumId).length < 1)) {
       next('/access-denied');
       return;
     }

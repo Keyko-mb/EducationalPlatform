@@ -57,17 +57,10 @@ const addClassroom = async (classroom) => {
     const response = await axios.post("classrooms", classroom);
     const currentId = response.data.id;
 
-    classrooms.value.push(classroom);
+    classrooms.value.push(response.data);
 
     await Promise.all(classroom.persons.map(async (student) => {
       await axios.put(`classrooms/${currentId}/students/${student.id}`);
-      const classIndex = classrooms.value.findIndex(c => c.id === currentId);
-      if (classIndex !== -1) {
-        classrooms.value[classIndex].persons = [
-          ...(classrooms.value[classIndex].persons || []),
-          student
-        ];
-      }
     }));
 
   } catch (error) {
@@ -81,11 +74,13 @@ const addClassroom = async (classroom) => {
 const editClassroom = async (updatedClassroom) => {
   try {
     isLoading.value = true;
-    await axios.put(`classrooms/${updatedClassroom.id}`, updatedClassroom);
+    const response = await axios.put(`classrooms/${updatedClassroom.id}`, updatedClassroom);
     const index = classrooms.value.findIndex(c => c.id === updatedClassroom.id);
+    console.log(classrooms.value[index])
     if (index !== -1) {
-      classrooms.value[index] = { ...updatedClassroom };
+      classrooms.value[index] = { ...response.data };
     }
+    console.log(classrooms.value[index])
   } catch (error) {
     console.error("Ошибка при обновлении группы:", error);
   } finally {

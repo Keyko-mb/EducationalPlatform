@@ -39,7 +39,7 @@ const Role = {
 
 <template>
   <div>
-    <h1>{{ `${studentStore.lastName} ${studentStore.firstName} ${studentStore.patronymic}` }}</h1>
+    <h1>{{ `${studentStore.lastName} ${studentStore.firstName} ${studentStore.patronymic ? studentStore.patronymic : ''}` }}</h1>
     <div class="my-3">
       <div class="space-y-3" role="list">
         <div role="listitem">
