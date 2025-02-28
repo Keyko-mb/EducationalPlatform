@@ -4,11 +4,11 @@ import {useStudentStore} from "@/stores/studentInfo.js";
 
 export const useThemeStore = defineStore('theme', {
   state: () => ({
-    theme: '',
-    fontSize: '1rem',
+    theme: 'default',
+    fontSize: 'normal',
     fontFamily: 'Nunito, sans-serif',
-    letterSpacing: '0rem',
-    lineHeight: '1.5rem',
+    letterSpacing: 'normal',
+    lineHeight: 'normal',
     imgHidingFlag : false,
     isSerifFlag: false,
     screenReaderEnabled: false,
@@ -17,33 +17,37 @@ export const useThemeStore = defineStore('theme', {
     screenReaderVolume: 1,
   }),
   actions: {
-    setTheme(theme, toggle = true) {
+    editTheme() {
       const studentInfo = useStudentStore();
+      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+      if (!studentInfo.studentId || !userInfo) {
+        console.log('Нет ID студента, запрос не отправлен');
+        return;
+      }
+
+      axios.put(`people/${studentInfo.studentId}/settings`, {
+        theme: this.theme,
+        fontSize: this.fontSize,
+        isSerif: this.isSerifFlag,
+        lineHeight: this.lineHeight,
+        letterSpacing: this.letterSpacing,
+        imgHiding: this.imgHidingFlag
+      }).catch(error => {
+        console.error('Ошибка сохранения настроек', error);
+      });
+    },
+    setTheme(theme, toggle = true) {
       if (toggle && this.theme === theme) {
-        this.theme = '';
+        this.theme = 'default';
         document.documentElement.classList.remove('light', 'dark', 'blue');
       } else {
         this.theme = theme;
         document.documentElement.classList.remove('light', 'dark', 'blue');
         document.documentElement.classList.add(`${theme}`);
       }
-      // try {
-      //   axios
-      //       .put(`people/${studentInfo.studentId}/settings`,
-      //           {
-      //             theme: theme,
-      //             fontSize: this.fontSize,
-      //             isSerif: this.fontFamily,
-      //             lineHeight: this.lineHeight,
-      //             letterSpacing: this.letterSpacing,
-      //             imgHiding: this.imgHidingFlag
-      //           });
-      // } catch (error) {
-      //   console.error('Ошибка сохранения размера шрифта', error);
-      // }
+      this.editTheme();
     },
     setLineHeight(value) {
-      const studentInfo = useStudentStore();
       this.lineHeight = value;
       if (value === 'normal') {
         document.documentElement.style.setProperty('--line-height-factor', '1.5');
@@ -52,20 +56,9 @@ export const useThemeStore = defineStore('theme', {
       } else if (value === 'xlarge') {
         document.documentElement.style.setProperty('--line-height-factor', '2');
       }
-      // try {
-      //   axios
-      //       .put(`people/${studentInfo.studentId}/settings`,
-      //           {
-      //             theme: this.theme,
-      //             fontSize: this.fontSize,
-      //             isSerif: this.fontFamily
-      //           });
-      // } catch (error) {
-      //   console.error('Ошибка сохранения размера шрифта', error);
-      // }
+      this.editTheme();
     },
     setLetterSpacing(value) {
-      const studentInfo = useStudentStore();
       this.letterSpacing = value;
       if (value === 'normal') {
         document.documentElement.style.setProperty('--letter-spacing-factor', '0');
@@ -74,20 +67,9 @@ export const useThemeStore = defineStore('theme', {
       } else if (value === 'xlarge') {
         document.documentElement.style.setProperty('--letter-spacing-factor', '0.2');
       }
-      // try {
-      //   axios
-      //       .put(`people/${studentInfo.studentId}/settings`,
-      //           {
-      //             theme: this.theme,
-      //             fontSize: this.fontSize,
-      //             isSerif: this.fontFamily
-      //           });
-      // } catch (error) {
-      //   console.error('Ошибка сохранения размера шрифта', error);
-      // }
+      this.editTheme();
     },
     setFontSize(size) {
-      const studentInfo = useStudentStore();
       this.fontSize = size;
       if (size === 'normal') {
         document.documentElement.style.setProperty('--font-size', '1rem');
@@ -96,20 +78,9 @@ export const useThemeStore = defineStore('theme', {
       } else if (size === 'xlarge') {
         document.documentElement.style.setProperty('--font-size', '3rem');
       }
-      // try {
-      //   axios
-      //       .put(`people/${studentInfo.studentId}/settings`,
-      //           {
-      //             theme: this.theme,
-      //             fontSize: size,
-      //             isSerif: this.fontFamily
-      //           });
-      // } catch (error) {
-      //   console.error('Ошибка сохранения размера шрифта', error);
-      // }
+      this.editTheme();
     },
     setFontFamily(isSerifFlag) {
-      const studentInfo = useStudentStore();
       this.isSerifFlag = isSerifFlag;
       if (isSerifFlag) {
         this.fontFamily = 'serif';
@@ -118,34 +89,12 @@ export const useThemeStore = defineStore('theme', {
         this.fontFamily = 'Nunito, sans-serif';
       }
       document.documentElement.style.setProperty('--font-family', this.fontFamily);
-      // const isSerif = fontFamily === 'serif';
-      // try {
-      //   axios
-      //       .put(`people/${studentInfo.studentId}/settings`,
-      //           {
-      //             theme: this.theme,
-      //             fontSize: this.fontSize,
-      //             isSerif: isSerifFlag
-      //           });
-      // } catch (error) {
-      //   console.error('Ошибка сохранения размера шрифта', error);
-      // }
+      this.editTheme();
     },
     setImgHiding(value) {
-      const studentInfo = useStudentStore();
       this.imgHidingFlag = value;
       document.body.classList.toggle('disable-images', value);
-      // try {
-      //   axios
-      //       .put(`people/${studentInfo.studentId}/settings`,
-      //           {
-      //             theme: this.theme,
-      //             fontSize: this.fontSize,
-      //             isSerif: this.fontFamily
-      //           });
-      // } catch (error) {
-      //   console.error('Ошибка сохранения размера шрифта', error);
-      // }
+      this.editTheme();
     },
     setScreenReaderEnabled(value) {
       this.screenReaderEnabled = value;

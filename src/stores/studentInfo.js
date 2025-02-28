@@ -40,33 +40,25 @@ export const useStudentStore = defineStore('student', {
             const themeStore = useThemeStore();
             if (this.settings) {
                 if (this.settings.theme) {
-                    const themeMapping = {
-                        'Светлый': 'light',
-                        'Темный': 'dark',
-                        'Голубой': 'blue'
-                    };
-                    themeStore.setTheme(themeMapping[this.settings.theme.name], false);
+                    themeStore.setTheme(this.settings.theme.name, false);
                 }
                 if (this.settings.fontSize) {
-                    const fontSizeMapping = {
-                        'Нормальный': 'normal',
-                        'Увеличенный': 'large',
-                        'Большой': 'xlarge'
-                    };
-                    themeStore.setFontSize(fontSizeMapping[this.settings.fontSize.name]);
+                    themeStore.setFontSize(this.settings.fontSize.name);
                 }
-                if (this.settings.isSerif) {
+                if (this.settings.isSerif !== null) {
                     themeStore.setFontFamily(this.settings.isSerif );
                 }
                 if (this.settings.lineHeight) {
-                    themeStore.setFontFamily(this.settings.lineHeight.name );
+                    themeStore.setLineHeight(this.settings.lineHeight.name );
                 }
                 if (this.settings.letterSpacing) {
-                    themeStore.setFontFamily(this.settings.letterSpacing.name );
+                    themeStore.setLetterSpacing(this.settings.letterSpacing.name );
                 }
-                if (this.settings.imgHiding) {
-                    themeStore.setFontFamily(this.settings.imgHiding);
+                if (this.settings.imgHiding !== null) {
+                    themeStore.setImgHiding(this.settings.imgHiding);
                 }
+            } else {
+                themeStore.applyPersistedSettings();
             }
         }
     },

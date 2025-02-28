@@ -1,5 +1,5 @@
 <script setup>
-import { RouterView } from 'vue-router';
+import {RouterView} from 'vue-router';
 import Navbar from './components/UI/Navbar.vue'
 import Breadcrumbs from './components/UI/Breadcrumbs.vue'
 import {useAuthStore} from "@/stores/auth.js";
@@ -22,35 +22,35 @@ const checkAuth = async () => {
     authStore.userInfo.refresh_token = userInfo.refresh_token
 
     await studentStore.initStudent();
-    await studentStore.fetchSettings();
+    if (studentStore.settings) {
+      await studentStore.fetchSettings();
+    }
+  } else {
+    themeStore.applyPersistedSettings();
   }
 }
 
 onMounted(() => {
   initializeToastInterceptor();
-  themeStore.applyPersistedSettings();
+  checkAuth();
 });
-
-checkAuth();
-
-
 </script>
 
 <template>
   <div id="app" class="flex flex-col min-h-screen">
     <a href="#main-content" class="skip-link">Перейти к основному контенту</a>
-    <Navbar />
+    <Navbar/>
     <main id="main-content" class="flex-grow">
       <div class="container px-5 mx-auto my-5">
-        <Breadcrumbs />
+        <Breadcrumbs/>
         <RouterView v-slot="{ Component, route }">
           <Transition name="global" mode="out-in" appear>
-            <Component :is="Component" :key="route.fullPath" />
+            <Component :is="Component" :key="route.fullPath"/>
           </Transition>
         </RouterView>
       </div>
     </main>
-    <Footer />
+    <Footer/>
   </div>
 </template>
 
@@ -59,10 +59,12 @@ checkAuth();
 .global-leave-active {
   transition: opacity 0.3s;
 }
+
 .global-enter-from,
 .global-leave-to {
   opacity: 0;
 }
+
 .global-enter-to,
 .global-leave-from {
   opacity: 1;

@@ -29,7 +29,8 @@ export const useAuthStore = defineStore('auth', () => {
             await localStorage.setItem('userInfo', JSON.stringify(userInfo.value));
 
             const studentStore = useStudentStore()
-            await studentStore.initStudent()
+            await studentStore.initStudent();
+            await studentStore.fetchSettings();
             return { success: true};
         } catch (error) {
             console.error('Ошибка при аутентификации:', error);
@@ -46,6 +47,7 @@ export const useAuthStore = defineStore('auth', () => {
         }
         delete axios.defaults.headers.common['Authorization'];
         localStorage.removeItem('userInfo');
+        localStorage.removeItem('student');
     }
 
     return {signIn, logOut, userInfo, isAuthenticated}

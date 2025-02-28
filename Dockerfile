@@ -1,20 +1,19 @@
-## Используем официальный образ Node.js
-#FROM node:18.18.2-slim
-#
-## Устанавливаем рабочую директорию
-#WORKDIR /app
-#
-## Копируем package.json и package-lock.json для установки зависимостей
-#COPY package*.json ./
-#
-## Устанавливаем зависимости
-#RUN npm install
-#
-## Копируем оставшиеся файлы приложения
-#COPY . .
-#
-## Указываем порт, который будет использоваться приложением
-#EXPOSE 5173
-#
-## Команда для запуска приложения
-#CMD ["npm", "run", "dev"]
+# Этап сборки: используем официальный образ Node.js
+FROM node:16-alpine AS builder
+WORKDIR /app
+
+# Копируем файлы зависимостей для использования кеша Docker-слоёв
+COPY package*.json ./
+RUN npm install
+
+# Копируем исходный код и выполняем сборку Vite
+COPY . .
+RUN npm run build
+
+# Этап запуска: копируем файлы сборки в образ Nginx
+FROM nginx:alpine
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Открываем стандартный порт для Nginx
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

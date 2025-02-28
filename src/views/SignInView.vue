@@ -48,16 +48,25 @@ const signIn = handleSubmit(async (values) => {
         </div>
         <div class="flex flex-col relative">
           <label for="password">Пароль</label>
-          <input class="my-input" :type="showPassword ? 'text' : 'password'" id="password" v-model="passwordField" v-bind="passwordAttrs" aria-label="Поле для ввода пароля">
-          <button
-              type="button"
-              @click="showPassword = !showPassword"
-              class="absolute right-2 top-8 opacity-50 w-6 h-6 hover:opacity-80"
-              aria-label="Показать пароль">
-            <img src="/eye.svg" alt="Настройки" class="w-full h-full"/>
-          </button>
+          <div class="relative">
+            <input
+                class="my-input w-full"
+                :type="showPassword ? 'text' : 'password'"
+                id="password"
+                v-model="passwordField"
+                v-bind="passwordAttrs"
+                aria-label="Поле для ввода пароля">
+            <button
+                type="button"
+                @click="showPassword = !showPassword"
+                class="absolute right-2 top-1/2 transform -translate-y-1/2 opacity-50 hover:opacity-80"
+                aria-label="Показать пароль">
+              <img src="/eye.svg" alt="Настройки" class="w-[1.2em] h-[1.2em]"/>
+            </button>
+          </div>
           <p v-if="errors.password" class="error">{{ errors.password }}</p>
         </div>
+
       </div>
 
       <button class="my-button" type="submit">Войти</button>
