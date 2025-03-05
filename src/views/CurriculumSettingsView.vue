@@ -64,7 +64,7 @@ const handleArrowNav = (currentIndex, direction) => {
             role="tab"
             :aria-selected="currentTab.name === tab.name"
             :aria-controls="`tabpanel-${index}`"
-            :class="['border-t border-l border-r border-tertiary px-4 py-2 rounded-t-lg hover:brightness-95 bg-formColor', { active: currentTab.name === tab.name }]"
+            :class="['border-t border-l border-r border-tertiary px-3 sm:px-4 py-2 rounded-t-lg hover:brightness-95 bg-formColor', { active: currentTab.name === tab.name }]"
             @click="currentTab = tab"
             @keydown.left.prevent="handleArrowNav(index, 'left')"
             @keydown.right.prevent="handleArrowNav(index, 'right')">

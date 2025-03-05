@@ -21,7 +21,6 @@ export const useThemeStore = defineStore('theme', {
       const studentInfo = useStudentStore();
       const userInfo = JSON.parse(localStorage.getItem('userInfo'));
       if (!studentInfo.studentId || !userInfo) {
-        console.log('Нет ID студента, запрос не отправлен');
         return;
       }
 

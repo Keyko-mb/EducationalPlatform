@@ -25,7 +25,7 @@ const showFeedbackForm = () => {
 <!--        </div>-->
 <!--    </footer>-->
 
-  <hr class="border-t border-gray-300 opacity-50 mt-20"/>
+  <hr class="border-t border-gray-300 opacity-50"/>
   <footer class="container mx-auto px-4 py-10">
       <div class="flex justify-between items-start gap-5 opacity-50">
         <div class="flex flex-col items-center gap-2">

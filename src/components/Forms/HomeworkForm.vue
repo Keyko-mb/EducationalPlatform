@@ -55,14 +55,18 @@ const emitHomeworkData = handleSubmit(async (values) => {
       values.attachments = values.attachments.filter(f => f !== file.name);
     }
     for (const file of newFiles.value) {
-      const filename = await filesStore.uploadFile('homeworks', values.id, file);
-      if (filename) {
-        await filesStore.fetchFile('homeworks', values.id, filename);
-        values.attachments.push(filename);
+      try {
+        const filename = await filesStore.uploadFile('homeworks', values.id, file);
+        if (filename) { // Проверяем, что filename не undefined и не null
+          await filesStore.fetchFile('homeworks', values.id, filename);
+          values.attachments.push(filename);
+        }
+      } catch (error) {
+        console.error(`Ошибка загрузки файла ${file.name}:`, error);
+        toast.error(h(ToastMessage, { message: "Ошибка загрузки файла", details: { info: error.message } }));
       }
     }
     setFieldValue("attachments", values.attachments);
-
     filesStore.refreshFiles();
   }
   emit('saveHomeworkData', values, newFiles.value)
@@ -97,7 +101,7 @@ const handleFileUpload = (event) => {
     event.target.value = '';
   }
   newFiles.value = validFiles;
-}
+};
 
 const removeFile = (file) => {
   try {

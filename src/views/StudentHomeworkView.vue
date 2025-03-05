@@ -69,7 +69,7 @@ const handleFileUpload = (event) => {
     if (file.size > MAX_FILE_SIZE) {
       const toastContent = h(ToastMessage, {
         message: "Ошибка загрузки",
-        details: {info: `Файл ${file.name} превышает допустимый размер (10 МБ)`}
+        details: { info: `Файл ${file.name} превышает допустимый размер (10 МБ)` }
       });
       toast.error(toastContent);
       hasOversizedFiles = true;
@@ -81,11 +81,11 @@ const handleFileUpload = (event) => {
     event.target.value = '';
   }
   newFiles.value = validFiles;
-}
+};
 
 const submitAnswer = async () => {
   try {
-    isLoading.value = true
+    isLoading.value = true;
     if (answer.value) {
       for (const file of removedFiles.value) {
         await answerStore.deleteFile(answer.value.id, file.name);
@@ -93,8 +93,10 @@ const submitAnswer = async () => {
       }
       for (const file of newFiles.value) {
         const filename = await answerStore.uploadFile(answer.value.id, file);
-        await answerStore.fetchFile(answer.value.id, filename);
-        answer.value.attachments.push(filename);
+        if (filename) { // Только если filename не null
+          await answerStore.fetchFile(answer.value.id, filename);
+          answer.value.attachments.push(filename);
+        }
       }
       answerStore.refreshFiles();
       const formData = {
@@ -103,8 +105,8 @@ const submitAnswer = async () => {
         studentId: studentStore.studentId,
         homeworkId: homeworkId,
         statusId: 2
-      }
-      answerStore.updateAnswer(answer.value.id, formData)
+      };
+      await answerStore.updateAnswer(answer.value.id, formData);
     } else {
       const formData = {
         text: answerText.value,
@@ -112,18 +114,17 @@ const submitAnswer = async () => {
         studentId: studentStore.studentId,
         homeworkId: homeworkId,
         statusId: 2
-      }
-      await answerStore.submitAnswer(formData, newFiles.value)
+      };
+      await answerStore.submitAnswer(formData, newFiles.value);
     }
-
-    newFiles.value = []
-    removedFiles.value = []
+    newFiles.value = [];
+    removedFiles.value = [];
   } catch (error) {
-    console.error('Ошибка при отправке ответа:', error)
+    console.error('Ошибка при отправке ответа:', error);
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 
 const removeFile = (file) => {
   try {

@@ -6,7 +6,7 @@ import ToastMessage from "@/components/UI/ToastMessage.vue";
 import { h } from "vue";
 
 // Возвращаем установку глобального базового URL
-axios.defaults.baseURL = "http://localhost:8084/v1/api/";
+axios.defaults.baseURL = "https://multiznaika-education.ru/v1/api/";
 
 let isRefreshing = false;
 let failedQueue = [];
@@ -29,7 +29,7 @@ const processQueue = (error, token = null) => {
 
 // Создаем отдельный экземпляр axios для refresh-запросов
 const axiosPublic = axios.create({
-    baseURL: "http://localhost:8084/v1/api/"
+    baseURL: "https://multiznaika-education.ru/v1/api/"
 });
 
 axios.interceptors.request.use(config => {
@@ -91,7 +91,9 @@ axios.interceptors.response.use(
                 await authStore.logOut();
                 await router.push("/signIn");
                 caughtError = error;
-                return Promise.reject({ ...error, isRefreshTokenFailure: true });
+                error.isRefreshTokenFailure = true;
+                error.userFriendlyMessage = "Ваша сессия завершена, так как вы вошли с другого устройства. Пожалуйста, войдите снова.";
+                return Promise.reject(error);
             } finally {
                 processQueue(caughtError || null, null);
                 isRefreshing = false;
@@ -103,7 +105,8 @@ axios.interceptors.response.use(
             await router.push("/signIn");
             return Promise.reject({
                 ...error,
-                isRefreshTokenFailure: true
+                isRefreshTokenFailure: true,
+                userFriendlyMessage: "Ваша сессия завершена, так как вы вошли с другого устройства. Пожалуйста, войдите снова."
             });
         }
 
@@ -118,11 +121,13 @@ export function initializeToastInterceptor() {
         response => response,
         error => {
             if (error.isRefreshTokenFailure) {
+                const message = error.userFriendlyMessage || "Ваша сессия истекла. Пожалуйста, войдите снова.";
+                toast.error(h(ToastMessage, { message }));
                 return Promise.reject(error);
             }
 
             const status = error.response?.status;
-            const message = error.response?.data?.error;
+            const message = error.response?.data?.error || "Произошла ошибка";
             const details = error.response?.data?.details;
 
             const toastContent = h(ToastMessage, { message, details });

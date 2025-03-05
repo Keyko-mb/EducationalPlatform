@@ -47,31 +47,30 @@ const emitPersonData = handleSubmit((values) => {
 
 <template>
   <form @submit.prevent="emitPersonData">
-    <div class="my-5 space-y-5">
+    <div>
       <h1>Пользователь</h1>
-
-      <div>
+      <div class="mt-5 mb-3">
         <label for="firstName">Имя</label>
         <input class="my-input w-full" type="text" id="firstName" v-model="firstNameField"
                v-bind="firstNameAttrs" aria-label="Поле для ввода имени пользователя"
                placeholder="Введите имя пользователя">
         <p v-if="errors.firstName" class="error">{{ errors.firstName }}</p>
       </div>
-      <div>
+      <div class="mb-3">
         <label for="lastName">Фамилия</label>
         <input class="my-input w-full" type="text" id="lastName" v-model="lastNameField"
                v-bind="lastNameAttrs" aria-label="Поле для ввода фамилии пользователя"
                placeholder="Введите фамилию пользователя">
         <p v-if="errors.lastName" class="error">{{ errors.lastName }}</p>
       </div>
-      <div>
+      <div class="mb-3">
         <label for="patronymic">Отчество</label>
         <input  class="my-input w-full" type="text" id="patronymic" v-model="patronymicField"
                 v-bind="patronymicAttrs" aria-label="Поле для ввода отчества пользователя"
                 placeholder="Введите отчество пользователя (при наличии)">
         <p v-if="errors.patronymic" class="error">{{ errors.patronymic }}</p>
       </div>
-      <div>
+      <div class="mb-3">
         <label for="role">Роль</label>
         <select class="my-select w-full" id="role" v-model="roleField"
                 v-bind="roleAttrs" aria-describedby="status-help">

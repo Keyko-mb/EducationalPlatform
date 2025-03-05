@@ -10,15 +10,16 @@
   >
     <div
         @click.stop
-        class="m-auto max-h-[52rem] min-w-sm sm:min-w-[500px] max-w-[1100px] border border-tertiary rounded-lg p-5 bg-bgColor relative overflow-y-auto"
+        class="m-auto max-h-[80vh] max-w-[90vw] sm:max-h-[52rem] sm:min-w-[500px] sm:max-w-[1100px] border border-tertiary rounded-lg p-3 sm:p-5 bg-bgColor relative overflow-y-auto"
         ref="dialogRef"
-        tabindex="-1">
+        tabindex="-1"
+    >
       <input
           @click="emitHideDialog"
           type="image"
           alt="Закрыть окно"
           src="/delete.svg"
-          class="absolute right-3 top-3 cursor-pointer w-5 h-5 opacity-50 hover:opacity-100"
+          class="absolute right-2 top-2 sm:right-3 sm:top-3 cursor-pointer w-6 h-6 sm:w-5 sm:h-5 opacity-50 hover:opacity-100"
           aria-label="Закрыть окно"
       />
       <h1 id="dialog-title" class="sr-only">Диалоговое окно</h1>

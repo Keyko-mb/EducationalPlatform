@@ -37,7 +37,7 @@ const signIn = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <div class="flex flex-col items-center h-screen justify-center -m-20">
+  <div class="flex flex-col items-center h-screen justify-center -m-36">
     <form @submit.prevent="signIn">
       <h1>Вход в систему</h1>
       <div class="my-5 space-y-5">

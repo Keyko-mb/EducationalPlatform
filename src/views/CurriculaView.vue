@@ -169,7 +169,7 @@ const visiblePages = computed(() => {
       </div>
 
       <div v-else>
-        <div v-if="studentCurricula" v-for="studentCurriculum in studentCurricula">
+        <div v-if="studentCurricula.length > 0" v-for="studentCurriculum in studentCurricula">
           <Card v-if="studentCurriculum.access"
                 :key="studentCurriculum.id"
                 @click="router.push(`/curricula/${studentCurriculum.id}`)"

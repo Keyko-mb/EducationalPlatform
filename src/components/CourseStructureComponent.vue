@@ -53,54 +53,50 @@ const editCourse = (updatedCourse) => {
 }
 
 const addLesson = (lesson, newFiles) => {
-  lesson.courseId = props.course.id
-  lesson.attachments = []
-  axios
-      .post("lessons", lesson)
-      .then(async (response) => {
-        lesson = response.data
-        await axios
-            .put(`lessons/${response.data.id}/course/${props.course.id}`)
-        let uploadedFiles = []
-        for (const file of newFiles) {
-          const filename = await filesStore.uploadFile('lessons', response.data.id, file);
-          uploadedFiles.push(filename);
-        }
-        lesson.attachments = uploadedFiles
-        await axios
-            .put(`lessons/${response.data.id}`, lesson).then((response) => {
-              lessons.value.push(response.data)
-            })
-        filesStore.clearFiles();
-        await materialsStore.fetchLessons();
-      })
+  lesson.courseId = props.course.id;
+  lesson.attachments = [];
+  axios.post("lessons", lesson).then(async (response) => {
+    lesson = response.data;
+    await axios.put(`lessons/${response.data.id}/course/${props.course.id}`);
+    let uploadedFiles = [];
+    for (const file of newFiles) {
+      const filename = await filesStore.uploadFile('lessons', response.data.id, file);
+      if (filename) { // Добавляем только если filename не null
+        uploadedFiles.push(filename);
+      }
+    }
+    lesson.attachments = uploadedFiles;
+    await axios.put(`lessons/${response.data.id}`, lesson).then((response) => {
+      lessons.value.push(response.data);
+    });
+    filesStore.clearFiles();
+    await materialsStore.fetchLessons();
+  });
   addLessonDialogVisible.value = false;
-}
+};
 
 const addHomework = (homework, newFiles) => {
-  homework.courseId = props.course.id
-  homework.attachments = []
-  axios
-      .post("homeworks", homework)
-      .then(async (response) => {
-        homework = response.data
-        await axios
-            .put(`homeworks/${response.data.id}/course/${props.course.id}`)
-        let uploadedFiles = []
-        for (const file of newFiles) {
-          const filename = await filesStore.uploadFile('homeworks', response.data.id, file);
-          uploadedFiles.push(filename);
-        }
-        homework.attachments = uploadedFiles
-        await axios
-            .put(`homeworks/${response.data.id}`, homework).then((response) => {
-              homeworks.value.push(response.data)
-            })
-        filesStore.clearFiles();
-        await materialsStore.fetchHomeworks();
-      })
+  homework.courseId = props.course.id;
+  homework.attachments = [];
+  axios.post("homeworks", homework).then(async (response) => {
+    homework = response.data;
+    await axios.put(`homeworks/${response.data.id}/course/${props.course.id}`);
+    let uploadedFiles = [];
+    for (const file of newFiles) {
+      const filename = await filesStore.uploadFile('homeworks', response.data.id, file);
+      if (filename) { // Добавляем только если filename не null
+        uploadedFiles.push(filename);
+      }
+    }
+    homework.attachments = uploadedFiles;
+    await axios.put(`homeworks/${response.data.id}`, homework).then((response) => {
+      homeworks.value.push(response.data);
+    });
+    filesStore.clearFiles();
+    await materialsStore.fetchHomeworks();
+  });
   addHomeworkDialogVisible.value = false;
-}
+};
 
 const showCourseEditDialog = () => {
   editCourseDialogVisible.value = true;

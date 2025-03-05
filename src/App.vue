@@ -37,20 +37,22 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="app" class="flex flex-col min-h-screen">
-    <a href="#main-content" class="skip-link">Перейти к основному контенту</a>
-    <Navbar/>
-    <main id="main-content" class="flex-grow">
-      <div class="container px-5 mx-auto my-5">
-        <Breadcrumbs/>
-        <RouterView v-slot="{ Component, route }">
-          <Transition name="global" mode="out-in" appear>
-            <Component :is="Component" :key="route.fullPath"/>
-          </Transition>
-        </RouterView>
-      </div>
-    </main>
-    <Footer/>
+  <div id="app" class="w-full min-h-screen flex flex-col">
+    <div class="flex flex-col flex-grow">
+      <a href="#main-content" class="skip-link">Перейти к основному контенту</a>
+      <Navbar />
+      <main id="main-content" class="flex-grow">
+        <div class="container px-5 mx-auto my-5">
+          <Breadcrumbs />
+          <RouterView v-slot="{ Component, route }">
+            <Transition name="global" mode="out-in" appear>
+              <Component :is="Component" :key="route.fullPath" />
+            </Transition>
+          </RouterView>
+        </div>
+      </main>
+    </div>
+    <Footer />
   </div>
 </template>
 

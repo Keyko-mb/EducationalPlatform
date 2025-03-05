@@ -55,14 +55,18 @@ const emitLessonData = handleSubmit(async (values) => {
       values.attachments = values.attachments.filter(f => f !== file.name);
     }
     for (const file of newFiles.value) {
-      const filename = await filesStore.uploadFile('lessons', values.id, file);
-      if (filename) {
-        await filesStore.fetchFile('lessons', values.id, filename);
-        values.attachments.push(filename);
+      try {
+        const filename = await filesStore.uploadFile('lessons', values.id, file);
+        if (filename) { // Проверяем, что filename не undefined и не null
+          await filesStore.fetchFile('lessons', values.id, filename);
+          values.attachments.push(filename);
+        }
+      } catch (error) {
+        console.error(`Ошибка загрузки файла ${file.name}:`, error);
+        toast.error(h(ToastMessage, { message: "Ошибка загрузки файла", details: { info: error.message } }));
       }
     }
     setFieldValue("attachments", values.attachments);
-
     filesStore.refreshFiles();
   }
   emit('saveLessonData', values, newFiles.value);
@@ -92,7 +96,7 @@ const handleFileUpload = (event) => {
     event.target.value = '';
   }
   newFiles.value = validFiles;
-}
+};
 
 const removeFile = async (file) => {
   try {
@@ -111,7 +115,7 @@ const removeFile = async (file) => {
 
       <fieldset aria-labelledby="basic-info">
         <legend id="basic-info" class="sr-only">Основная информация</legend>
-        <div class="my-5">
+        <div class="mt-5 mb-3">
           <label for="name">Название</label>
           <input class="my-input w-full" type="text" id="name" v-model="nameField"
                  v-bind="nameAttrs" aria-label="Поле для ввода названия урока"
@@ -187,7 +191,7 @@ const removeFile = async (file) => {
         <p v-if="errors.attachments" class="error">{{ errors.attachments }}</p>
       </fieldset>
 
-      <fieldset class="my-5">
+      <fieldset class="mt-5">
         <legend>Доступность</legend>
         <div class="flex gap-1">
           <input type="checkbox" id="access" v-model="accessField"
