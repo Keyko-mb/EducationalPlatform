@@ -59,6 +59,12 @@ const showPersonEditDialog = (person) => {
   editPersonDialogVisible.value = true;
 }
 
+const Role = {
+  ADMIN: 'Администратор',
+  TEACHER: 'Преподаватель',
+  STUDENT: 'Ученик'
+}
+
 </script>
 
 <template>
@@ -79,7 +85,7 @@ const showPersonEditDialog = (person) => {
         <td class="my-td border-l border-tertiary" role="cell">{{ person.lastName }}</td>
         <td class="my-td" role="cell">{{ person.firstName }}</td>
         <td class="my-td" role="cell">{{ person.patronymic }}</td>
-        <td class="my-td" role="cell">{{ person.role }}</td>
+        <td class="my-td" role="cell">{{ Role[person.role] }}</td>
         <td class="my-td border-r border-tertiary" role="cell">
           <EditAndDeleteButtons
               @deleteClick="deletePerson(person.id)"
