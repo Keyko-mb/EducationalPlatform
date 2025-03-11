@@ -18,9 +18,9 @@ const homeworkId = useRoute().params.homeworkId
 const answers = computed(() => homeworkStore.answers)
 const answerStore = useAnswerStore()
 
-// const totalPages = computed(() => homeworkStore.totalPages);
-// const currentPage = ref(0);
-// const pageSize = ref(10);
+const totalPages = computed(() => homeworkStore.totalPages);
+const currentPage = ref(0);
+const pageSize = ref(10);
 
 const selectedAnswer = ref(null)
 const showFilesDialogVisible = ref(false)
@@ -30,8 +30,7 @@ defineRule('max', max)
 
 onMounted(async () => {
   try {
-    await homeworkStore.fetchAnswers(homeworkId);
-    // await homeworkStore.fetchAnswersPaginated(homeworkId, currentPage.value, pageSize.value);
+    await homeworkStore.fetchAnswersPaginated(homeworkId, currentPage.value, pageSize.value);
   } catch (error) {
     console.error("Ошибка при получении ответов:", error);
   } finally {
@@ -93,47 +92,47 @@ const getReport = async () => {
   }
 }
 
-// const handlePageChange = async (page) => {
-//   if (page >= 0 && page < totalPages.value) {
-//     currentPage.value = page;
-//     await homeworkStore.fetchAnswersPaginated(homeworkId, currentPage.value, pageSize.value);
-//   }
-// };
-//
-// const visiblePages = computed(() => {
-//   const maxVisible = 10;
-//   const pages = [];
-//   const total = totalPages.value;
-//   // Если количество страниц меньше или равно максимальному количеству отображаемых элементов, // возвращаем все страницы
-//   if (total <= maxVisible) {
-//     for (let i = 1; i <= total; i++) {
-//       pages.push(i);
-//     }
-//   } else {
-//     // Определяем диапазон так, чтобы currentPage была примерно по центру
-//     const half = Math.floor(maxVisible / 2);
-//     let start = currentPage.value + 1 - half; // +1, т.к. currentPage начинается с 0
-//     if (start < 1) {
-//       start = 1;
-//     }
-//     let end = start + maxVisible - 1;
-//     if (end > total) {
-//       end = total;
-//       start = end - maxVisible + 1;
-//     }
-//     for (let i = start; i <= end; i++) {
-//       pages.push(i);
-//     }
-//   }
-//   return pages;
-// });
+const handlePageChange = async (page) => {
+  if (page >= 0 && page < totalPages.value) {
+    currentPage.value = page;
+    await homeworkStore.fetchAnswersPaginated(homeworkId, currentPage.value, pageSize.value);
+  }
+};
+
+const visiblePages = computed(() => {
+  const maxVisible = 10;
+  const pages = [];
+  const total = totalPages.value;
+  // Если количество страниц меньше или равно максимальному количеству отображаемых элементов, // возвращаем все страницы
+  if (total <= maxVisible) {
+    for (let i = 1; i <= total; i++) {
+      pages.push(i);
+    }
+  } else {
+    // Определяем диапазон так, чтобы currentPage была примерно по центру
+    const half = Math.floor(maxVisible / 2);
+    let start = currentPage.value + 1 - half; // +1, т.к. currentPage начинается с 0
+    if (start < 1) {
+      start = 1;
+    }
+    let end = start + maxVisible - 1;
+    if (end > total) {
+      end = total;
+      start = end - maxVisible + 1;
+    }
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+  }
+  return pages;
+});
 </script>
 
 <template>
   <div>
     <Loader class="min-h-60" :is-active="isLoading"/>
     <div v-if="!isLoading">
-      <div v-if="answers && answers.length" class="overflow-auto">
+      <div v-if="homeworkStore.answers && homeworkStore.answers.length" class="overflow-auto">
         <h2 class="sr-only">Таблица ответов студентов</h2>
         <div class="flex lg:justify-end mb-5">
           <button
@@ -156,7 +155,7 @@ const getReport = async () => {
           </tr>
           </thead>
           <TransitionGroup name="table-row" tag="tbody" appear>
-            <tr v-for="answer in answers" :key="answer.id" class="bg-formColor" role="row">
+            <tr v-for="answer in homeworkStore.answers" :key="answer.id" class="bg-formColor" role="row">
               <td class="my-td border-l border-tertiary">{{ answer.student?.lastName }}</td>
               <td class="my-td">{{ answer.student?.firstName }}</td>
               <td class="my-td">{{ answer.student?.patronymic }}</td>
@@ -210,33 +209,33 @@ const getReport = async () => {
         <h2 id="dialog-title" class="sr-only" aria-labelledby="dialog-title">Окно с вложениями</h2>
         <FilesModal v-model:show="showFilesDialogVisible" :answer="selectedAnswer"/>
 
-<!--        <div class="flex items-center justify-center mt-4">-->
-<!--          <button-->
-<!--              class="px-3 py-1 border border-tertiary rounded-lg shadow-md bg-formColor transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:brightness-95"-->
-<!--              :disabled="currentPage <= 0"-->
-<!--              @click="handlePageChange(currentPage - 1)">-->
-<!--            <-->
-<!--          </button>-->
-<!--          <div class="mx-3 flex space-x-1">-->
-<!--          <span-->
-<!--              v-for="n in visiblePages"-->
-<!--              :key="n"-->
-<!--              @click="handlePageChange(n - 1)"-->
-<!--              class="cursor-pointer px-3 py-1 rounded-lg"-->
-<!--              :class="{-->
-<!--              'bg-logoColor text-formColor': currentPage + 1 === n,-->
-<!--              'bg-formColor border border-tertiary': currentPage + 1 !== n-->
-<!--            }">-->
-<!--            {{ n }}-->
-<!--          </span>-->
-<!--          </div>-->
-<!--          <button-->
-<!--              class="px-3 py-1 border border-tertiary rounded-lg shadow-md bg-formColor transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:brightness-95"-->
-<!--              :disabled="currentPage >= totalPages - 1"-->
-<!--              @click="handlePageChange(currentPage + 1)">-->
-<!--            >-->
-<!--          </button>-->
-<!--        </div>-->
+        <div class="flex items-center justify-center mt-4">
+          <button
+              class="px-3 py-1 border border-tertiary rounded-lg shadow-md bg-formColor transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:brightness-95"
+              :disabled="currentPage <= 0"
+              @click="handlePageChange(currentPage - 1)">
+            <
+          </button>
+          <div class="mx-3 flex space-x-1">
+          <span
+              v-for="n in visiblePages"
+              :key="n"
+              @click="handlePageChange(n - 1)"
+              class="cursor-pointer px-3 py-1 rounded-lg"
+              :class="{
+              'bg-logoColor text-formColor': currentPage + 1 === n,
+              'bg-formColor border border-tertiary': currentPage + 1 !== n
+            }">
+            {{ n }}
+          </span>
+          </div>
+          <button
+              class="px-3 py-1 border border-tertiary rounded-lg shadow-md bg-formColor transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:brightness-95"
+              :disabled="currentPage >= totalPages - 1"
+              @click="handlePageChange(currentPage + 1)">
+            >
+          </button>
+        </div>
       </div>
       <div v-else>Ответов нет</div>
     </div>

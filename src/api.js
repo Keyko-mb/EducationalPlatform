@@ -5,8 +5,8 @@ import { useToast } from "vue-toastification";
 import ToastMessage from "@/components/UI/ToastMessage.vue";
 import { h } from "vue";
 
-// Возвращаем установку глобального базового URL
 axios.defaults.baseURL = "https://multiznaika-education.ru/v1/api/";
+// axios.defaults.baseURL = "http://localhost:8084/v1/api/";
 
 let isRefreshing = false;
 let failedQueue = [];
@@ -30,6 +30,7 @@ const processQueue = (error, token = null) => {
 // Создаем отдельный экземпляр axios для refresh-запросов
 const axiosPublic = axios.create({
     baseURL: "https://multiznaika-education.ru/v1/api/"
+    // baseURL: "http://localhost:8084/v1/api/"
 });
 
 axios.interceptors.request.use(config => {

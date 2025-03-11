@@ -98,7 +98,7 @@ const importPeople = async (event) => {
 const exportPeople = async () => {
   try {
     isLoading.value = true;
-    const response = await axios.get("admin/users/export", {
+    const response = await axios.get("admin/users/export-passwords", {
       responseType: "blob",
     });
 
