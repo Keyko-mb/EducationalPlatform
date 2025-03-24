@@ -167,7 +167,7 @@ const breadcrumbs = computed(() => {
 </script>
 
 <template>
-  <nav v-if="breadcrumbs.length" aria-label="Навигация по сайту" class="mb-4 overflow-auto">
+  <nav v-if="breadcrumbs.length" aria-label="Навигация по сайту" class="mb-4 py-1 overflow-auto">
     <ol class="flex gap-1">
       <!-- "Главная" всегда отображается -->
       <li>

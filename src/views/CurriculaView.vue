@@ -63,12 +63,15 @@ const addCurriculum = (curriculum) => {
 const searchQuery = ref('');
 
 const filteredCurricula = computed(() => {
-  return curricula.value.filter(curriculum => {
-    if (authStore.userInfo.role === 'ADMIN' || authStore.userInfo.role === 'TEACHER') {
-      return curriculum.name.toLowerCase().includes(searchQuery.value.toLowerCase());
-    }
-    return curriculum.access && curriculum.name.toLowerCase().includes(searchQuery.value.toLowerCase());
-  });
+  if (authStore.userInfo.role === 'ADMIN' || authStore.userInfo.role === 'TEACHER') {
+    return curricula.value.filter(curriculum =>
+        curriculum.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+    );
+  } else {
+    return studentCurricula.value.filter(curriculum =>
+        curriculum.access && curriculum.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+    );
+  }
 });
 
 const visiblePages = computed(() => {
@@ -169,21 +172,21 @@ const visiblePages = computed(() => {
       </div>
 
       <div v-else>
-        <div v-if="studentCurricula.length > 0" v-for="studentCurriculum in studentCurricula">
-          <Card v-if="studentCurriculum.access"
-                :key="studentCurriculum.id"
-                @click="router.push(`/curricula/${studentCurriculum.id}`)"
-                :title="studentCurriculum.name"
-                @keydown.enter="router.push(`/curricula/${studentCurriculum.id}`)">
-            <template #caption>
-              <div>
-                <p>{{ studentCurriculum.description }}</p>
-              </div>
-            </template>
-          </Card>
+        <div v-if="filteredCurricula.length > 0" role="list">
+          <div v-for="curriculum in filteredCurricula" :key="curriculum.id" role="listitem">
+            <Card @click="router.push(`/curricula/${curriculum.id}`)"
+                  @keydown.enter="router.push(`/curricula/${curriculum.id}`)"
+                  :title="curriculum.name">
+              <template #caption>
+                <div>
+                  <p>{{ curriculum.description }}</p>
+                </div>
+              </template>
+            </Card>
+          </div>
         </div>
         <div v-else class="my-2">
-          <p>Вы не обучаетесь ни на одной учебной программе</p>
+          <p>Учебные программы не найдены</p>
         </div>
       </div>
     </div>

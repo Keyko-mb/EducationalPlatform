@@ -65,7 +65,7 @@ const makeAccessible = () => {
               <RouterLink
                   active-class="active"
                   to="/classrooms"
-                  v-if="authStore.isAuthenticated && authStore.userInfo.role === 'ADMIN'"
+                  v-if="authStore.isAuthenticated && (authStore.userInfo.role === 'ADMIN' || authStore.userInfo.role === 'TEACHER')"
                   role="menuitem"
               >
                 <h3 class="navbar-text">Учебные группы</h3>

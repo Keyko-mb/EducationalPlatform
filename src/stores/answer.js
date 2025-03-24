@@ -107,10 +107,17 @@ export const useAnswerStore = defineStore('answer', {
                 const contentDisposition = response.headers["content-disposition"];
                 let fileName = file;
                 if (contentDisposition) {
-                    const fileNameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-                    const matches = fileNameRegex.exec(contentDisposition);
-                    if (matches != null && matches[1]) {
-                        fileName = matches[1].replace(/['"]/g, '');
+                    const filenameStarRegex = /filename\*=UTF-8''([^;]*)/i;
+                    const starMatches = filenameStarRegex.exec(contentDisposition);
+                    if (starMatches && starMatches[1]) {
+                        fileName = decodeURIComponent(starMatches[1]);
+                    } else {
+                        const filenameRegex = /filename="?([^";]*)"?/i;
+                        const matches = filenameRegex.exec(contentDisposition);
+
+                        if (matches && matches[1]) {
+                            fileName = matches[1];
+                        }
                     }
                 }
                 const fileURL = URL.createObjectURL(response.data);

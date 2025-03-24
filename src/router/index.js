@@ -116,7 +116,7 @@ const router = createRouter({
       component: ClassroomsView,
       meta: {
         auth: true,
-        roles: [Role.Admin]
+        roles: [Role.Admin, Role.Teacher]
       }
     },
     {
