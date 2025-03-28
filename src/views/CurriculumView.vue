@@ -48,7 +48,7 @@ const filteredCourses = computed(() => {
       <button v-if="authStore.userInfo.role === 'ADMIN' || authStore.userInfo.role === 'TEACHER'"
               class="my-button"
               @click="router.push(`/curricula/${curriculum.id}/settings`)">
-        Настройки курса</button>
+        Настройки программы</button>
     </div>
 
     <div role="list">

@@ -32,6 +32,9 @@ watch(() => props.curriculum, (newValue) => {
 });
 
 const emitCurriculumData = handleSubmit((values) => {
+  if (!values.access) {
+    values.access = false
+  }
   emit('saveCurriculumData', values);
   isSaved.value = true;
   setTimeout(() => {
