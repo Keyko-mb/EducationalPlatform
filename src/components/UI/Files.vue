@@ -19,15 +19,14 @@ const links = computed(() => filesStore.links);
           v-for="(file, index) in images"
           :key="'image-' + index"
           class="max-w-96 text-center"
-          aria-labelledby="image-{{index}}">
+          :aria-labelledby="'image-' + index">
         <img
             :src="file.url"
-            :alt="file.name || 'Изображение без названия'"
+            :alt="'Изображение ' + (index + 1) + ': ' + (file.fileName || 'Без названия')"
+            tabindex="0"
             class="shadow-md"/>
-<!--            loading="lazy"-->
-<!--            decoding="async"/>-->
         <figcaption
-            id="image-{{index}}"
+            :id="'image-' + index"
             class="sr-only"
         >
           Изображение {{index + 1}}: {{file.fileName || 'Без названия'}}
@@ -43,7 +42,7 @@ const links = computed(() => filesStore.links);
         <li
             v-for="(file, index) in links"
             :key="'link-' + index"
-            class="lg:text-center text-nowrap"
+            class="lg:text-center text-nowrap py-1"
             role="listitem">
           <a :href="file.url"
              :download="file.fileName"

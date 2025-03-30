@@ -32,27 +32,34 @@ const studentsInOtherClassrooms = ref([]);
 const isLoading = ref(true);
 
 onMounted(async () => {
-  const [peopleResponse, classroomsResponse] = await Promise.all([
-    axios.get("people"),
-    axios.get("classrooms")
-  ]);
+  try {
+    const [peopleResponse, classroomsResponse] = await Promise.all([
+      axios.get("people"),
+      axios.get("classrooms")
+    ]);
 
-  people.value = peopleResponse.data.filter(person => person.role === "STUDENT");
+    people.value = peopleResponse.data.filter(person => person.role === "STUDENT");
 
-  const classrooms = classroomsResponse.data;
-  classrooms.forEach((currentClassroom) => {
-    currentClassroom.persons.forEach((person) => {
-      if (
-          !studentsInOtherClassrooms.value.includes(person.id) &&
-          props.classroom?.id &&
-          currentClassroom.id !== props.classroom.id
-      ) {
-        studentsInOtherClassrooms.value.push(person.id);
-      }
+    studentsInOtherClassrooms.value = [];
+
+    const classrooms = classroomsResponse.data;
+    classrooms.forEach((currentClassroom) => {
+      currentClassroom.persons.forEach((person) => {
+        if (
+            !props.classroom?.id ||
+            currentClassroom.id !== props.classroom.id
+        ) {
+          if (!studentsInOtherClassrooms.value.includes(person.id)) {
+            studentsInOtherClassrooms.value.push(person.id);
+          }
+        }
+      });
     });
-  });
-
-  isLoading.value = false;
+  } catch (error) {
+    console.error("Ошибка при загрузке данных:", error);
+  } finally {
+    isLoading.value = false;
+  }
 });
 
 watch(() => props.classroom, (newClassroom) => {
@@ -70,8 +77,13 @@ const isPersonInAnotherClassroom = (person) => studentsInOtherClassrooms.value.i
 
 const emitClassroomData = handleSubmit((values) => {
   emit("saveClassroomData", values);
-  people.value = [];
-  studentsInOtherClassrooms.value = [];
+  if (values.persons && values.persons.length > 0) {
+    values.persons.forEach(person => {
+      if (!studentsInOtherClassrooms.value.includes(person.id)) {
+        studentsInOtherClassrooms.value.push(person.id);
+      }
+    });
+  }
 });
 
 const searchQuery = ref('');
@@ -100,7 +112,9 @@ const filteredPeople = computed(() => {
           <div v-if="filteredPeople.length > 0" v-for="person in filteredPeople" :key="person.id">
             <input type="checkbox" :value="person" :id="person.id" @change="togglePerson(person)"
                    :checked="isPersonSelected(person)" :disabled="isPersonInAnotherClassroom(person)" class="mr-2">
-            <label :for="person.id">{{ person.lastName + " " + person.firstName + " " + (person.patronymic ? person.patronymic : "") }}</label>
+            <label :for="person.id">{{
+                person.lastName + " " + person.firstName + " " + (person.patronymic ? person.patronymic : "")
+              }}</label>
           </div>
           <div v-else>Пользователи не найдены</div>
         </div>

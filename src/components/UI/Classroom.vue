@@ -16,7 +16,7 @@ const emitDeleteClassroom = () => {
   emits('deleteClassroom', classroomId)
 }
 
-const emitEditClassroom = (updatedClassroom) => {
+const emitEditClassroom = async (updatedClassroom) => {
 
   const originalPeople = props.classroom.persons || [];
   const newPeople = updatedClassroom.persons || [];
@@ -30,12 +30,12 @@ const emitEditClassroom = (updatedClassroom) => {
   );
 
   for (const student of peopleToDelete) {
-    axios
+    await axios
         .delete(`classrooms/${updatedClassroom.id}/students/${student.id}`);
   }
 
   for (const student of peopleToAdd) {
-    axios
+    await axios
         .put(`classrooms/${updatedClassroom.id}/students/${student.id}`);
   }
 

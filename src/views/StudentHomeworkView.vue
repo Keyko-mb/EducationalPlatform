@@ -148,38 +148,38 @@ onUnmounted(() => {
     <div v-if="!isLoading">
       <div v-if="homework">
         <div class="mb-5">
-          <h1>{{ homework.name }}</h1>
+          <h1 tabindex="0">{{ homework.name }}</h1>
           <div v-if="answer && answer.statusId !== 1">
-            <p v-if="answer.statusId === 2" class="bg-warnColor px-5 py-1 rounded-lg w-fit mt-2"
+            <p v-if="answer.statusId === 2" tabindex="0" class="bg-warnColor px-5 py-1 rounded-lg w-fit mt-2"
                aria-label="Статус: на проверке">{{ Status[2] }}</p>
-            <p v-if="answer.statusId === 3" class="bg-truthColor px-5 py-1 rounded-lg w-fit mt-2"
+            <p v-if="answer.statusId === 3" tabindex="0" class="bg-truthColor px-5 py-1 rounded-lg w-fit mt-2"
                aria-label="Статус: выполнено">{{ Status[3] }}</p>
           </div>
           <div v-else>
-            <p class="bg-errColor px-5 py-1 rounded-lg w-fit mt-2 shadow-md" aria-label="Статус: не выполнено">
+            <p tabindex="0" class="bg-errColor px-5 py-1 rounded-lg w-fit mt-2 shadow-md" aria-label="Статус: не выполнено">
               {{ Status[1] }}</p>
           </div>
           <div class="my-5 space-y-2">
-            <p>{{ homework.description }}</p>
+            <p tabindex="0">{{ homework.description }}</p>
             <div v-if="homework.attachments && homework.attachments.length > 0">
-              <h2 class="mb-2">Вложения</h2>
+              <h2 tabindex="0" class="mb-2">Вложения</h2>
               <Files :flag="'materials'"/>
             </div>
           </div>
         </div>
 
         <div>
-          <h2 class="text-logoColor mb-2">Ваш ответ:</h2>
+          <h2 class="text-logoColor mb-2" tabindex="0">Ваш ответ:</h2>
           <div v-if="answer && answer.statusId !== 1" class="space-y-5">
             <div>
-              <p v-if="answer.text">{{ answer.text }}</p>
+              <p tabindex="0" v-if="answer.text">{{ answer.text }}</p>
               <div v-if="answer.attachments && answer.attachments.length > 0" class="my-2">
                 <Files :flag="'answer'"/>
               </div>
             </div>
             <div v-if="answer.comment">
-              <h2 class="text-logoColor mb-2">Комментарий от преподавателя:</h2>
-              <p>{{ answer.comment }}</p>
+              <h2 tabindex="0" class="text-logoColor mb-2">Комментарий от преподавателя:</h2>
+              <p tabindex="0">{{ answer.comment }}</p>
             </div>
           </div>
 
@@ -189,7 +189,7 @@ onUnmounted(() => {
               <textarea id="answer-text" v-model="answerText" class="my-input h-28 w-full" type="text"
                         :aria-label="answerText"/>
               <div v-if="answerFiles.length > 0">
-                <label class="form-label">Вложения</label>
+                <label tabindex="0" class="form-label">Вложения</label>
 
                 <div
                     class="border border-tertiary rounded-lg max-h-96 flex-wrap overflow-y-auto bg-formColor p-4 flex gap-4"
@@ -240,8 +240,8 @@ onUnmounted(() => {
             </form>
 
             <div v-if="answer.comment" class="mt-5">
-              <h2 class="text-logoColor mb-2">Комментарий от преподавателя:</h2>
-              <p>{{ answer.comment }}</p>
+              <h2 tabindex="0" class="text-logoColor mb-2">Комментарий от преподавателя:</h2>
+              <p tabindex="0">{{ answer.comment }}</p>
             </div>
           </div>
 

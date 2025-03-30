@@ -39,7 +39,10 @@ const Role = {
 
 <template>
   <div>
-    <h1>{{ `${studentStore.lastName} ${studentStore.firstName} ${studentStore.patronymic ? studentStore.patronymic : ''}` }}</h1>
+    <div class="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between mb-2">
+      <h1 tabindex="0">{{ `${studentStore.lastName} ${studentStore.firstName} ${studentStore.patronymic ? studentStore.patronymic : ''}` }}</h1>
+      <button @click="logOut" class="my-button w-auto">Выйти</button>
+    </div>
     <div class="my-3">
       <div class="space-y-3" role="list">
         <div role="listitem">
@@ -52,6 +55,9 @@ const Role = {
         </div>
       </div>
     </div>
-    <button @click="logOut" class="my-button w-auto">Выйти</button>
+    <div v-if="authStore.userInfo.role === 'ADMIN'" class="flex flex-col gap-2 lg:flex-row">
+      <a href="https://multiznaika-education.ru:9090" target="_blank" class="my-button bg-tableColor">Метрики Prometheus</a>
+      <a href="https://multiznaika-education.ru:3000" target="_blank" class="my-button bg-tableColor">Дашборды Grafana</a>
+    </div>
   </div>
 </template>

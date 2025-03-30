@@ -84,7 +84,7 @@ onUnmounted(() => {
   <div>
     <div>
       <div class="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between mb-2">
-        <h1>{{ lesson.name }}</h1>
+        <h1 tabindex="0">{{ lesson.name }}</h1>
         <div v-if="authStore.userInfo.role === 'ADMIN' || authStore.userInfo.role === 'TEACHER'" class="flex gap-2">
           <button class="my-button" @click="showLessonEditDialog">Редактировать</button>
           <button class="my-button-danger" @click="showDeleteConfirmDialog">Удалить</button>
@@ -93,12 +93,12 @@ onUnmounted(() => {
 
       <div>
         <section class="mb-5">
-          <h2 class="mb-5">{{ lesson.description }}</h2>
-          <p>{{ lesson.content }}</p>
+          <h2 class="mb-5" tabindex="0">{{ lesson.description }}</h2>
+          <p tabindex="0">{{ lesson.content }}</p>
         </section>
 
         <section v-if="lesson.attachments && lesson.attachments.length > 0">
-          <h2 class="mb-2">Вложения</h2>
+          <h2 tabindex="0" class="mb-2">Вложения</h2>
           <Files/>
         </section>
       </div>

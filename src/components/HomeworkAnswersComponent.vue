@@ -149,7 +149,7 @@ const visiblePages = computed(() => {
             <th class="my-th min-w-40" scope="col">Статус</th>
             <th class="my-th min-w-40" scope="col">Текст ответа</th>
             <th class="my-th" scope="col">Вложения</th>
-            <th class="my-th" scope="col">Дата изменения</th>
+            <th class="my-th" scope="col">Дата сдачи</th>
             <th class="my-th min-w-40" scope="col">Комментарий</th>
             <th class="my-th" scope="col">Действия</th>
           </tr>
@@ -179,8 +179,8 @@ const visiblePages = computed(() => {
               </td>
               <td v-else class="my-td opacity-50" aria-label="Вложения отсутствуют">Отсутствуют</td>
 
-              <td class="my-td" :aria-label="'Дата изменения ответа' + formatDate(answer.updatedAt)">
-                {{ formatDate(answer.updatedAt) }}
+              <td class="my-td" :aria-label="'Дата сдачи ответа' + formatDate(answer.createdAt)">
+                {{ formatDate(answer.createdAt) }}
               </td>
 
               <td class="my-td">

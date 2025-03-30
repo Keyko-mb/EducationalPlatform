@@ -13,6 +13,8 @@ const currentPage = ref(0);
 const pageSize = ref(10);
 const totalPages =  ref(0);
 
+const formKey = ref(0);
+
 const fetchClassrooms = async () => {
   try {
     isLoading.value = true;
@@ -48,6 +50,7 @@ const handlePageChange = async (pageNumber) => {
 };
 
 const showAddClassroomDialog = () => {
+  formKey.value = Date.now();
   addClassroomDialogVisible.value = true;
 }
 
@@ -63,8 +66,10 @@ const addClassroom = async (classroom) => {
       await axios.put(`classrooms/${currentId}/students/${student.id}`);
     }));
 
+    await fetchClassrooms();
+
   } catch (error) {
-    console.error("Error creating classroom:", error);
+    console.error("Ошибка при создании группы:", error);
   } finally {
     isLoading.value = false;
     addClassroomDialogVisible.value = false;
@@ -76,11 +81,11 @@ const editClassroom = async (updatedClassroom) => {
     isLoading.value = true;
     const response = await axios.put(`classrooms/${updatedClassroom.id}`, updatedClassroom);
     const index = classrooms.value.findIndex(c => c.id === updatedClassroom.id);
-    console.log(classrooms.value[index])
     if (index !== -1) {
-      classrooms.value[index] = { ...response.data };
+      const newClassrooms = [...classrooms.value];
+      newClassrooms[index] = { ...response.data };
+      classrooms.value = newClassrooms;
     }
-    console.log(classrooms.value[index])
   } catch (error) {
     console.error("Ошибка при обновлении группы:", error);
   } finally {
@@ -193,7 +198,7 @@ const visiblePages = computed(() => {
 
     <Dialog v-model:show="addClassroomDialogVisible" aria-labelledby="dialog-title">
       <h2 id="dialog-title" class="sr-only">Окно для создания новой учебной группы</h2>
-      <ClassroomForm @saveClassroomData="addClassroom"/>
+      <ClassroomForm :key="formKey" @saveClassroomData="addClassroom"/>
     </Dialog>
   </div>
 </template>
